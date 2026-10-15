@@ -48,6 +48,7 @@ export function CommandPaletteLauncher({ email, agentMode }: { email: string; ag
       const t = (e.target as Element).closest?.<HTMLElement>("[data-agent-open],[data-agent-ask]");
       if (!t) return;
       e.preventDefault();
+      e.stopPropagation(); // the no-JS fallback href ("/#agent") must not reach Lenis' anchor scrolling
       const q = t.dataset.agentAsk;
       withAgent((a) => (q ? a.ask(q) : a.open()));
     };

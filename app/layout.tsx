@@ -70,13 +70,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <Footer />
         <SmoothScroll />
-        {/* desktop: the floating "Ask the agent" pill (brief §5); phones use the bottom bar */}
-        <Link href="/#agent" className="agent-pill" data-agent-open>
-          <span aria-hidden="true" />
-          Ask the agent
-          <kbd>⌘K</kbd>
-        </Link>
-        <AskBar />
+        <aside aria-label="Agent">
+          {/* desktop: the floating "Ask the agent" pill (brief §5); phones use the bottom bar */}
+          <Link href="/#agent" className="agent-pill" data-agent-open>
+            <span aria-hidden="true" />
+            Ask the agent
+            <kbd>⌘K</kbd>
+          </Link>
+          <AskBar />
+        </aside>
         <CommandPaletteLauncher email={site.email} agentMode={agentConfigured() ? "live" : "demo"} />
       </body>
     </html>

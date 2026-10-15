@@ -146,3 +146,9 @@ Process copy provided (applied verbatim). Toolbox, booking link and contact deli
 ## 12. Phase 4 additions to the Content Gaps (2026-10-15)
 - [ ] Per project, for the run reports: lead sentence, role, timeline, 2–4 results with the measurement period, `graph.json` node `detail` lines and branch labels, a sanitized `trace.json` (the invoice pipeline uses the design's sample run), and the MDX body (problem, decisions & tradeoffs, what's next).
 - [ ] Confirm the `/work` categories (placeholders: Agents — support inbox, lead research; Automations — invoice pipeline, weekly ops report).
+
+## 13. Phase 5 additions to the Content Gaps (2026-10-15)
+- [ ] Live agent: `AGENT_MODEL` (+ `AGENT_PROVIDER`) and the provider key in `.env.local` / Vercel; Upstash keys for the shared rate limit (owner adds them; never pasted in chat). Until then the agent runs the labelled demo replay.
+- [ ] Review the agent's recorded demo answers (`lib/agent/replays.ts`).
+- [x] Unknown run addresses answer a real 404 on the first request (Phase 4 review).
+- [x] The replay sentence is in `trace.json` and says it's a sample run (Phase 4 review).
