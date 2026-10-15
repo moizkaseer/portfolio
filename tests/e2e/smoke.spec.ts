@@ -33,8 +33,7 @@ test.describe("shell", () => {
     test(`no axe violations (${theme})`, async ({ page }) => {
       await page.addInitScript((t) => localStorage.setItem("mr-theme", t), theme);
       await page.goto("/?freeze=prompt-done");
-      const { violations, pending } = await axeViolations(page);
-      if (pending.length) test.info().annotations.push({ type: "pending owner decision", description: pending.join("\n") });
+      const { violations } = await axeViolations(page);
       expect(violations).toEqual([]);
     });
   }

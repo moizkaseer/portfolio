@@ -214,6 +214,7 @@
 /* ---------- Live run panel (§3.4) ---------- */
 
 .panel {
+  --muted: var(--muted-raised);
   position: absolute;
   left: 1010px;
   top: 112px;
@@ -270,6 +271,10 @@
 }
 .rowTime {
   color: var(--muted);
+}
+/* the highlighted row's timestamp uses --ink-2 (--muted there is 4.13:1 night / 3.51:1 day) */
+.row[data-new="true"] .rowTime {
+  color: var(--ink-2);
 }
 
 /* ---------- Bottom row (§3.5) ---------- */
@@ -575,6 +580,7 @@
 }
 
 .box {
+  --muted: var(--muted-raised);
   display: flex;
   flex-direction: column;
   gap: 14px;

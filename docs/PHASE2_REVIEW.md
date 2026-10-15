@@ -1,6 +1,6 @@
 # Phase 2 review — Circuit hero + "Your turn" prompt + the first stretch of the wire
 
-Branch `phase-2-hero` (on top of `phase-1-foundation`). Paused here for the owner's review.
+Branch `phase-2-hero` (on top of `phase-1-foundation`). **Approved by the owner on 2026-10-15**; the review decisions are applied (see "Owner decisions" at the end).
 
 ## What was built
 - **Hero + section 02 as one fixed-coordinate stage** (`components/hero/HeroStage.tsx`, `HeroStage.module.css`): 1440 × 1840 on desktop (scaled uniformly from 1024 to 1920px wide), 390 × 1970 on phones (scaled with the screen width, max 560px on tablets). One DOM for both layouts; every coordinate, size, colour, timing and text comes from DESIGN_SPEC §3, §4, §8 and the source files.
@@ -16,14 +16,16 @@ Files: `docs/fidelity/phase-2/` — for each state the build screenshot, a side-
 
 | State | Reference | Mismatch |
 |---|---|---|
-| desktop night, 0.4s | hero-night-start.png | 1.81% |
-| desktop day, 0.4s | hero-day-start.png | 1.64% |
-| desktop night, 17.0s | hero-night-prompt-done.png | 2.00% |
-| desktop day, 17.0s | hero-day-prompt-done.png | 1.94% |
-| phone night, 0.4s | hero-phone-night-start.png | 2.37% |
-| phone day, 0.4s | hero-phone-day-start.png | 2.17% |
-| phone night, 17.0s | hero-phone-night-prompt-done.png | 2.88% |
-| phone day, 17.0s | hero-phone-day-prompt-done.png | 2.81% |
+| desktop night, 0.4s | hero-night-start.png | 1.34% |
+| desktop day, 0.4s | hero-day-start.png | 1.23% |
+| desktop night, 17.0s | hero-night-prompt-done.png | 1.49% |
+| desktop day, 17.0s | hero-day-prompt-done.png | 1.42% |
+| phone night, 0.4s | hero-phone-night-start.png | 2.07% |
+| phone day, 0.4s | hero-phone-day-start.png | 1.84% |
+| phone night, 17.0s | hero-phone-night-prompt-done.png | 2.51% |
+| phone day, 17.0s | hero-phone-day-prompt-done.png | 2.42% |
+
+(After the review fixes: Geist from Vercel's files and the contrast amendments. Before: 1.64–2.88%.)
 
 The nav strip is excluded (owner decision: the full nav wins). What the remaining mismatch is:
 - **Glyph advance drift, not layout.** Long text lines end a few px apart from the reference (e.g. the 54-character prompt at 34px is ~10px wider). I verified the fonts are identical: next/font serves the same Google files, and the same string measures 816.28px with both. The reference PNGs were rasterised in a different environment.
@@ -56,7 +58,7 @@ Also: `tests/unit/hero-motion.test.ts` (port of all 31 expectations of `hero-mot
 Only `transform`, `opacity`, colours and borders animate; the packet is one `transform` per frame; React re-renders only when the discrete state changes.
 
 ## Lighthouse (mobile, production build)
-Performance 92 · Accessibility 96 · Best Practices 100 · SEO 100. FCP 1.1s, **LCP 2.0s**, CLS 0.002, TBT 320ms. Accessibility < 100 only because of the contrast items below.
+After the review fixes: **Accessibility 100 · Best Practices 100 · SEO 100**; Performance 79–92 across runs (FCP 1.1–1.2s, simulated LCP 2.0–3.1s, CLS 0.002, TBT 320–870ms). The spread comes from this machine being under load from other applications (load average 5–8): Lighthouse's simulated LCP adds the main-thread script time it observed. **Observed in the browser with 4× CPU throttling, LCP = FCP ≈ 0.3s** (phone: the sub-line; desktop: the headline's "the work."), so the page doesn't wait for hydration to show its largest text. Lighthouse CI on a clean runner (Phase 8) gives the reference numbers.
 
 ## Decisions needed from the owner
 1. **Colour contrast in the approved design (WCAG AA).** Kept exactly as designed until you decide:
@@ -79,3 +81,13 @@ Performance 92 · Accessibility 96 · Best Practices 100 · SEO 100. FCP 1.1s, *
 
 ## Still `[TODO]` (owner content)
 Everything in AUDIT.md §6: name, city + timezone, email, domain, booking link, socials, the two hero stat numbers, projects.
+
+## Owner decisions (2026-10-15) — applied
+1. **Contrast**: day-shift muted text on raised `--paper-2` surfaces uses `--muted-raised` #64615A (4.73:1); the highlighted log row's timestamp uses `--ink-2`. DESIGN_SPEC §1 / §3.4 updated. axe: zero violations in both themes; Lighthouse Accessibility 100.
+2. **JS budget** raised to 190KB in REDESIGN_BRIEF §9 (current: 183KB).
+3. **Phone LCP element**: unchanged, as designed.
+4. **Arrows**: Geist and Geist Mono now come from Vercel's `geist` package files (OFL), subset to Latin + the arrows block by `scripts/subset-fonts.sh` (35KB each instead of 70KB for the full files), so → ↵ ↓ render in Geist on every OS. Visual comparison re-run (table above).
+5. **Packet hand-off**: unchanged, follows the design spec.
+6. **GitHub**: branches pushed, one PR per phase.
+7. **Timezone**: Europe/Skopje.
+8–9. Owner details and projects stay placeholders (AUDIT.md §6); Phase 3 uses the design's placeholder projects.

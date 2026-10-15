@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
+import { Instrument_Serif } from "next/font/google";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import { SmoothScroll } from "@/lib/motion/SmoothScroll";
@@ -9,15 +10,19 @@ import { site } from "@/lib/content/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
-const geist = Geist({
+// Vercel's Geist files (`geist` package, OFL) subset to Latin + arrows by scripts/subset-fonts.sh
+// (owner decision, 2026-10-15): unlike Google's subsets they include → and ↵, so arrows look the same on every OS.
+const geist = localFont({
+  src: "./fonts/Geist-Variable.subset.woff2",
   variable: "--font-geist",
-  subsets: ["latin"],
+  weight: "100 900",
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMono-Variable.subset.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "100 900",
   display: "swap",
   preload: false,
 });

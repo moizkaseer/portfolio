@@ -3,7 +3,7 @@
   "name": "[YOUR NAME]",
   "positioning": "AI agents & automation",
   "city": "[CITY]",
-  "timezone": null,
+  "timezone": "Europe/Skopje",
   "availability": { "status": "available", "label": "Available for projects" },
   "email": "[you@yourdomain.com]",
   "domain": "[yourdomain.com]",
