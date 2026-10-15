@@ -64,7 +64,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <SmoothScroll />
         <GridOverlay />
-        <CommandPaletteLauncher />
+        <CommandPaletteLauncher email={site.email} />
       </body>
     </html>
   );

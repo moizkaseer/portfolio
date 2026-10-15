@@ -110,7 +110,7 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 - [ ] Decisions and tradeoffs (guardrails, evals, failure handling), and what you'd change
 
 **Site-wide**
-- [ ] Hero stats: "Agents in production" and "Hours automated / yr" (or OK to remove)
+- [ ] Hero stats: numbers for "Agents in production" and "Hours automated / yr" (block is kept; owner reply had `[LABEL]: [NUMBER]` placeholders)
 - [ ] Toolbox: tools you actually use, grouped (Orchestration / Models / Data / Surfaces …)
 - [ ] Testimonials (optional; without them Proof is omitted) and any real counters
 - [ ] Confirm the manifesto wording is true to how you work

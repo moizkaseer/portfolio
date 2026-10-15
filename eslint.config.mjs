@@ -14,6 +14,11 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // The approved design's own files: reference only, never shipped or edited.
     "design-reference/**",
+    // generated test output
+    "playwright-report/**",
+    "test-results/**",
+    "lighthouse-report/**",
+    ".lighthouseci/**",
   ]),
 ]);
 

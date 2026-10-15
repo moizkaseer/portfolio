@@ -1,0 +1,34 @@
+[
+  {
+    "state": "desktop-night-start",
+    "mismatch": "1.811%"
+  },
+  {
+    "state": "desktop-day-start",
+    "mismatch": "1.638%"
+  },
+  {
+    "state": "desktop-night-prompt-done",
+    "mismatch": "1.997%"
+  },
+  {
+    "state": "desktop-day-prompt-done",
+    "mismatch": "1.936%"
+  },
+  {
+    "state": "phone-night-start",
+    "mismatch": "2.368%"
+  },
+  {
+    "state": "phone-day-start",
+    "mismatch": "2.165%"
+  },
+  {
+    "state": "phone-night-prompt-done",
+    "mismatch": "2.876%"
+  },
+  {
+    "state": "phone-day-prompt-done",
+    "mismatch": "2.809%"
+  }
+]
