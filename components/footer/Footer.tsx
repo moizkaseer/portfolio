@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/content/site";
-import { WordmarkScrub } from "./WordmarkScrub";
+import { Deferred } from "@/components/Deferred";
 import styles from "./Footer.module.css";
 
 const year = new Date(process.env.BUILD_DATE ?? Date.now()).getUTCFullYear();
@@ -27,7 +27,7 @@ export function Footer() {
       <div aria-hidden="true" className={styles.wordmark} data-wordmark>
         <span className={styles.wordmarkInner}>{site.name}</span>
       </div>
-      <WordmarkScrub />
+      <Deferred name="wordmark" />
 
       <div className={styles.bottom}>
         <span>

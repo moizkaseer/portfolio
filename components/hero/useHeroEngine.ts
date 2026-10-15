@@ -12,6 +12,7 @@ import {
   type HeroState,
 } from "@/lib/motion/hero-motion";
 import {
+  beginDesign as ctlBegin,
   createController,
   createReducedController,
   onFocus as ctlFocus,
@@ -242,6 +243,7 @@ export function useHeroEngine() {
     onFocus: () => act(ctlFocus),
     onType: (value: string) => act((c, t) => ctlType(c, t, value)),
     runUser: (text: string, idx?: number) => act((c, t) => void ctlRun(c, t, text, idx)),
+    beginDesign: (text: string) => act((c, t) => ctlBegin(c, t, text)),
     templates: TEMPLATES,
   };
 }

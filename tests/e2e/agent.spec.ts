@@ -56,7 +56,8 @@ test.describe("agent — demo replay drives the site", () => {
     await home(page);
     await page.locator("#agent").scrollIntoViewIfNeeded();
     await page.locator("#agent").getByRole("button", { name: "Show me your best project" }).click();
-    await expect(page.locator(".agent-ghost")).toHaveAttribute("data-on", "true", { timeout: 10_000 });
+    // take control as soon as the first page action starts
+    await page.locator('[data-agent-live] [data-state="running"]', { hasText: "ui.scroll_to" }).first().waitFor({ timeout: 10_000 });
     await page.mouse.move(300, 300);
     await page.mouse.wheel(0, 400);
     const log = panel(page).getByRole("log");

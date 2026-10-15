@@ -61,6 +61,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* for developers who open the console (brief C4); inline, so it isn't in the JS budget */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `console.info("%c■ ${site.name.replace(/["\\]/g, "")}%c — this site has a terminal version:  curl ${site.domain.replace(/["\\]/g, "")}", "color:#FF4F1A;font-weight:600", "color:inherit");`,
+          }}
+        />
       </head>
       <body>
         <a className="skip-link" href="#main">

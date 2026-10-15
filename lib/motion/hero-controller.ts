@@ -189,6 +189,15 @@ export function runUser(c: Controller, now: number, text: string, idx?: number):
   return tpl;
 }
 
+/**
+ * The smart engine is drafting (up to 2.5s): show "Designing the system · 0 / 5" with the
+ * visitor's words in place, then runUser() builds with the result (or the template fallback).
+ */
+export function beginDesign(c: Controller, now: number, text: string) {
+  takeOver(c, now);
+  c.prompt = { ...c.prompt, typed: text, tpl: -2, revealed: 0, active: -1, phase: "building" };
+}
+
 export function sameState(a: HeroState, b: HeroState) {
   return (
     a.step === b.step &&
