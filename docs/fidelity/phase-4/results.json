@@ -1,7 +1,7 @@
 [
   {
     "state": "run-report-day-report",
-    "mismatch": "2.542%"
+    "mismatch": "2.947%"
   },
   {
     "state": "run-report-day-next-run",
@@ -9,7 +9,7 @@
   },
   {
     "state": "run-report-night-report",
-    "mismatch": "2.672%"
+    "mismatch": "2.884%"
   },
   {
     "state": "run-report-night-next-run",

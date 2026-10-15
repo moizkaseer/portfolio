@@ -31,7 +31,7 @@ export function SelectedRuns() {
       <RunList items={items} featured={featured} />
       <div className={styles.allRuns}>
         <Link href="/work" className={styles.allRunsLink}>
-          All runs {items.length} <span aria-hidden="true">→</span>
+          All runs {items.length} <span aria-hidden="true" className="nudge">→</span>
         </Link>
       </div>
     </section>

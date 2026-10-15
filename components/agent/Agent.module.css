@@ -58,6 +58,9 @@
   min-height: 220px;
   max-height: 420px;
   overflow-y: auto;
+  /* the terminal is dark in both themes: its scrollbar is too */
+  scrollbar-color: rgba(236, 233, 226, 0.3) transparent;
+  scrollbar-width: thin;
   padding: 22px 18px 24px;
   font-family: var(--font-mono);
   font-size: 13px;
@@ -341,5 +344,12 @@
 @media (prefers-reduced-motion: reduce) {
   :global(.agent-ghost) {
     display: none;
+  }
+}
+
+/* iOS Safari zooms the page into inputs under 16px: touch screens get 16px (design: 13px) */
+@media (pointer: coarse) {
+  .input {
+    font-size: 16px;
   }
 }

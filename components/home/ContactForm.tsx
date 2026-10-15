@@ -69,8 +69,10 @@ export function ContactForm({ ownerName }: { ownerName: string }) {
 
       <div className={styles.submitRow}>
         <button type="submit" className={styles.run}>
-          <span aria-hidden="true" className={styles.triangle} />
-          <span data-run-label>Run</span>
+          <span aria-hidden="true" className={`${styles.triangle} nudge`} />
+          <span className="roll" data-label="Run">
+            <span data-run-label>Run</span>
+          </span>
         </button>
         <span className={styles.sentTrace} aria-hidden="true" data-trace>
           {["received", "parsed", `queued for ${ownerName}`].map((s, i) => (
