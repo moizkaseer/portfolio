@@ -9,6 +9,7 @@ export function ToolButton({ tool, runs }: { tool: string; runs: string[] }) {
     <button
       type="button"
       className={styles.tool}
+      data-tool={tool}
       onPointerEnter={() => emit(tool)}
       onPointerLeave={() => emit(null)}
       onFocus={() => emit(tool)}

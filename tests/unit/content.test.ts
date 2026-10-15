@@ -55,3 +55,17 @@ describe("run report diagram layout", () => {
     );
   });
 });
+
+describe("generated content index", () => {
+  it("lib/content/slugs.generated.json lists exactly the projects on disk (run `node scripts/gen-content-index.mjs`)", async () => {
+    const generated = (await import("@/lib/content/slugs.generated.json")).default;
+    expect(generated).toEqual([...slugs].sort());
+  });
+
+  it("every trace has a note (the replay sentence must be true for the trace)", () => {
+    for (const slug of slugs) {
+      const p = path.join(DIR, slug, "trace.json");
+      if (fs.existsSync(p)) expect(JSON.parse(fs.readFileSync(p, "utf8")).note).toBeTruthy();
+    }
+  });
+});

@@ -1,5 +1,6 @@
 {
-  "_todo": "PLACEHOLDER: the design's sample run (RunReport.html). Replace with a real, sanitized run. Rows without a time hadn't happened yet in the design's frame; their ms offsets only pace the replay (total 2305ms puts 1.34s at 58%, as in the design).",
+  "_todo": "PLACEHOLDER: the design's sample run (RunReport.html). Replace with a real, sanitized run. Rows without a time hadn't happened yet in the design's frame; their ms offsets only pace the replay (total 2305ms puts 1.34s at 58%, as in the design). When the real trace replaces it, change \"note\" to: \"This is a real run with customer details removed.\"",
+  "note": "This is a sample run showing how the system works.",
   "runId": "run_8841",
   "date": "[date]",
   "durationMs": 2305,

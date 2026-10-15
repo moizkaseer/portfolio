@@ -30,6 +30,8 @@ const FrontmatterSchema = z.object({
 });
 
 export const TraceSchema = z.object({
+  /** the sentence under "Every run is logged. Replay one." — must be true for this trace */
+  note: z.string().min(1),
   runId: z.string(),
   date: z.string(),
   durationMs: z.number().positive(),

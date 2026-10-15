@@ -121,6 +121,47 @@
   background-size: 100% 1px;
 }
 
+/* Desktop "Ask the agent" pill (phones: the bottom bar from Mobile.html). Static markup;
+   the agent itself loads on first click. */
+.agent-pill {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 8px 0 16px;
+  background: var(--term);
+  color: var(--term-ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid rgba(236, 233, 226, 0.16);
+}
+.agent-pill > span {
+  width: 7px;
+  height: 7px;
+  background: var(--signal);
+}
+.agent-pill kbd {
+  padding: 3px 6px;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--term-muted);
+}
+html[data-agent-panel] .agent-pill,
+html[data-agent-panel] [data-askbar] {
+  display: none;
+}
+@media (max-width: 1023.98px) {
+  .agent-pill {
+    display: none;
+  }
+}
+
 /* Title morph between pages (React <ViewTransition share="morph">). */
 ::view-transition-group(.morph) {
   animation-duration: 560ms;

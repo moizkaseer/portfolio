@@ -52,7 +52,7 @@ export default function CommandPalette({ open, onClose, email }: { open: boolean
           navigator.clipboard?.writeText(email).catch(() => {});
         },
       },
-      { id: "agent-ask", group: "Actions", label: "Ask the agent", hint: "coming soon", disabled: true, run: () => {} },
+      { id: "agent-ask", group: "Actions", label: "Ask the agent", hint: "opens the chat", run: () => window.dispatchEvent(new Event("agent:open")) },
     ];
   }, [router, email]);
 

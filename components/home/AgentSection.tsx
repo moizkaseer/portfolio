@@ -1,3 +1,4 @@
+import { agentConfigured } from "@/lib/server/agent-model";
 import { SectionHeader } from "./SectionHeader";
 import home from "./home.module.css";
 import styles from "./AgentSection.module.css";
@@ -12,13 +13,15 @@ const TRACE = [
 ] as const;
 
 /**
- * 06 — Talk to my agent (Main.html). Phase 3 ships the section as designed with the design's
- * example session; Phase 5 connects the live agent, its tools and the UI actions (C1).
+ * 06 — Talk to my agent (Main.html). The terminal shows the design's example session until the
+ * visitor interacts: then the agent (loaded on demand) takes it over with the real conversation.
+ * Without a configured model it runs the scripted demo replay, and says so.
  */
 export function AgentSection() {
+  const live = agentConfigured();
   return (
     <section aria-labelledby="agent-h" className={`${home.section} ${styles.section}`} id="agent">
-      <SectionHeader index="06" title="Talk to my agent" asHeading={false} meta="Live · reads only my case studies" />
+      <SectionHeader index="06" title="Talk to my agent" asHeading={false} meta={live ? "Live · reads only my case studies" : "Demo replay · reads only my case studies"} />
       <div className={styles.cols}>
         <div className={styles.left}>
           <h2 id="agent-h" className={styles.title}>
@@ -29,7 +32,7 @@ export function AgentSection() {
           </p>
           <div className={styles.chips}>
             {CHIPS.map((c, i) => (
-              <button key={c} type="button" className={i === 0 ? styles.chipFilled : styles.chip} aria-disabled="true" title="The live agent is connected in Phase 5">
+              <button key={c} type="button" className={i === 0 ? styles.chipFilled : styles.chip} data-agent-ask={c}>
                 {c}
               </button>
             ))}
@@ -44,7 +47,7 @@ export function AgentSection() {
               Acting on the page
             </span>
           </div>
-          <div className={styles.termBody} aria-label="Example session" role="log">
+          <div className={styles.termBody} aria-label="Example session from the design" role="log">
             <div className={styles.user}>show me your best project</div>
             {TRACE.map((t) => (
               <div key={t.call} className={styles.tool} data-state={t.state}>
@@ -64,8 +67,8 @@ export function AgentSection() {
             <label htmlFor="ask-agent" className="sr-only">
               Ask the agent
             </label>
-            <input id="ask-agent" type="text" className={styles.input} placeholder="Ask the agent anything…" disabled />
-            <button type="button" className={styles.send} aria-disabled="true">
+            <input id="ask-agent" type="text" className={styles.input} placeholder="Ask the agent anything…" data-agent-input maxLength={500} />
+            <button type="button" className={styles.send} data-agent-open>
               Send ↵
             </button>
           </div>
