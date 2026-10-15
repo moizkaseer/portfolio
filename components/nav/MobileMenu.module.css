@@ -1,0 +1,126 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bars span {
+  width: 14px;
+  height: 1px;
+  background: var(--ink);
+}
+
+.panel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 24px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.panel:not([data-open="true"]) {
+  visibility: hidden;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  border-bottom: 1px solid var(--line);
+}
+
+.label,
+.bottom {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.links {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: clamp(48px, 15vw, 88px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s var(--ease-reveal),
+    transform 0.7s var(--ease-reveal);
+}
+
+.panel[data-open="true"] .link {
+  opacity: 1;
+  transform: none;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.ink {
+  color: var(--ink);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transform: none;
+    transition: opacity 0.2s linear;
+  }
+}

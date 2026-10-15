@@ -1,0 +1,20 @@
+{
+  "_todo": "Every bracketed value is a [TODO] the owner still has to provide. See AUDIT.md §6.",
+  "name": "[YOUR NAME]",
+  "positioning": "AI agents & automation",
+  "city": "[CITY]",
+  "timezone": null,
+  "availability": { "status": "available", "label": "Available for projects" },
+  "email": "[you@yourdomain.com]",
+  "domain": "[yourdomain.com]",
+  "bookingUrl": null,
+  "socials": [
+    { "label": "[GitHub]", "url": null },
+    { "label": "[LinkedIn]", "url": null },
+    { "label": "[X]", "url": null }
+  ],
+  "heroStats": [
+    { "label": "Agents in production", "value": "[N]" },
+    { "label": "Hours automated / yr", "value": "[N]" }
+  ]
+}
