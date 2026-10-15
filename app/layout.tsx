@@ -4,7 +4,6 @@ import { Instrument_Serif } from "next/font/google";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import { SmoothScroll } from "@/lib/motion/SmoothScroll";
-import { GridOverlay } from "@/components/grid/GridOverlay";
 import { CommandPaletteLauncher } from "@/components/palette/CommandPaletteLauncher";
 import { site } from "@/lib/content/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
@@ -68,7 +67,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <Footer />
         <SmoothScroll />
-        <GridOverlay />
         <CommandPaletteLauncher email={site.email} />
       </body>
     </html>

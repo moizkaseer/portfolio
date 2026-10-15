@@ -50,6 +50,11 @@
   white-space: nowrap;
 }
 
+/* "01 Work" underlined on /work pages (RunReport.html) — CSS only, no client JS */
+:global(body:has([data-page="work"])) .link[data-nav="work"] {
+  border-bottom: 1px solid var(--ink);
+}
+
 .link:hover .index {
   color: var(--ink);
 }

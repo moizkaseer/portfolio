@@ -30,7 +30,7 @@ export function SelectedRuns() {
       <SectionHeader index="04" title="Selected runs" id="runs-h" meta={<><span className={styles.dOnly}>{count} runs</span><span className={styles.mOnly}>{count}</span></>} markMobile={{ left: "30%", width: "22%" }} />
       <RunList items={items} featured={featured} />
       <div className={styles.allRuns}>
-        <Link href="/work" prefetch={false} className={styles.allRunsLink}>
+        <Link href="/work" className={styles.allRunsLink}>
           All runs {items.length} <span aria-hidden="true">→</span>
         </Link>
       </div>

@@ -1,0 +1,218 @@
+/* RunReport.html "01 — The system" (DESIGN_SPEC §6). */
+.grid {
+  display: grid;
+  margin-top: 56px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.box[data-state="done"] {
+  border-color: var(--ink);
+}
+.box[data-state="running"] {
+  border: 1.5px solid var(--signal);
+  box-shadow: 0 0 0 4px var(--signal-soft);
+}
+.box[data-human="true"]:not([data-state="running"]) {
+  border: 1px dashed var(--ink);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.box[data-state="running"] .kind {
+  color: var(--ink);
+}
+
+.mark {
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+}
+.box[data-state="running"] .mark {
+  background: var(--signal);
+}
+.box[data-state="pending"] .mark {
+  background: transparent;
+  border: 1px solid var(--muted);
+  box-sizing: border-box;
+}
+.box[data-human="true"][data-state="pending"] .mark {
+  border-color: var(--ink);
+}
+
+.label {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.box[data-state="pending"]:not([data-human="true"]) .label {
+  color: var(--ink-2);
+}
+
+.detail {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.link {
+  position: relative;
+  align-self: center;
+  height: 1.5px;
+  background: var(--line-strong);
+  transition: background-color 0.3s;
+}
+.link[data-lit="true"] {
+  background: var(--ink);
+}
+
+.packet {
+  position: absolute;
+  left: 26px;
+  top: -2.5px;
+  width: 6px;
+  height: 6px;
+  background: var(--signal);
+}
+
+.branch {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.dashed {
+  width: 0;
+  height: 100%;
+  border-left: 1.5px dashed var(--ink);
+}
+.branchLabel {
+  position: absolute;
+  left: calc(50% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.hline {
+  align-self: center;
+  height: 1.5px;
+  background: var(--line-strong);
+}
+.up {
+  display: flex;
+  justify-content: center;
+}
+.up span {
+  width: 0;
+  height: 100%;
+  border-left: 1.5px solid var(--line-strong);
+}
+.elbow {
+  display: flex;
+}
+.elbowH {
+  flex: 1;
+  align-self: center;
+  height: 1.5px;
+  background: var(--line-strong);
+}
+.elbowV {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.elbowV span:first-child {
+  flex: 1;
+  width: 0;
+  border-left: 1.5px solid var(--line-strong);
+}
+.elbowV span:last-child {
+  flex: 1;
+}
+.hline[data-lit="true"],
+.elbow[data-lit="true"] .elbowH {
+  background: var(--ink);
+}
+.up[data-lit="true"] span,
+.elbow[data-lit="true"] .elbowV span:first-child {
+  border-color: var(--ink);
+}
+
+/* phones */
+.stack {
+  display: none;
+}
+
+@media (max-width: 1023.98px) {
+  .grid {
+    display: none;
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .stackItem {
+    display: flex;
+    flex-direction: column;
+  }
+  .vlink {
+    width: 1.5px;
+    height: 24px;
+    margin-left: 22px;
+    background: var(--line-strong);
+  }
+  .vlink[data-lit="true"] {
+    background: var(--ink);
+  }
+  .stackBranch {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 32px;
+  }
+  .vdashed {
+    width: 0;
+    height: 48px;
+    margin-left: 22px;
+    border-left: 1.5px dashed var(--ink);
+  }
+  .stackBranch .branchLabel {
+    left: 36px;
+    top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box,
+  .link {
+    transition: none;
+  }
+}

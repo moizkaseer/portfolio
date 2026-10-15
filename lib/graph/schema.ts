@@ -6,9 +6,20 @@ export const NodeKindSchema = z.enum(["Trigger", "Schedule", "Model", "Code", "T
 export const GraphSchema = z
   .object({
     nodes: z
-      .array(z.object({ id: z.string(), label: z.string(), kind: NodeKindSchema, short: z.string().optional() }))
+      .array(
+        z.object({
+          id: z.string(),
+          label: z.string(),
+          kind: NodeKindSchema,
+          /** shorter label for the phone mini trace */
+          short: z.string().optional(),
+          /** the mono line under the label in the run report diagram (e.g. "[mail provider] · webhook") */
+          detail: z.string().optional(),
+        }),
+      )
       .min(2),
-    edges: z.array(z.tuple([z.string(), z.string()])),
+    /** [from, to] or [from, to, label] — a label marks a conditional branch (e.g. "confidence < 0.9") */
+    edges: z.array(z.union([z.tuple([z.string(), z.string()]), z.tuple([z.string(), z.string(), z.string()])])),
   })
   .superRefine((g, ctx) => {
     const ids = new Set(g.nodes.map((n) => n.id));
