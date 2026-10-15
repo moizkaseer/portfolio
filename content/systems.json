@@ -1,0 +1,63 @@
+{
+  "_source": "Copied verbatim from design-reference/motion/hero-motion.ts (TEMPLATES, GENERIC_TEMPLATE, matchTemplate). Approved design copy, not owner content. hero-motion.ts stays the runtime source of truth for the hero loop; this file is what the C2 instant engine, the agent and curl read, and it can grow over time.",
+  "templates": [
+    {
+      "chip": "Invoices → ledger",
+      "prompt": "Reconcile invoices from Gmail into our accounting tool",
+      "keywords": ["invoice", "receipt", "bill", "accounting", "ledger", "xero", "quickbooks"],
+      "nodes": [
+        { "kind": "Trigger", "title": "Invoice email arrives" },
+        { "kind": "Model", "title": "Extract the fields" },
+        { "kind": "Code", "title": "Match to purchase orders" },
+        { "kind": "Human", "title": "Check if unsure" },
+        { "kind": "Tool", "title": "Post to the ledger" }
+      ]
+    },
+    {
+      "chip": "Refund emails",
+      "prompt": "Answer refund emails and escalate the angry ones",
+      "keywords": ["refund", "support", "ticket", "reply", "customer", "complain", "inbox"],
+      "nodes": [
+        { "kind": "Trigger", "title": "Support inbox" },
+        { "kind": "Model", "title": "Read intent and mood" },
+        { "kind": "Tool", "title": "Look up the order" },
+        { "kind": "Model", "title": "Draft the reply" },
+        { "kind": "Human", "title": "Escalate if upset" }
+      ]
+    },
+    {
+      "chip": "Monday KPI report",
+      "prompt": "Every Monday, send a KPI summary to Slack",
+      "keywords": ["report", "kpi", "weekly", "monday", "summary", "metric", "dashboard"],
+      "nodes": [
+        { "kind": "Schedule", "title": "Monday 09:00" },
+        { "kind": "Tool", "title": "Pull the metrics" },
+        { "kind": "Model", "title": "Write the summary" },
+        { "kind": "Code", "title": "Sanity-check numbers" },
+        { "kind": "Tool", "title": "Post to #ops" }
+      ]
+    },
+    {
+      "chip": "Lead research",
+      "prompt": "Research new leads and add them to the CRM",
+      "keywords": ["lead", "crm", "sales", "prospect", "hubspot", "salesforce"],
+      "nodes": [
+        { "kind": "Trigger", "title": "New form lead" },
+        { "kind": "Tool", "title": "Search the company" },
+        { "kind": "Model", "title": "Score the fit" },
+        { "kind": "Tool", "title": "Enrich the CRM record" },
+        { "kind": "Tool", "title": "Notify sales" }
+      ]
+    }
+  ],
+  "generic": {
+    "label": "drafted from your words",
+    "nodes": [
+      { "kind": "Trigger", "title": "When it happens" },
+      { "kind": "Model", "title": "Understand the input" },
+      { "kind": "Code", "title": "Apply your rules" },
+      { "kind": "Tool", "title": "Do the work" },
+      { "kind": "Human", "title": "Approve the result" }
+    ]
+  }
+}
