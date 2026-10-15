@@ -1,0 +1,38 @@
+.section {
+  padding-top: 88px;
+  padding-bottom: 120px;
+}
+
+.text {
+  margin: 64px 0 0;
+  max-width: 24ch;
+  font-size: clamp(36px, 4.7vw, 68px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+/* The last sentence starts --muted and turns --ink word by word as it passes the
+   viewport centre (--p per word: 0 → 1, set by ManifestoMotion). */
+.word {
+  --p: 0;
+  color: color-mix(in srgb, var(--ink) calc(var(--p) * 100%), var(--muted));
+}
+
+.text em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 1023.98px) {
+  .section {
+    padding-top: 64px;
+    padding-bottom: 88px;
+  }
+  .text {
+    margin-top: 40px;
+  }
+}

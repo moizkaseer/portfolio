@@ -1,0 +1,35 @@
+{
+  "_todo": "[TODO: confirm] Draft copy for the Process section (05), written from the brief and the design's own line 'map the work, decide where a model helps, where code is safer, and where a person stays in the loop'. The owner should confirm or rewrite every line.",
+  "steps": [
+    {
+      "id": "trigger",
+      "title": "Trigger",
+      "text": "Find the moment the work starts: an email lands, a form is sent, a schedule fires.",
+      "log": ["watch · inbox, forms, schedules", "event · new item → run starts"]
+    },
+    {
+      "id": "plan",
+      "title": "Plan",
+      "text": "Decide where a model helps, where code is safer, and where a person stays in the loop.",
+      "log": ["plan · 5 steps", "split · 2 model · 2 code · 1 human"]
+    },
+    {
+      "id": "act",
+      "title": "Act",
+      "text": "Work inside the tools your team already uses. No new app to learn.",
+      "log": ["tool · read the source", "tool · write to the system of record"]
+    },
+    {
+      "id": "verify",
+      "title": "Verify",
+      "text": "Every run checks itself. Unsure cases go to a person instead of guessing.",
+      "log": ["check · totals recomputed", "route · low confidence → human"]
+    },
+    {
+      "id": "ship",
+      "title": "Ship",
+      "text": "Logged, monitored, and with an off switch from day one.",
+      "log": ["log · every step replayable", "alert · failures fail loudly"]
+    }
+  ]
+}

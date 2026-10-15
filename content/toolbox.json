@@ -1,0 +1,9 @@
+{
+  "_todo": "[TODO: the owner's real tools.] Until then the groups hold the same bracketed placeholders the design uses in each project's stack, so hovering a tool already highlights the projects that list it.",
+  "groups": [
+    { "category": "Orchestration", "tools": ["[Orchestrator]", "[Scheduler]"] },
+    { "category": "Models", "tools": ["[Model]"] },
+    { "category": "Data", "tools": ["[CRM]", "[Sheets]", "[Search]", "[Accounting API]"] },
+    { "category": "Surfaces", "tools": ["[Slack]"] }
+  ]
+}

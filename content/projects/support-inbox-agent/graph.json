@@ -1,0 +1,12 @@
+{
+  "_todo": "[TODO: confirm] Placeholder steps based on the brief's example (Gmail trigger → classify → look up customer in CRM → draft reply → human approves → send).",
+  "nodes": [
+    { "id": "trigger", "label": "Support email arrives", "kind": "Trigger" },
+    { "id": "classify", "label": "Classify the request", "kind": "Model" },
+    { "id": "lookup", "label": "Look up the customer", "kind": "Tool" },
+    { "id": "draft", "label": "Draft the reply", "kind": "Model" },
+    { "id": "approve", "label": "Approve", "kind": "Human" },
+    { "id": "send", "label": "Send", "kind": "Tool" }
+  ],
+  "edges": [["trigger", "classify"], ["classify", "lookup"], ["lookup", "draft"], ["draft", "approve"], ["approve", "send"]]
+}

@@ -34,7 +34,7 @@
     background: var(--paper);
     color: var(--ink);
     font-size: var(--fs-body);
-    line-height: 1.5;
+    line-height: normal; /* as in the design: line-heights are set explicitly where it wants them */
     overflow-x: clip;
   }
 
@@ -44,9 +44,8 @@
     text-wrap: balance;
   }
 
-  p {
-    text-wrap: pretty;
-  }
+  /* The approved design wraps paragraphs normally; text-wrap: pretty is applied only in the
+     sections the design does not cover (Process, Toolbox, Contact). */
 
   ::selection {
     background: var(--signal);
@@ -120,6 +119,13 @@
 }
 .text-link:hover {
   background-size: 100% 1px;
+}
+
+/* phones: room for the bottom "Ask the agent" bar */
+@media (max-width: 1023.98px) {
+  body {
+    padding-bottom: 84px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

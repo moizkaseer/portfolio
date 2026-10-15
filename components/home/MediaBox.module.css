@@ -1,0 +1,67 @@
+.media {
+  position: relative;
+  height: 202px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper) repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 11px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.compact {
+  height: 200px;
+  padding: 10px;
+  font-size: 10px;
+  background: var(--paper-2) repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 11px);
+}
+
+.media[data-reveal="true"] {
+  animation: clip-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes clip-in {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  align-self: center;
+}
+
+.progress {
+  display: block;
+  height: 2px;
+  background: var(--line);
+}
+.progress span {
+  display: block;
+  width: 46%;
+  height: 2px;
+  background: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media[data-reveal="true"] {
+    animation: fade 0.2s linear both;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+}

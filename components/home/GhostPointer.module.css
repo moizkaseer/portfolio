@@ -1,0 +1,25 @@
+.pointer {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.pointer path {
+  fill: var(--signal);
+  stroke: var(--paper);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.pill {
+  margin-top: 16px;
+  padding: 3px 7px;
+  background: var(--signal);
+  color: var(--on-signal);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}

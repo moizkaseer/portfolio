@@ -1,0 +1,63 @@
+.rail {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+.base,
+.progress,
+.tick,
+.branch {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.base {
+  stroke: var(--line-strong);
+}
+
+.progress {
+  stroke: var(--ink);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.tick {
+  stroke: var(--line-strong);
+  transition: stroke 0.4s;
+}
+.tick[data-lit="true"] {
+  stroke: var(--ink);
+}
+
+.branch {
+  stroke: var(--signal);
+}
+
+.packet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--signal);
+  box-shadow: 0 0 0 4px var(--signal-soft);
+  opacity: 0;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    stroke-dashoffset: 0;
+  }
+  .packet {
+    display: none;
+  }
+}

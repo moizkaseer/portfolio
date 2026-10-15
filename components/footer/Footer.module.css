@@ -77,6 +77,11 @@
   white-space: nowrap;
 }
 
+.wordmarkInner {
+  display: block;
+  will-change: transform;
+}
+
 .bottom {
   display: flex;
   flex-wrap: wrap;
