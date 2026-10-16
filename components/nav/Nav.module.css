@@ -1,0 +1,134 @@
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  background: var(--paper);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  height: var(--nav-h);
+  margin-inline: var(--margin);
+  border-bottom: 1px solid var(--line);
+  box-sizing: border-box;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.brandMark {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: var(--signal);
+}
+
+.links {
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.link {
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.link:hover .index {
+  color: var(--ink);
+}
+
+.index {
+  color: var(--muted);
+  transition: color 0.2s var(--ease-ui);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ledBooked {
+  background: #e0a526;
+  box-shadow: 0 0 0 3px rgba(224, 165, 38, 0.22);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-ui);
+}
+
+.toggle:hover {
+  border-color: var(--line-strong);
+}
+
+.phone {
+  display: none;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Phone nav (HeroComboMobile.html): name + LED + Menu. */
+@media (max-width: 1023.98px) {
+  .inner {
+    margin-inline: 16px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .brandMark {
+    width: 9px;
+    height: 9px;
+  }
+  .links,
+  .meta {
+    display: none;
+  }
+  .phone {
+    display: flex;
+  }
+}
