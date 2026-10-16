@@ -22,7 +22,7 @@ export function GET() {
     "",
     ...about.bio,
     "",
-    `More: ${abs("/about")} · plain text: curl ${site.domain}`,
+    `More: ${abs("/about")} · plain text: curl -L ${site.domain}`,
     "",
     "## How the work is done",
     "",

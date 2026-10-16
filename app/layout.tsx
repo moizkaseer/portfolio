@@ -9,7 +9,7 @@ import { CommandPaletteLauncher } from "@/components/palette/CommandPaletteLaunc
 import { site } from "@/lib/content/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { agentConfigured } from "@/lib/server/agent-model";
-import { siteUrl } from "@/lib/seo";
+import { pageMetadata, siteUrl } from "@/lib/seo";
 import { AskBar } from "@/components/home/AskBar";
 import { Deferred } from "@/components/Deferred";
 import "./globals.css";
@@ -46,10 +46,7 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: { default: `${site.name} — ${site.positioning}`, template: `%s — ${site.name}` },
-  description: site.summary,
-  alternates: { canonical: "/" },
-  openGraph: { type: "website", siteName: site.name, title: `${site.name} — ${site.positioning}`, description: site.summary },
-  twitter: { card: "summary_large_image" },
+  ...pageMetadata({ description: `${site.summary} Based in ${site.city}, North Macedonia; working remotely.`, path: "/" }),
 };
 
 export const viewport: Viewport = {
@@ -72,7 +69,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* for developers who open the console (brief C4); inline, so it isn't in the JS budget */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `console.info("%c■ ${site.name.replace(/["\\]/g, "")}%c — this site has a terminal version:  curl ${site.domain.replace(/["\\]/g, "")}", "color:#FF4F1A;font-weight:600", "color:inherit");`,
+            __html: `console.info("%c■ ${site.name.replace(/["\\]/g, "")}%c — this site has a terminal version:  curl -L ${site.domain.replace(/["\\]/g, "")}", "color:#FF4F1A;font-weight:600", "color:inherit");`,
           }}
         />
       </head>

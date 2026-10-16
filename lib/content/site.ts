@@ -24,3 +24,6 @@ const SiteSchema = z.object({
 export type Site = z.infer<typeof SiteSchema>;
 
 export const site: Site = SiteSchema.parse(raw);
+
+/** The advertised terminal command. -L: the host redirects http → https, and curl doesn't follow redirects by default. */
+export const curlCommand = (path = "") => `curl -L ${site.domain}${path}`;

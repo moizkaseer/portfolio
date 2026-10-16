@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { site } from "@/lib/content/site";
+import { curlCommand, site } from "@/lib/content/site";
 import { Deferred } from "@/components/Deferred";
 import styles from "./Footer.module.css";
 
@@ -50,7 +50,7 @@ export function Footer() {
           ))}
         </span>
         <span>
-          Try <span className={styles.curl}>curl {site.domain}</span>
+          Try <span className={styles.curl}>{curlCommand()}</span>
         </span>
         <span>Built with a few agents helping</span>
       </div>
