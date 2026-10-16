@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chosen hero on a phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400..600&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="{{vars}} --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; position: relative; width: 390px; height: 1970px; overflow: hidden; background: var(--paper); color: var(--ink); font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased">
+
+<header style="position: absolute; left: 16px; right: 16px; top: 0; height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line)">
+<a href="#" style="display: flex; align-items: center; gap: 8px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: -0.01em"><span aria-hidden="true" style="width: 9px; height: 9px; background: var(--signal)"></span>[YOUR NAME]</a>
+<div style="display: flex; align-items: center; gap: 12px">
+<span aria-label="Available for projects" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px var(--okRing)"></span>
+<button type="button" aria-label="Open menu" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; background: transparent; color: var(--ink); border: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer">Menu<span aria-hidden="true" style="display: flex; flex-direction: column; gap: 4px"><span style="width: 14px; height: 1px; background: var(--ink)"></span><span style="width: 14px; height: 1px; background: var(--ink)"></span></span></button>
+</div>
+</header>
+
+<div style="position: absolute; left: 16px; right: 16px; top: 68px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span>AI agents &amp; automation</span>
+<span><span style="color: var(--ink)">Online</span> · [CITY] 19:42</span>
+</div>
+
+<svg aria-hidden="true" width="390" height="1970" viewBox="0 0 390 1970" style="position: absolute; left: 0; top: 0">
+<g style="stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 5">
+<path d="M44 110 V430"></path>
+<path d="M72 110 V430"></path>
+<path d="M100 110 V430"></path>
+<path d="M128 110 V430"></path>
+</g>
+<path d="M0 155 H17" style="fill: none; stroke: var(--ink); stroke-width: 1.5"></path>
+<path d="M22 160 V233 H45" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{seg0}}"></path>
+<path d="M50 238 V311 H73" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{seg1}}"></path>
+<path d="M78 316 V389 H101" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{seg2}}"></path>
+<path d="M106 394 V446 H377" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{segOut}}"></path>
+<path d="M382 451 V1283 H374" style="fill: none; stroke-width: 1.5; transition: stroke 0.5s; stroke: {{segRail}}"></path>
+<rect x="17" y="150" width="10" height="10" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n0}}"></rect>
+<rect x="45" y="228" width="10" height="10" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n1}}"></rect>
+<rect x="73" y="306" width="10" height="10" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n2}}"></rect>
+<rect x="101" y="384" width="10" height="10" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n3}}"></rect>
+<rect x="377" y="441" width="10" height="10" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{nOut}}"></rect>
+<text x="368" y="434" style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 9px; letter-spacing: 0.06em; text-anchor: end; fill: var(--muted)">SHIPPED · YOURS ↓</text>
+</svg>
+<span aria-hidden="true" style="position: absolute; z-index: 3; width: 8px; height: 8px; background: var(--signal); box-shadow: 0 0 0 3px var(--signalSoft); {{packetStyle}}"></span>
+
+<h1 style="margin: 0; font-weight: 600; font-size: 50px; letter-spacing: -0.05em; line-height: 1">
+<span style="position: absolute; left: 44px; top: 128px; white-space: nowrap; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w0.style}}"><span style="position: absolute; left: 2px; top: -12px; font-family: var(--mono); font-size: 9px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">01 TRIGGER · {{w0.status}}</span>I build</span>
+<span style="position: absolute; left: 72px; top: 206px; white-space: nowrap; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w1.style}}"><span style="position: absolute; left: 2px; top: -12px; font-family: var(--mono); font-size: 9px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">02 PLAN · {{w1.status}}</span>agents</span>
+<span style="position: absolute; left: 100px; top: 284px; white-space: nowrap; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w2.style}}"><span style="position: absolute; left: 2px; top: -12px; font-family: var(--mono); font-size: 9px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">03 ACT · {{w2.status}}</span>that do</span>
+<em style="position: absolute; left: 128px; top: 356px; white-space: nowrap; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 58px; letter-spacing: -0.025em; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w3.style}}"><span style="position: absolute; left: 3px; top: 0px; font-family: var(--mono); font-style: normal; font-size: 9px; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">04 SHIP · {{w3.status}}</span>the work.</em>
+</h1>
+
+<div style="position: absolute; left: 16px; top: 470px; width: 350px; border: 1px solid var(--line); background: var(--paper2); font-family: var(--mono)">
+<div style="display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span style="display: flex; align-items: center; gap: 7px; color: var(--ink)"><span aria-hidden="true" style="width: 6px; height: 6px; background: var(--signal)"></span>Live run · demo</span>
+<span>{{stepLabel}}</span>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: flex-end; height: 132px; overflow: hidden; padding: 4px 0">
+<sc-for list="{{logTail}}" as="line" hint-placeholder-count="3">
+<div style="display: grid; grid-template-columns: 74px 46px minmax(0, 1fr); gap: 8px; padding: 5px 12px; font-size: 10.5px; line-height: 1.45; {{line.rowStyle}}"><span style="color: var(--muted)">{{line.short}}</span><span>{{line.step}}</span><span>{{line.text}}</span></div>
+</sc-for>
+</div>
+</div>
+
+<p style="position: absolute; left: 16px; top: 656px; width: 350px; margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink2)">I design, build and run AI agents and automations for teams that are done doing the same work twice.</p>
+<div style="position: absolute; left: 16px; top: 748px; width: 350px; display: flex; flex-direction: column; gap: 10px">
+<a href="#" style="display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 18px; background: var(--ink); color: var(--paper); text-decoration: none; font-size: 15px; font-weight: 500">Start a project <span aria-hidden="true">→</span></a>
+<a href="#" style="display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 18px; border: 1px solid var(--lineStrong); color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500">Try it on your task <span aria-hidden="true">↓</span></a>
+</div>
+<dl style="position: absolute; left: 16px; top: 884px; width: 350px; margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase">
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line)"><dt style="color: var(--muted)">Agents in production</dt><dd style="margin: 0">[N]</dd></div>
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)"><dt style="color: var(--muted)">Hours automated / yr</dt><dd style="margin: 0">[N]</dd></div>
+</dl>
+
+<section aria-labelledby="yours-h-m">
+<div style="position: absolute; left: 16px; width: 350px; top: 1004px; display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase">
+<span>02 — Your turn</span>
+<span style="color: var(--muted)">Try it</span>
+</div>
+<p style="position: absolute; left: 16px; top: 1040px; margin: 0; font-family: var(--serif); font-style: italic; font-size: 24px; letter-spacing: -0.01em; color: var(--ink2)">That was one of mine. Now yours.</p>
+<h2 id="yours-h-m" style="position: absolute; left: 16px; top: 1080px; margin: 0; font-size: 52px; font-weight: 600; letter-spacing: -0.05em; line-height: 0.92"><span style="display: block">What should</span><em style="display: block; font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; font-size: 1.08em">run itself?</em></h2>
+
+<div style="position: absolute; left: 16px; right: 16px; top: 1220px; display: flex; align-items: center; gap: 10px; height: 64px; box-sizing: border-box; border-bottom: 2px solid; transition: border-color 0.6s; {{underline}}">
+<span aria-hidden="true" style="font-family: var(--mono); font-size: 22px; transition: color 0.4s; {{chevron}}">›</span>
+<label for="task-input-m" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Describe a task you want automated</label>
+<input id="task-input-m" type="text" value="{{typed}}" onChange="{{onType}}" onKeyDown="{{onKey}}" onFocus="{{onFocus}}" placeholder="Describe a task…" autocomplete="off" style="flex: 1; min-width: 0; height: 44px; background: transparent; border: 0; outline: none; color: var(--ink); caret-color: var(--signal); font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 20px; letter-spacing: -0.015em">
+<button type="button" aria-label="Generate" onClick="{{onGenerate}}" style="flex: none; width: 44px; height: 44px; background: var(--ink); color: var(--paper); border: 0; font-family: var(--mono); font-size: 16px; cursor: pointer">↵</button>
+</div>
+<div style="position: absolute; left: 0; right: 0; top: 1298px; display: flex; gap: 8px; padding: 0 16px; overflow-x: auto; white-space: nowrap">
+<sc-for list="{{chips}}" as="chip" hint-placeholder-count="4">
+<button type="button" onClick="{{chip.pick}}" style="flex: none; min-height: 44px; padding: 0 12px; background: transparent; color: var(--ink); border: 1px solid var(--lineStrong); font-family: var(--mono); font-size: 11px; cursor: pointer; {{chip.style}}">{{chip.label}}</button>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 16px; width: 358px; top: 1360px; display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span style="display: flex; align-items: center; gap: 7px; color: var(--ink)"><span aria-hidden="true" style="width: 6px; height: 6px; background: var(--signal)"></span>{{statusShort}}</span>
+<span>{{summaryShort}}</span>
+</div>
+<div style="position: absolute; left: 16px; width: 358px; top: 1400px; display: flex; flex-direction: column">
+<sc-for list="{{nodes}}" as="n" hint-placeholder-count="5">
+<sc-if value="{{n.hasLink}}" hint-placeholder-val="{{true}}">
+<span aria-hidden="true" style="position: relative; display: block; width: 1.5px; height: 16px; margin-left: 18px; background: var(--ink); transform-origin: center top; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); {{n.linkStyle}}"><span style="position: absolute; left: -2.25px; width: 6px; height: 6px; background: var(--signal); transition: opacity 0.2s; {{n.packetStyle}}"></span></span>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 8px; min-height: 64px; box-sizing: border-box; padding: 12px 14px; background: var(--paper2); transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s; {{n.boxStyle}}">
+<span style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted)"><span style="display: flex; align-items: center; gap: 7px"><span aria-hidden="true" style="width: 8px; height: 8px; {{n.markStyle}}"></span>{{n.kind}}</span><span>0{{n.num}}</span></span>
+<span style="font-size: 17px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.2">{{n.title}}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 16px; width: 358px; top: 1828px; display: flex; flex-direction: column; gap: 6px">
+<a href="#" style="display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 18px; background: var(--ink); color: var(--paper); text-decoration: none; font-size: 15px; font-weight: 500">Build this with me <span aria-hidden="true">→</span></a>
+<a href="#" style="display: flex; align-items: center; justify-content: center; min-height: 44px; color: var(--ink); font-size: 15px; font-weight: 500; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px">See real runs</a>
+</div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["night","day"],"default":"night"},"accent":{"editor":"color","options":["#FF4F1A","#2F5BFF","#C6F03A","#FF3B7F"],"default":"#FF4F1A"},"$preview":{"width":390,"height":1970}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.alive = true;
+    this.templates = [
+      { chip: 'Invoices → ledger', prompt: 'Reconcile invoices from Gmail into our accounting tool',
+        nodes: [['Trigger', 'Invoice email arrives'], ['Model', 'Extract the fields'], ['Code', 'Match to purchase orders'], ['Human', 'Check if unsure'], ['Tool', 'Post to the ledger']] },
+      { chip: 'Refund emails', prompt: 'Answer refund emails and escalate the angry ones',
+        nodes: [['Trigger', 'Support inbox'], ['Model', 'Read intent and mood'], ['Tool', 'Look up the order'], ['Model', 'Draft the reply'], ['Human', 'Escalate if upset']] },
+      { chip: 'Monday KPI report', prompt: 'Every Monday, send a KPI summary to Slack',
+        nodes: [['Schedule', 'Monday 09:00'], ['Tool', 'Pull the metrics'], ['Model', 'Write the summary'], ['Code', 'Sanity-check numbers'], ['Tool', 'Post to #ops']] },
+      { chip: 'Lead research', prompt: 'Research new leads and add them to the CRM',
+        nodes: [['Trigger', 'New form lead'], ['Tool', 'Search the company'], ['Model', 'Score the fit'], ['Tool', 'Enrich the CRM record'], ['Tool', 'Notify sales']] }
+    ];
+    this.generic = { nodes: [['Trigger', 'When it happens'], ['Model', 'Understand the input'], ['Code', 'Apply your rules'], ['Tool', 'Do the work'], ['Human', 'Approve the result']] };
+    this.reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (this.reduce) {
+      this.setState({ step: 10, jump: true, mode: 'user', tpl: 0, typed: this.templates[0].prompt, revealed: 5, active: -1, phase: 'done' });
+      return;
+    }
+    this.setState({ step: 0, jump: true, mode: 'auto', tpl: -1, typed: '', revealed: 0, active: -1, phase: 'idle', nextTpl: 0 }, () => this.circuit());
+  }
+  componentWillUnmount() {
+    this.alive = false;
+    clearTimeout(this.cTimer);
+    clearTimeout(this.pTimer);
+  }
+  cLater(ms, fn) { clearTimeout(this.cTimer); this.cTimer = setTimeout(() => { if (this.alive) fn(); }, ms); }
+  pLater(ms, fn) { clearTimeout(this.pTimer); this.pTimer = setTimeout(() => { if (this.alive) fn(); }, ms); }
+  circuit() {
+    const s = this.state.step;
+    const holds = [1400, 480, 1400, 480, 1400, 480, 1400, 620, 900, 900, 1100];
+    if (s < 10) {
+      this.cLater(holds[s], () => this.setState({ step: s + 1, jump: false }, () => this.circuit()));
+      return;
+    }
+    if (this.state.mode === 'auto') {
+      const next = this.state.nextTpl || 0;
+      this.setState({ tpl: next, typed: '', revealed: 0, active: -1, phase: 'typing' }, () => this.prompt());
+    } else {
+      this.cLater(2400, () => this.setState({ step: 0, jump: true }, () => this.circuit()));
+    }
+  }
+  prompt() {
+    const s = this.state;
+    if (s.mode !== 'auto') return;
+    const target = this.templates[s.tpl].prompt;
+    if (s.phase === 'typing') {
+      if (s.typed.length < target.length) this.pLater(34 + (s.typed.length % 5) * 9, () => this.setState({ typed: target.slice(0, s.typed.length + 1) }, () => this.prompt()));
+      else this.pLater(420, () => this.setState({ phase: 'building', revealed: 0 }, () => this.prompt()));
+    } else if (s.phase === 'building') {
+      if (s.revealed < 5) this.pLater(240, () => this.setState({ revealed: s.revealed + 1 }, () => this.prompt()));
+      else this.pLater(200, () => this.setState({ phase: 'running', active: 0 }, () => this.prompt()));
+    } else if (s.phase === 'running') {
+      if (s.active < 4) this.pLater(520, () => this.setState({ active: s.active + 1 }, () => this.prompt()));
+      else this.pLater(2200, () => this.setState({ phase: 'erasing', active: -1 }, () => this.prompt()));
+    } else if (s.phase === 'erasing') {
+      if (s.typed.length > 0) this.pLater(12, () => this.setState({ typed: s.typed.slice(0, -2), revealed: Math.min(s.revealed, Math.ceil(s.typed.length / 12)) }, () => this.prompt()));
+      else this.pLater(200, () => this.setState({ phase: 'idle', tpl: -1, revealed: 0, nextTpl: (s.tpl + 1) % this.templates.length, step: 0, jump: true }, () => this.circuit()));
+    }
+  }
+  matchTemplate(text) {
+    const q = (text || '').toLowerCase();
+    if (/invoice|receipt|bill|accounting|ledger|xero|quickbooks/.test(q)) return 0;
+    if (/refund|support|ticket|reply|customer|complain|inbox/.test(q)) return 1;
+    if (/report|kpi|weekly|monday|summary|metric|dashboard/.test(q)) return 2;
+    if (/lead|crm|sales|prospect|hubspot|salesforce/.test(q)) return 3;
+    return -2;
+  }
+  takeOver() {
+    clearTimeout(this.pTimer);
+    if (this.state.step >= 10) this.cLater(1600, () => this.setState({ step: 0, jump: true }, () => this.circuit()));
+  }
+  runUser(text, idx) {
+    this.takeOver();
+    const tpl = typeof idx === 'number' ? idx : this.matchTemplate(text);
+    this.setState({ mode: 'user', typed: text, tpl: tpl, revealed: 0, active: -1, phase: 'building' }, () => this.userBuild());
+  }
+  userBuild() {
+    const s = this.state;
+    if (s.phase === 'building') {
+      if (s.revealed < 5) this.pLater(200, () => this.setState({ revealed: s.revealed + 1 }, () => this.userBuild()));
+      else this.pLater(160, () => this.setState({ phase: 'running', active: 0 }, () => this.userBuild()));
+    } else if (s.phase === 'running') {
+      if (s.active < 4) this.pLater(480, () => this.setState({ active: s.active + 1 }, () => this.userBuild()));
+      else this.pLater(600, () => this.setState({ phase: 'done', active: -1 }));
+    }
+  }
+  renderVals() {
+    const night = (this.props.theme ?? 'night') === 'night';
+    const accent = this.props.accent ?? '#FF4F1A';
+    const t = night ? {
+      paper: '#0C0C0B', paper2: '#141413', ink: '#ECE9E2', ink2: '#B5B2AA', muted: '#8C8980',
+      line: 'rgba(236, 233, 226, 0.12)', lineStrong: 'rgba(236, 233, 226, 0.28)', ok: '#3DBA6F', okRing: 'rgba(61, 186, 111, 0.22)'
+    } : {
+      paper: '#EDEAE3', paper2: '#E5E1D8', ink: '#0E0E0C', ink2: '#3B3A36', muted: '#6A675F',
+      line: 'rgba(14, 14, 12, 0.14)', lineStrong: 'rgba(14, 14, 12, 0.30)', ok: '#2E9B5A', okRing: 'rgba(46, 155, 90, 0.20)'
+    };
+    const vars = Object.keys(t).map((k) => '--' + k + ': ' + t[k] + ';').join(' ') + ' --signal: ' + accent + '; --signalSoft: ' + accent + '33;';
+    const s = this.state || {};
+    const step = typeof s.step === 'number' ? s.step : 10;
+    const jump = s.jump !== false;
+
+    const word = (i) => {
+      const done = 2 * i < step;
+      const active = 2 * i === step;
+      return {
+        status: done ? 'done' : (active ? 'running' : 'queued'),
+        style: (done || active) ? 'color: var(--ink); -webkit-text-stroke: 0px transparent;' : 'color: transparent; -webkit-text-stroke: 1px var(--lineStrong);'
+      };
+    };
+    const node = (i) => {
+      if (2 * i < step) return 'fill: var(--ink); stroke: var(--ink);';
+      if (2 * i === step) return 'fill: var(--signal); stroke: var(--signal);';
+      return 'fill: var(--paper); stroke: var(--lineStrong);';
+    };
+    const seg = (i) => (step > 2 * i ? 'var(--ink)' : 'var(--lineStrong)');
+
+    const P = [[22, 155], [22, 233], [50, 233], [50, 311], [78, 311], [78, 389], [106, 389], [106, 446], [382, 446], [382, 1283], [26, 1283]];
+    const D = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.45, 0.8, 0.85, 1.05];
+    const p = P[Math.min(step, 10)];
+    const d = D[Math.min(step, 10)];
+    const ease = 'cubic-bezier(0.65, 0, 0.35, 1)';
+    const packetStyle = 'left: ' + (p[0] - 4) + 'px; top: ' + (p[1] - 4) + 'px; transition: ' + (jump ? 'none' : 'left ' + d + 's ' + ease + ', top ' + d + 's ' + ease) + ';';
+
+    const lines = [
+      { at: 0, short: '14:02:11.0', step: 'trigger', text: 'request · "Reconcile March invoices"' },
+      { at: 2, short: '14:02:11.6', step: 'plan', text: '3 steps · 2 tools · 1 check' },
+      { at: 4, short: '14:02:13.9', step: 'act', text: 'sheets → ledger · 41 rows matched' },
+      { at: 6, short: '14:02:19.2', step: 'ship', text: 'verified · report sent to #finance' },
+      { at: 8, short: '14:02:19.3', step: 'done', text: '8.2s · 0 errors · next run: yours ↓' }
+    ];
+    const visible = lines.filter((l) => l.at <= step);
+    const tail = visible.slice(-3);
+    const logTail = tail.map((l, i) => ({
+      short: l.short, step: l.step, text: l.text,
+      rowStyle: i === tail.length - 1 ? 'background: var(--signalSoft); box-shadow: inset 2px 0 0 var(--signal); color: var(--ink);' : 'color: var(--ink2);'
+    }));
+    const stepLabel = step >= 8 ? 'done · 8.2s' : 'step ' + (Math.floor(step / 2) + 1) + ' / 4';
+
+    const templates = this.templates || [];
+    const tplIdx = typeof s.tpl === 'number' ? s.tpl : 0;
+    let src;
+    if (tplIdx >= 0 && templates[tplIdx]) src = templates[tplIdx].nodes;
+    else if (tplIdx === -2 && this.generic) src = this.generic.nodes;
+    else src = templates.length ? templates[(s.nextTpl || 0)].nodes : [['Trigger', 'Invoice email arrives'], ['Model', 'Extract the fields'], ['Code', 'Match to purchase orders'], ['Human', 'Check if unsure'], ['Tool', 'Post to the ledger']];
+    const revealed = typeof s.revealed === 'number' ? s.revealed : 5;
+    const active = typeof s.active === 'number' ? s.active : -1;
+    const phase = s.phase || 'done';
+    const nodes = src.map((n, i) => {
+      const shown = i < revealed;
+      const isActive = i === active;
+      const isDone = active > i || phase === 'done';
+      const kind = n[0];
+      let mark = 'background: var(--ink);';
+      if (kind === 'Human') mark = 'border: 1px solid var(--ink); box-sizing: border-box;';
+      if (kind === 'Model') mark = 'background: var(--ink); border-radius: 50%;';
+      if (kind === 'Trigger' || kind === 'Schedule') mark = 'background: var(--ink); transform: rotate(45deg) scale(0.8);';
+      if (isActive) mark += ' background: var(--signal);';
+      let box = shown ? 'opacity: 1; transform: translateY(0);' : 'opacity: 0.12; transform: translateY(10px);';
+      box += isActive ? ' border: 1.5px solid var(--signal); box-shadow: 0 0 0 4px var(--signalSoft);' : (isDone && shown ? ' border: 1px solid var(--ink);' : ' border: 1px solid var(--lineStrong);');
+      if (kind === 'Human' && !isActive) box += ' border-style: dashed;';
+      const linkShown = i > 0 && i < revealed;
+      return {
+        num: i + 1, kind: kind, title: n[1], hasLink: i > 0,
+        boxStyle: box, markStyle: mark,
+        linkStyle: linkShown ? 'transform: scaleY(1);' : 'transform: scaleY(0);',
+        packetStyle: (active === i && i > 0) ? 'top: calc(100% - 6px); opacity: 1;' : 'top: 0; opacity: 0;'
+      };
+    });
+    const models = src.filter((n) => n[0] === 'Model').length;
+    const humans = src.filter((n) => n[0] === 'Human').length;
+    let statusShort = 'Waiting for your task';
+    if (phase === 'typing') statusShort = 'Listening';
+    if (phase === 'building') statusShort = 'Designing · ' + Math.min(revealed, 5) + ' / 5';
+    if (phase === 'running') statusShort = 'Test run · ' + (active + 1) + ' / 5';
+    if (phase === 'done') statusShort = 'Ready to build';
+    if (phase === 'erasing') statusShort = 'Next example';
+    const summaryShort = (phase === 'idle' && revealed === 0) ? '—' : '5 steps · ' + humans + (humans === 1 ? ' human check' : ' human checks');
+    const chips = templates.map((tp, i) => ({
+      label: tp.chip,
+      style: i === tplIdx ? 'border-color: var(--ink); background: var(--paper2);' : '',
+      pick: () => this.runUser(tp.prompt, i)
+    }));
+    const lit = step >= 10 || phase === 'typing' || phase === 'building' || phase === 'running' || s.mode === 'user';
+
+    return {
+      vars: vars,
+      w0: word(0), w1: word(1), w2: word(2), w3: word(3),
+      n0: node(0), n1: node(1), n2: node(2), n3: node(3),
+      nOut: step >= 8 ? 'fill: var(--signal); stroke: var(--signal);' : 'fill: var(--paper); stroke: var(--lineStrong);',
+      seg0: seg(0), seg1: seg(1), seg2: seg(2),
+      segOut: step >= 7 ? 'var(--ink)' : 'var(--lineStrong)',
+      segRail: step >= 9 ? 'var(--ink)' : 'var(--lineStrong)',
+      underline: lit ? 'border-color: var(--ink);' : 'border-color: var(--lineStrong);',
+      chevron: lit ? 'color: var(--signal);' : 'color: var(--muted);',
+      packetStyle: packetStyle,
+      logTail: logTail,
+      stepLabel: stepLabel,
+      typed: typeof s.typed === 'string' ? s.typed : 'Reconcile invoices from Gmail into our accounting tool',
+      nodes: nodes,
+      chips: chips,
+      statusShort: statusShort,
+      summaryShort: summaryShort,
+      onType: (e) => { this.takeOver(); this.setState({ mode: 'user', typed: e.target.value, phase: 'idle', active: -1 }); },
+      onFocus: () => { if (this.state && this.state.mode === 'auto') { this.takeOver(); this.setState({ mode: 'user', phase: this.state.revealed ? 'done' : 'idle', active: -1 }); } },
+      onKey: (e) => { if (e.key === 'Enter') this.runUser(e.target.value); },
+      onGenerate: () => this.runUser((this.state && this.state.typed) || '')
+    };
+  }
+}
+</script>
+</body>
+</html>

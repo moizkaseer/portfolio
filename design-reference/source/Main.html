@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400..600&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="{{vars}} --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; width: 100%; box-sizing: border-box; background: var(--paper); color: var(--ink); font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; padding: 0 clamp(16px, 4.4vw, 64px); -webkit-font-smoothing: antialiased">
+
+<header style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 32px; min-height: 64px; border-bottom: 1px solid var(--line)">
+<a href="#" style="display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: -0.01em"><span aria-hidden="true" style="display: inline-block; width: 10px; height: 10px; background: var(--signal)"></span>[YOUR NAME]</a>
+<nav aria-label="Primary" style="display: flex; flex-wrap: wrap; gap: 28px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase">
+<a href="#" style="color: var(--ink); text-decoration: none"><span style="color: var(--muted)">01</span> Work</a>
+<a href="#" style="color: var(--ink); text-decoration: none"><span style="color: var(--muted)">02</span> Agent</a>
+<a href="#" style="color: var(--ink); text-decoration: none"><span style="color: var(--muted)">03</span> About</a>
+<a href="#" style="color: var(--ink); text-decoration: none"><span style="color: var(--muted)">04</span> Contact</a>
+</nav>
+<div style="display: flex; align-items: center; gap: 20px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase">
+<span style="color: var(--muted)">[CITY] 19:42</span>
+<span style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px var(--okRing)"></span>Available for projects</span>
+<button type="button" aria-label="Switch theme" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; background: transparent; color: var(--ink); border: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" style="fill: none; stroke: var(--ink)"></circle><path d="M6 1 A5 5 0 0 1 6 11 Z" style="fill: var(--ink)"></path></svg>{{themeLabel}} shift</button>
+</div>
+</header>
+
+<section aria-label="Intro">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; padding: 18px 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span>01 — Index</span>
+<span>AI agents &amp; automation</span>
+<span>[CITY] · UTC+02:00</span>
+<span style="text-align: right"><span style="color: var(--ink)">System online</span> · 19 nodes · 1 run in flight</span>
+</div>
+
+<div style="position: relative; width: 100%; aspect-ratio: 1440 / 420">
+<svg aria-hidden="true" viewBox="0 0 1440 420" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible">
+<g style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; fill: var(--muted)">
+<text x="86" y="16">TRIGGER</text>
+<text x="266" y="16">PARSE</text>
+<text x="446" y="16">UNDERSTAND</text>
+<text x="626" y="16">PLAN</text>
+<text x="806" y="16">ACT</text>
+<text x="986" y="16">VERIFY</text>
+<text x="1166" y="16">APPROVE</text>
+<text x="1346" y="16">SHIP</text>
+</g>
+<g style="fill: none; stroke: var(--lineStrong); stroke-width: 1">
+<path d="M94 210 C184 210 176 150 266 150"></path>
+<path d="M94 210 C184 210 176 290 266 290"></path>
+<path d="M94 330 C184 330 176 290 266 290"></path>
+<path d="M274 150 C364 150 356 230 446 230"></path>
+<path d="M274 290 C364 290 356 230 446 230"></path>
+<path d="M274 290 C364 290 356 350 446 350"></path>
+<path d="M454 230 C544 230 536 180 626 180"></path>
+<path d="M454 350 C544 350 536 180 626 180"></path>
+<path d="M454 350 C544 350 536 320 626 320"></path>
+<path d="M454 230 C544 230 536 320 626 320"></path>
+<path d="M634 180 C724 180 716 170 806 170"></path>
+<path d="M634 180 C724 180 716 270 806 270"></path>
+<path d="M634 320 C724 320 716 270 806 270"></path>
+<path d="M634 320 C724 320 716 370 806 370"></path>
+<path d="M814 170 C904 170 896 140 986 140"></path>
+<path d="M814 270 C904 270 896 140 986 140"></path>
+<path d="M814 270 C904 270 896 300 986 300"></path>
+<path d="M814 370 C904 370 896 300 986 300"></path>
+<path d="M994 300 C1084 300 1076 220 1166 220"></path>
+<path d="M994 300 L1346 300"></path>
+<path d="M994 140 C1170 140 1170 160 1346 160"></path>
+<path d="M1174 220 C1264 220 1256 300 1346 300"></path>
+</g>
+<g style="fill: none; stroke: var(--ink); stroke-width: 1.5">
+<path d="M94 90 C184 90 176 150 266 150"></path>
+<path d="M274 150 C364 150 356 110 446 110"></path>
+<path d="M454 110 C544 110 536 180 626 180"></path>
+<path d="M634 180 C724 180 716 70 806 70"></path>
+<path d="M814 70 C904 70 896 140 986 140"></path>
+</g>
+<g style="fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 3 5">
+<path d="M994 140 C1084 140 1076 220 1166 220"></path>
+<path d="M1174 220 C1264 220 1256 160 1346 160"></path>
+</g>
+<g style="fill: var(--signal)">
+<rect x="177" y="117" width="6" height="6"></rect>
+<rect x="163" y="113" width="4" height="4" style="opacity: 0.45"></rect>
+<rect x="717" y="122" width="6" height="6"></rect>
+<rect x="703" y="117" width="4" height="4" style="opacity: 0.45"></rect>
+<rect x="944" y="111" width="6" height="6"></rect>
+<rect x="930" y="103" width="4" height="4" style="opacity: 0.45"></rect>
+<rect x="897" y="282" width="5" height="5" style="opacity: 0.55"></rect>
+</g>
+<g style="fill: var(--ink); stroke: var(--ink); stroke-width: 1.5">
+<rect x="86" y="86" width="8" height="8"></rect>
+<rect x="266" y="146" width="8" height="8"></rect>
+<rect x="446" y="106" width="8" height="8"></rect>
+<rect x="626" y="176" width="8" height="8"></rect>
+<rect x="806" y="66" width="8" height="8"></rect>
+</g>
+<g style="fill: var(--paper); stroke: var(--ink); stroke-width: 1.5">
+<rect x="1166" y="216" width="8" height="8"></rect>
+<rect x="1346" y="156" width="8" height="8"></rect>
+</g>
+<g style="fill: var(--paper); stroke: var(--muted); stroke-width: 1.25">
+<rect x="86" y="206" width="8" height="8"></rect>
+<rect x="86" y="326" width="8" height="8"></rect>
+<rect x="266" y="286" width="8" height="8"></rect>
+<rect x="446" y="226" width="8" height="8"></rect>
+<rect x="446" y="346" width="8" height="8"></rect>
+<rect x="626" y="316" width="8" height="8"></rect>
+<rect x="806" y="166" width="8" height="8"></rect>
+<rect x="806" y="266" width="8" height="8"></rect>
+<rect x="806" y="366" width="8" height="8"></rect>
+<rect x="986" y="296" width="8" height="8"></rect>
+</g>
+<rect x="981" y="131" width="18" height="18" style="fill: none; stroke: var(--signal); stroke-width: 1.5"></rect>
+<rect x="985" y="135" width="10" height="10" style="fill: var(--signal)"></rect>
+<rect x="1341" y="291" width="18" height="18" style="fill: var(--paper); stroke: var(--ink); stroke-width: 1.5"></rect>
+<rect x="1346" y="296" width="8" height="8" style="fill: var(--ink)"></rect>
+<g style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.02em; fill: var(--ink)">
+<text x="100" y="82">trigger:email</text>
+<text x="100" y="202" style="fill: var(--muted)">trigger:form</text>
+<text x="100" y="322" style="fill: var(--muted)">trigger:cron</text>
+<text x="280" y="142">parse</text>
+<text x="280" y="282" style="fill: var(--muted)">dedupe</text>
+<text x="460" y="102">classify</text>
+<text x="460" y="222" style="fill: var(--muted)">retrieve</text>
+<text x="460" y="342" style="fill: var(--muted)">memory</text>
+<text x="640" y="172">plan</text>
+<text x="640" y="312" style="fill: var(--muted)">guardrails</text>
+<text x="820" y="62">tool:crm</text>
+<text x="820" y="162" style="fill: var(--muted)">tool:sheets</text>
+<text x="820" y="262" style="fill: var(--muted)">tool:gmail</text>
+<text x="820" y="362" style="fill: var(--muted)">tool:slack</text>
+<text x="1006" y="126">verify <tspan style="fill: var(--muted)">· running</tspan></text>
+<text x="1000" y="292" style="fill: var(--muted)">eval</text>
+<text x="1180" y="212">human-in-loop</text>
+<text x="1360" y="152">ship</text>
+<text x="1366" y="286">log</text>
+</g>
+</svg>
+<div style="position: absolute; right: calc(6.25% + 14px); top: 59.5%; width: 248px; box-sizing: border-box; padding: 12px 14px 14px; background: var(--paper); border: 1px solid var(--ink); display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase"><span>log</span><span style="color: var(--muted)">step 08</span></div>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink2)">Every run is written to an audit trail you can replay step by step.</p>
+<a href="#" style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink)">See a trace →</a>
+</div>
+</div>
+
+<h1 style="margin: 28px 0 0; font-size: clamp(56px, 9.6vw, 152px); font-weight: 600; letter-spacing: -0.045em; line-height: 0.9; text-wrap: balance">
+<span style="display: block">I build AI agents</span>
+<span style="display: block">that <em style="font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; font-size: 1.08em">do the work.</em><span aria-hidden="true" style="display: inline-block; width: 0.36em; height: 0.72em; margin-left: 0.06em; background: var(--signal); vertical-align: -0.02em"></span></span>
+</h1>
+
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: end; padding: 40px 0 44px">
+<p style="grid-column: span 5; margin: 0; max-width: 44ch; font-size: 19px; line-height: 1.5; color: var(--ink2); text-wrap: pretty">I design, build and run AI agents and automations for teams that are done doing the same work twice.</p>
+<div style="grid-column: span 3; display: flex; flex-direction: column; align-items: flex-start; gap: 14px">
+<a href="#" style="display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 22px; background: var(--ink); color: var(--paper); text-decoration: none; font-size: 15px; font-weight: 500">Start a project <span aria-hidden="true">→</span></a>
+<a href="#" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ink); font-size: 15px; font-weight: 500; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px">Talk to my agent <span aria-hidden="true">↓</span></a>
+</div>
+<dl style="grid-column: span 4; margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase">
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line)"><dt style="color: var(--muted)">Agents in production</dt><dd style="margin: 0">[N]</dd></div>
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line)"><dt style="color: var(--muted)">Hours automated / yr</dt><dd style="margin: 0">[N]</dd></div>
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)"><dt style="color: var(--muted)">Runs this month</dt><dd style="margin: 0">[N]</dd></div>
+</dl>
+</div>
+</section>
+
+<section aria-labelledby="manifesto-h" style="padding: 88px 0 120px">
+<div style="position: relative; display: flex; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">
+<h2 id="manifesto-h" style="margin: 0; font-size: inherit; font-weight: 400">02 — How I work</h2>
+<span style="color: var(--muted)">02 / 06</span>
+<span aria-hidden="true" style="position: absolute; left: 22%; bottom: -1px; width: 16%; height: 1px; background: var(--ink)"></span>
+<span aria-hidden="true" style="position: absolute; left: 38%; bottom: -3px; width: 6px; height: 6px; background: var(--signal)"></span>
+</div>
+<p style="margin: 64px 0 0; max-width: 24ch; font-size: clamp(36px, 4.7vw, 68px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.04; text-wrap: balance">Agents that fail loudly. Automations with an off&#160;switch. <span style="color: var(--muted)">Systems your team actually <em style="font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em">trusts.</em></span></p>
+</section>
+
+<section aria-labelledby="runs-h" style="padding-bottom: 120px">
+<div style="display: flex; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">
+<h2 id="runs-h" style="margin: 0; font-size: inherit; font-weight: 400">03 — Selected runs</h2>
+<span style="color: var(--muted)">04 runs</span>
+</div>
+<div aria-hidden="true" style="display: grid; grid-template-columns: 112px minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 0.8fr) 200px 56px; gap: 24px; padding: 14px 0; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span>Run</span><span>Project</span><span>Outcome</span><span>Stack</span><span>Status</span><span style="text-align: right">Year</span>
+</div>
+
+<a href="#" style="display: grid; grid-template-columns: 112px minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 0.8fr) 200px 56px; gap: 24px; align-items: center; padding: 30px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none">
+<span style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">RUN #014</span>
+<span style="font-size: 40px; font-weight: 500; letter-spacing: -0.035em; line-height: 1">[Support inbox agent]</span>
+<span style="font-size: 15px; line-height: 1.45; color: var(--ink2)">[One-line outcome with a real number]</span>
+<span style="font-family: var(--mono); font-size: 12px; color: var(--ink2)">[Orchestrator] · [Model] · [CRM]</span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ok)"></span>In production</span>
+<span style="font-family: var(--mono); font-size: 12px; text-align: right">[2026]</span>
+</a>
+
+<a href="#" style="position: relative; display: grid; grid-template-columns: 112px minmax(0, 1fr) 360px; gap: 24px; align-items: start; padding: 28px 20px 28px 20px; margin: 0 -20px; background: var(--paper2); border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none">
+<span style="padding-top: 10px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink)">RUN #011</span>
+<div style="display: flex; flex-direction: column; gap: 18px; min-width: 0">
+<span style="display: flex; align-items: center; gap: 16px; font-size: 52px; font-weight: 500; letter-spacing: -0.04em; line-height: 1"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; background: var(--signal)"></span>[Invoice extraction pipeline]</span>
+<span style="max-width: 52ch; font-size: 16px; line-height: 1.5; color: var(--ink2)">[One-line outcome with a real number — what changed for the people who used to do this by hand.]</span>
+<div aria-hidden="true" style="display: flex; align-items: center; flex-wrap: wrap; gap: 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; background: var(--ink)"></span>trigger</span>
+<span style="width: 44px; height: 1px; margin: 0 10px; background: var(--ink)"></span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; background: var(--ink)"></span>extract</span>
+<span style="position: relative; width: 44px; height: 1px; margin: 0 10px; background: var(--ink)"><span style="position: absolute; left: 18px; top: -3px; width: 6px; height: 6px; background: var(--signal)"></span></span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; background: var(--signal)"></span>validate</span>
+<span style="width: 44px; height: 1px; margin: 0 10px; background: var(--lineStrong)"></span>
+<span style="display: flex; align-items: center; gap: 8px; color: var(--muted)"><span style="width: 6px; height: 6px; border: 1px solid var(--muted)"></span>post to ledger</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; font-family: var(--mono); font-size: 12px; color: var(--ink2)">
+<span>[Orchestrator] · [Model] · [Accounting API]</span>
+<span style="display: flex; align-items: center; gap: 8px; color: var(--ink)"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ok)"></span>In production since [year]</span>
+<span style="color: var(--ink)">Open run report →</span>
+</div>
+</div>
+<div style="position: relative; height: 202px; border: 1px solid var(--lineStrong); background: var(--paper) repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 11px); display: flex; flex-direction: column; justify-content: space-between; padding: 12px; box-sizing: border-box; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase">
+<span style="display: flex; justify-content: space-between; color: var(--ink2)"><span>Loop · muted</span><span>00:07 / 00:15</span></span>
+<span style="align-self: center; color: var(--ink2)">[Screen recording of the system]</span>
+<span style="display: block; height: 2px; background: var(--line)"><span style="display: block; width: 46%; height: 2px; background: var(--ink)"></span></span>
+</div>
+<span aria-hidden="true" style="position: absolute; left: 47%; top: 52px; display: flex; align-items: flex-start; gap: 4px; pointer-events: none">
+<svg width="22" height="24" viewBox="0 0 22 24"><path d="M2 2 L2 19 L7 14.5 L10.5 22 L13.5 20.6 L10 13.2 L17 13 Z" style="fill: var(--signal); stroke: var(--paper); stroke-width: 1.5; stroke-linejoin: round"></path></svg>
+<span style="margin-top: 16px; padding: 3px 7px; background: var(--signal); color: #0E0E0C; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; white-space: nowrap">agent · highlight_project</span>
+</span>
+</a>
+
+<a href="#" style="display: grid; grid-template-columns: 112px minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 0.8fr) 200px 56px; gap: 24px; align-items: center; padding: 30px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none">
+<span style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">RUN #009</span>
+<span style="font-size: 40px; font-weight: 500; letter-spacing: -0.035em; line-height: 1">[Lead research agent]</span>
+<span style="font-size: 15px; line-height: 1.45; color: var(--ink2)">[One-line outcome with a real number]</span>
+<span style="font-family: var(--mono); font-size: 12px; color: var(--ink2)">[Model] · [Search] · [Sheets]</span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ok)"></span>In production</span>
+<span style="font-family: var(--mono); font-size: 12px; text-align: right">[2025]</span>
+</a>
+
+<a href="#" style="display: grid; grid-template-columns: 112px minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 0.8fr) 200px 56px; gap: 24px; align-items: center; padding: 30px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none">
+<span style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--muted)">RUN #006</span>
+<span style="font-size: 40px; font-weight: 500; letter-spacing: -0.035em; line-height: 1">[Weekly ops report]</span>
+<span style="font-size: 15px; line-height: 1.45; color: var(--ink2)">[One-line outcome with a real number]</span>
+<span style="font-family: var(--mono); font-size: 12px; color: var(--ink2)">[Scheduler] · [Model] · [Slack]</span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--ink2)"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--muted); box-sizing: border-box"></span>Handed over</span>
+<span style="font-family: var(--mono); font-size: 12px; text-align: right">[2025]</span>
+</a>
+
+<div style="display: flex; justify-content: flex-end; padding-top: 28px">
+<a href="#" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink)">All runs [n] <span aria-hidden="true">→</span></a>
+</div>
+</section>
+
+<section aria-labelledby="agent-h" style="padding-bottom: 140px">
+<div style="display: flex; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">
+<span>05 — Talk to my agent</span>
+<span style="color: var(--muted)">Live · reads only my case studies</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 48px; padding-top: 56px">
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+<h2 id="agent-h" style="margin: 0; font-size: clamp(36px, 4vw, 58px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance">Ask it about my work. It will <em style="font-family: var(--serif); font-style: italic; font-weight: 400">show</em> you.</h2>
+<p style="margin: 0; max-width: 42ch; font-size: 17px; line-height: 1.55; color: var(--ink2)">It answers from my case studies, shows every tool call it makes, and can take you straight to what you are looking for.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" style="min-height: 44px; padding: 0 16px; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; cursor: pointer">Show me your best project</button>
+<button type="button" style="min-height: 44px; padding: 0 16px; background: transparent; color: var(--ink); border: 1px solid var(--lineStrong); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; cursor: pointer">What do you build?</button>
+<button type="button" style="min-height: 44px; padding: 0 16px; background: transparent; color: var(--ink); border: 1px solid var(--lineStrong); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; cursor: pointer">How do you make agents reliable?</button>
+<button type="button" style="min-height: 44px; padding: 0 16px; background: transparent; color: var(--ink); border: 1px solid var(--lineStrong); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; cursor: pointer">Are you available?</button>
+</div>
+</div>
+<div style="flex: 1.4 1 520px; min-width: 0; background: var(--term); color: var(--termInk); border: 1px solid var(--line)">
+<div style="display: flex; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid rgba(236, 233, 226, 0.12); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--termMuted)">
+<span>Agent · session 3f2a</span>
+<span style="display: flex; align-items: center; gap: 8px; color: var(--termInk)"><span aria-hidden="true" style="width: 7px; height: 7px; background: var(--signal)"></span>Acting on the page</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 18px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.6">
+<div style="align-self: flex-end; padding: 8px 12px; border: 1px solid rgba(236, 233, 226, 0.2)">show me your best project</div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 7px 10px; background: rgba(236, 233, 226, 0.05)"><span style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 6px; height: 6px; background: var(--termInk)"></span>search_projects(sort: "impact")</span><span style="color: var(--termMuted)">142ms · 4 results</span></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 7px 10px; background: rgba(236, 233, 226, 0.05)"><span style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 6px; height: 6px; background: var(--termInk)"></span>ui.scroll_to("work")</span><span style="color: var(--termMuted)">done</span></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 7px 10px; background: rgba(236, 233, 226, 0.05)"><span style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 6px; height: 6px; background: var(--signal)"></span>ui.highlight_project("[slug]")</span><span style="color: var(--termInk)">running</span></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 7px 10px; color: var(--termMuted)"><span style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 6px; height: 6px; border: 1px solid var(--termMuted); box-sizing: border-box"></span>ui.open_project("[slug]")</span><span>queued</span></div>
+<p style="margin: 10px 0 0; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 16px; line-height: 1.55">This is RUN #011, [Invoice extraction pipeline]. I have highlighted it on the page and I am opening the full run report next.<span aria-hidden="true" style="display: inline-block; width: 8px; height: 17px; margin-left: 4px; background: var(--signal); vertical-align: -3px"></span></p>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 18px; border-top: 1px solid rgba(236, 233, 226, 0.12)">
+<label for="ask-agent" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Ask the agent</label>
+<input id="ask-agent" type="text" placeholder="Ask the agent anything…" style="flex: 1; min-width: 0; min-height: 44px; background: transparent; border: 0; color: var(--termInk); font-family: var(--mono); font-size: 13px">
+<button type="button" style="min-height: 44px; padding: 0 16px; background: var(--termInk); color: #0E0E0C; border: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer">Send ↵</button>
+</div>
+</div>
+</div>
+</section>
+
+<footer style="padding-top: 24px; border-top: 1px solid var(--line)">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px; padding: 72px 0 56px">
+<p style="margin: 0; max-width: 16ch; font-size: clamp(40px, 5vw, 76px); font-weight: 500; letter-spacing: -0.04em; line-height: 0.98">Have work that should <em style="font-family: var(--serif); font-style: italic; font-weight: 400">run itself?</em></p>
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px">
+<a href="#" style="font-size: 22px; font-weight: 500; color: var(--ink); text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px">[you@yourdomain.com]</a>
+<a href="#" style="display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 22px; background: var(--ink); color: var(--paper); text-decoration: none; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase"><span aria-hidden="true" style="width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid var(--signal)"></span>Start a run</a>
+</div>
+</div>
+<div aria-hidden="true" style="overflow: hidden; font-size: 15.2vw; font-weight: 600; letter-spacing: -0.065em; line-height: 0.78; padding-bottom: 0.04em; white-space: nowrap">[YOUR NAME]</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 22px 0 28px; margin-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span>© 2026 [YOUR NAME]</span>
+<span>[GitHub] · [LinkedIn] · [X]</span>
+<span>Try <span style="color: var(--ink); text-transform: none">curl [yourdomain.com]</span></span>
+<span>Built with a few agents helping</span>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["day","night"],"default":"day"},"accent":{"editor":"color","options":["#FF4F1A","#2F5BFF","#C6F03A","#FF3B7F"],"default":"#FF4F1A"},"$preview":{"width":1440,"height":3420}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const night = (this.props.theme ?? 'day') === 'night';
+    const accent = this.props.accent ?? '#FF4F1A';
+    const t = night ? {
+      paper: '#0C0C0B', paper2: '#161614', ink: '#ECE9E2', ink2: '#B5B2AA', muted: '#8C8980',
+      line: 'rgba(236, 233, 226, 0.12)', lineStrong: 'rgba(236, 233, 226, 0.30)',
+      term: '#161614', termInk: '#ECE9E2', termMuted: '#9A978E', ok: '#3DBA6F', okRing: 'rgba(61, 186, 111, 0.22)'
+    } : {
+      paper: '#EDEAE3', paper2: '#E3DFD6', ink: '#0E0E0C', ink2: '#3B3A36', muted: '#6A675F',
+      line: 'rgba(14, 14, 12, 0.14)', lineStrong: 'rgba(14, 14, 12, 0.32)',
+      term: '#121210', termInk: '#ECE9E2', termMuted: '#9A978E', ok: '#2E9B5A', okRing: 'rgba(46, 155, 90, 0.20)'
+    };
+    const vars = Object.keys(t).map((k) => '--' + k + ': ' + t[k] + ';').join(' ') + ' --signal: ' + accent + ';';
+    return { vars: vars, themeLabel: night ? 'Night' : 'Day' };
+  }
+}
+</script>
+</body>
+</html>

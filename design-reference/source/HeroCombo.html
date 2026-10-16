@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hero A + C — circuit into prompt</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400..600&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="{{vars}} --mono: 'Geist Mono', ui-monospace, monospace; --serif: 'Instrument Serif', Georgia, serif; position: relative; width: 1440px; height: 1840px; overflow: hidden; background: var(--paper); color: var(--ink); font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased">
+
+<header style="position: absolute; left: 64px; right: 64px; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line)">
+<a href="#" style="display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px"><span aria-hidden="true" style="width: 10px; height: 10px; background: var(--signal)"></span>[YOUR NAME]</a>
+<nav aria-label="Primary" style="display: flex; gap: 28px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase">
+<a href="#" style="color: var(--ink); text-decoration: none">Work</a>
+<a href="#" style="color: var(--ink); text-decoration: none">Agent</a>
+<a href="#" style="color: var(--ink); text-decoration: none">About</a>
+<a href="#" style="color: var(--ink); text-decoration: none">Contact</a>
+</nav>
+<span style="display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: var(--ok)"></span>Available · [CITY] 19:42</span>
+</header>
+
+<svg aria-hidden="true" width="1440" height="1840" viewBox="0 0 1440 1840" style="position: absolute; left: 0; top: 0">
+<g style="stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 6">
+<path d="M150 100 V730"></path>
+<path d="M300 100 V730"></path>
+<path d="M450 100 V730"></path>
+<path d="M600 100 V730"></path>
+</g>
+<path d="M0 198 H105" style="fill: none; stroke: var(--ink); stroke-width: 1.5"></path>
+<path d="M110 203 V332 H255" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{seg0}}"></path>
+<path d="M260 337 V466 H405" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{seg1}}"></path>
+<path d="M410 471 V600 H555" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{seg2}}"></path>
+<path d="M560 605 V700 H1394" style="fill: none; stroke-width: 1.5; transition: stroke 0.4s; stroke: {{segOut}}"></path>
+<path d="M1400 706 V1300 H1376" style="fill: none; stroke-width: 1.5; transition: stroke 0.5s; stroke: {{segRail}}"></path>
+<rect x="104" y="192" width="12" height="12" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n0}}"></rect>
+<rect x="254" y="326" width="12" height="12" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n1}}"></rect>
+<rect x="404" y="460" width="12" height="12" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n2}}"></rect>
+<rect x="554" y="594" width="12" height="12" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{n3}}"></rect>
+<rect x="1394" y="694" width="12" height="12" style="stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; {{nOut}}"></rect>
+<text x="1380" y="684" style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; text-anchor: end; fill: var(--muted)">SHIPPED · NEXT RUN IS YOURS ↓</text>
+</svg>
+<span aria-hidden="true" style="position: absolute; z-index: 3; width: 10px; height: 10px; background: var(--signal); box-shadow: 0 0 0 4px var(--signalSoft); {{packetStyle}}"></span>
+
+<h1 style="margin: 0; font-weight: 600; font-size: 132px; letter-spacing: -0.05em; line-height: 1">
+<span style="position: absolute; left: 150px; top: 128px; white-space: nowrap; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w0.style}}"><span style="position: absolute; left: 4px; top: -14px; font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">01 TRIGGER · {{w0.status}}</span>I build</span>
+<span style="position: absolute; left: 300px; top: 262px; white-space: nowrap; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w1.style}}"><span style="position: absolute; left: 4px; top: -14px; font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">02 PLAN · {{w1.status}}</span>agents</span>
+<span style="position: absolute; left: 450px; top: 396px; white-space: nowrap; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w2.style}}"><span style="position: absolute; left: 4px; top: -14px; font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">03 ACT · {{w2.status}}</span>that do</span>
+<em style="position: absolute; left: 600px; top: 520px; white-space: nowrap; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 150px; letter-spacing: -0.025em; transition: color 0.5s, -webkit-text-stroke-color 0.5s; {{w3.style}}"><span style="position: absolute; left: 6px; top: 6px; font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: 0.08em; color: var(--muted); -webkit-text-stroke: 0; white-space: nowrap">04 SHIP · {{w3.status}}</span>the work.</em>
+</h1>
+
+<div style="position: absolute; left: 1010px; top: 112px; width: 366px; border: 1px solid var(--line); background: var(--paper2); font-family: var(--mono); font-size: 12px">
+<div style="display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span style="display: flex; align-items: center; gap: 8px; color: var(--ink)"><span aria-hidden="true" style="width: 7px; height: 7px; background: var(--signal)"></span>Live run · demo</span>
+<span>{{stepLabel}}</span>
+</div>
+<div style="display: flex; flex-direction: column; padding: 8px 0; min-height: 168px">
+<sc-for list="{{log}}" as="line" hint-placeholder-count="3">
+<div style="display: grid; grid-template-columns: 92px 58px minmax(0, 1fr); gap: 10px; padding: 6px 14px; line-height: 1.45; {{line.rowStyle}}"><span style="color: var(--muted)">{{line.time}}</span><span>{{line.step}}</span><span>{{line.text}}</span></div>
+</sc-for>
+</div>
+</div>
+
+<p style="position: absolute; left: 64px; top: 772px; width: 410px; margin: 0; font-size: 18px; line-height: 1.5; color: var(--ink2)">I design, build and run AI agents and automations for teams that are done doing the same work twice.</p>
+<div style="position: absolute; left: 560px; top: 776px; display: flex; gap: 14px">
+<a href="#" style="display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 22px; background: var(--ink); color: var(--paper); text-decoration: none; font-size: 15px; font-weight: 500">Start a project <span aria-hidden="true">→</span></a>
+<a href="#" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 20px; border: 1px solid var(--lineStrong); color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500">Try it on your task ↓</a>
+</div>
+<dl style="position: absolute; left: 1010px; top: 768px; width: 366px; margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase">
+<div style="display: flex; justify-content: space-between; padding: 9px 0; border-top: 1px solid var(--line)"><dt style="color: var(--muted)">Agents in production</dt><dd style="margin: 0">[N]</dd></div>
+<div style="display: flex; justify-content: space-between; padding: 9px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line)"><dt style="color: var(--muted)">Hours automated / yr</dt><dd style="margin: 0">[N]</dd></div>
+</dl>
+
+<section aria-labelledby="yours-h">
+<div style="position: absolute; left: 64px; right: 64px; top: 984px; display: flex; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">
+<span>02 — Your turn</span>
+<span style="color: var(--muted)">Describe a task · see the system I would build</span>
+</div>
+<p style="position: absolute; left: 64px; top: 1052px; margin: 0; font-family: var(--serif); font-style: italic; font-size: 40px; letter-spacing: -0.01em; color: var(--ink2)">That was one of mine. Now yours.</p>
+<h2 id="yours-h" style="position: absolute; left: 64px; top: 1106px; margin: 0; font-size: 108px; font-weight: 600; letter-spacing: -0.05em; line-height: 0.9; white-space: nowrap">What should <em style="font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; font-size: 1.08em">run itself?</em></h2>
+
+<div style="position: absolute; left: 64px; right: 64px; top: 1212px; display: flex; align-items: center; gap: 18px; height: 88px; box-sizing: border-box; border-bottom: 2px solid; transition: border-color 0.6s; {{underline}}">
+<span aria-hidden="true" style="font-family: var(--mono); font-size: 30px; transition: color 0.4s; {{chevron}}">›</span>
+<label for="task-input" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Describe a task you want automated</label>
+<input id="task-input" type="text" value="{{typed}}" onChange="{{onType}}" onKeyDown="{{onKey}}" onFocus="{{onFocus}}" placeholder="Describe something your team does by hand…" autocomplete="off" style="flex: 1; min-width: 0; height: 60px; background: transparent; border: 0; outline: none; color: var(--ink); caret-color: var(--signal); font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 34px; font-weight: 400; letter-spacing: -0.02em">
+<button type="button" onClick="{{onGenerate}}" style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; background: var(--ink); color: var(--paper); border: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer">Generate ↵</button>
+</div>
+<div style="position: absolute; left: 64px; right: 64px; top: 1316px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px">
+<span style="margin-right: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">Try</span>
+<sc-for list="{{chips}}" as="chip" hint-placeholder-count="4">
+<button type="button" onClick="{{chip.pick}}" style="min-height: 40px; padding: 0 14px; background: transparent; color: var(--ink); border: 1px solid var(--lineStrong); font-family: var(--mono); font-size: 12px; cursor: pointer; {{chip.style}}">{{chip.label}}</button>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 64px; right: 64px; top: 1420px">
+<div style="display: flex; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted)">
+<span style="display: flex; align-items: center; gap: 8px; color: var(--ink)"><span aria-hidden="true" style="width: 7px; height: 7px; background: var(--signal)"></span>{{status}}</span>
+<span>{{summary}}</span>
+</div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr); align-items: center; padding-top: 32px">
+<sc-for list="{{nodes}}" as="n" hint-placeholder-count="5">
+<sc-if value="{{n.hasLink}}" hint-placeholder-val="{{true}}">
+<span aria-hidden="true" style="position: relative; display: block; height: 1.5px; background: var(--ink); transform-origin: left center; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); {{n.linkStyle}}"><span style="position: absolute; top: -2.5px; width: 6px; height: 6px; background: var(--signal); transition: opacity 0.2s; {{n.packetStyle}}"></span></span>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 14px; min-height: 128px; box-sizing: border-box; padding: 16px 16px 18px; background: var(--paper2); transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s; {{n.boxStyle}}">
+<span style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted)"><span style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 8px; height: 8px; {{n.markStyle}}"></span>{{n.kind}}</span><span>0{{n.num}}</span></span>
+<span style="font-size: 21px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15">{{n.title}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="position: absolute; left: 64px; right: 64px; top: 1700px; display: flex; justify-content: space-between; align-items: center; padding-top: 22px; border-top: 1px solid var(--line)">
+<p style="margin: 0; max-width: 54ch; font-size: 16px; line-height: 1.5; color: var(--ink2)">This is how I start every project: map the work, decide where a model helps, where code is safer, and where a person stays in the loop.</p>
+<div style="display: flex; gap: 12px">
+<a href="#" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 18px; border: 1px solid var(--lineStrong); color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500">See real runs</a>
+<a href="#" style="display: inline-flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 22px; background: var(--ink); color: var(--paper); text-decoration: none; font-size: 15px; font-weight: 500">Build this with me <span aria-hidden="true">→</span></a>
+</div>
+</div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["night","day"],"default":"night"},"accent":{"editor":"color","options":["#FF4F1A","#2F5BFF","#C6F03A","#FF3B7F"],"default":"#FF4F1A"},"$preview":{"width":1440,"height":1840}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.alive = true;
+    this.templates = [
+      { chip: 'Invoices → ledger', prompt: 'Reconcile invoices from Gmail into our accounting tool',
+        nodes: [['Trigger', 'Invoice email arrives'], ['Model', 'Extract the fields'], ['Code', 'Match to purchase orders'], ['Human', 'Check if unsure'], ['Tool', 'Post to the ledger']] },
+      { chip: 'Refund emails', prompt: 'Answer refund emails and escalate the angry ones',
+        nodes: [['Trigger', 'Support inbox'], ['Model', 'Read intent and mood'], ['Tool', 'Look up the order'], ['Model', 'Draft the reply'], ['Human', 'Escalate if upset']] },
+      { chip: 'Monday KPI report', prompt: 'Every Monday, send a KPI summary to Slack',
+        nodes: [['Schedule', 'Monday 09:00'], ['Tool', 'Pull the metrics'], ['Model', 'Write the summary'], ['Code', 'Sanity-check numbers'], ['Tool', 'Post to #ops']] },
+      { chip: 'Lead research', prompt: 'Research new leads and add them to the CRM',
+        nodes: [['Trigger', 'New form lead'], ['Tool', 'Search the company'], ['Model', 'Score the fit'], ['Tool', 'Enrich the CRM record'], ['Tool', 'Notify sales']] }
+    ];
+    this.generic = { nodes: [['Trigger', 'When it happens'], ['Model', 'Understand the input'], ['Code', 'Apply your rules'], ['Tool', 'Do the work'], ['Human', 'Approve the result']] };
+    this.reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (this.reduce) {
+      this.setState({ step: 10, jump: true, mode: 'user', tpl: 0, typed: this.templates[0].prompt, revealed: 5, active: -1, phase: 'done' });
+      return;
+    }
+    this.setState({ step: 0, jump: true, mode: 'auto', tpl: -1, typed: '', revealed: 0, active: -1, phase: 'idle', nextTpl: 0 }, () => this.circuit());
+  }
+  componentWillUnmount() {
+    this.alive = false;
+    clearTimeout(this.cTimer);
+    clearTimeout(this.pTimer);
+  }
+  cLater(ms, fn) { clearTimeout(this.cTimer); this.cTimer = setTimeout(() => { if (this.alive) fn(); }, ms); }
+  pLater(ms, fn) { clearTimeout(this.pTimer); this.pTimer = setTimeout(() => { if (this.alive) fn(); }, ms); }
+  circuit() {
+    const s = this.state.step;
+    const holds = [1400, 480, 1400, 480, 1400, 480, 1400, 620, 900, 900, 1100];
+    if (s < 10) {
+      this.cLater(holds[s], () => this.setState({ step: s + 1, jump: false }, () => this.circuit()));
+      return;
+    }
+    if (this.state.mode === 'auto') {
+      const next = this.state.nextTpl || 0;
+      this.setState({ tpl: next, typed: '', revealed: 0, active: -1, phase: 'typing' }, () => this.prompt());
+    } else {
+      this.cLater(2400, () => this.setState({ step: 0, jump: true }, () => this.circuit()));
+    }
+  }
+  prompt() {
+    const s = this.state;
+    if (s.mode !== 'auto') return;
+    const target = this.templates[s.tpl].prompt;
+    if (s.phase === 'typing') {
+      if (s.typed.length < target.length) this.pLater(34 + (s.typed.length % 5) * 9, () => this.setState({ typed: target.slice(0, s.typed.length + 1) }, () => this.prompt()));
+      else this.pLater(420, () => this.setState({ phase: 'building', revealed: 0 }, () => this.prompt()));
+    } else if (s.phase === 'building') {
+      if (s.revealed < 5) this.pLater(240, () => this.setState({ revealed: s.revealed + 1 }, () => this.prompt()));
+      else this.pLater(200, () => this.setState({ phase: 'running', active: 0 }, () => this.prompt()));
+    } else if (s.phase === 'running') {
+      if (s.active < 4) this.pLater(520, () => this.setState({ active: s.active + 1 }, () => this.prompt()));
+      else this.pLater(2200, () => this.setState({ phase: 'erasing', active: -1 }, () => this.prompt()));
+    } else if (s.phase === 'erasing') {
+      if (s.typed.length > 0) this.pLater(12, () => this.setState({ typed: s.typed.slice(0, -2), revealed: Math.min(s.revealed, Math.ceil(s.typed.length / 12)) }, () => this.prompt()));
+      else this.pLater(200, () => this.setState({ phase: 'idle', tpl: -1, revealed: 0, nextTpl: (s.tpl + 1) % this.templates.length, step: 0, jump: true }, () => this.circuit()));
+    }
+  }
+  matchTemplate(text) {
+    const q = (text || '').toLowerCase();
+    if (/invoice|receipt|bill|accounting|ledger|xero|quickbooks/.test(q)) return 0;
+    if (/refund|support|ticket|reply|customer|complain|inbox/.test(q)) return 1;
+    if (/report|kpi|weekly|monday|summary|metric|dashboard/.test(q)) return 2;
+    if (/lead|crm|sales|prospect|hubspot|salesforce/.test(q)) return 3;
+    return -2;
+  }
+  takeOver() {
+    clearTimeout(this.pTimer);
+    if (this.state.step >= 10) this.cLater(1600, () => this.setState({ step: 0, jump: true }, () => this.circuit()));
+  }
+  runUser(text, idx) {
+    this.takeOver();
+    const tpl = typeof idx === 'number' ? idx : this.matchTemplate(text);
+    this.setState({ mode: 'user', typed: text, tpl: tpl, revealed: 0, active: -1, phase: 'building' }, () => this.userBuild());
+  }
+  userBuild() {
+    const s = this.state;
+    if (s.phase === 'building') {
+      if (s.revealed < 5) this.pLater(200, () => this.setState({ revealed: s.revealed + 1 }, () => this.userBuild()));
+      else this.pLater(160, () => this.setState({ phase: 'running', active: 0 }, () => this.userBuild()));
+    } else if (s.phase === 'running') {
+      if (s.active < 4) this.pLater(480, () => this.setState({ active: s.active + 1 }, () => this.userBuild()));
+      else this.pLater(600, () => this.setState({ phase: 'done', active: -1 }));
+    }
+  }
+  renderVals() {
+    const night = (this.props.theme ?? 'night') === 'night';
+    const accent = this.props.accent ?? '#FF4F1A';
+    const t = night ? {
+      paper: '#0C0C0B', paper2: '#141413', ink: '#ECE9E2', ink2: '#B5B2AA', muted: '#8C8980',
+      line: 'rgba(236, 233, 226, 0.12)', lineStrong: 'rgba(236, 233, 226, 0.28)', ok: '#3DBA6F'
+    } : {
+      paper: '#EDEAE3', paper2: '#E5E1D8', ink: '#0E0E0C', ink2: '#3B3A36', muted: '#6A675F',
+      line: 'rgba(14, 14, 12, 0.14)', lineStrong: 'rgba(14, 14, 12, 0.30)', ok: '#2E9B5A'
+    };
+    const vars = Object.keys(t).map((k) => '--' + k + ': ' + t[k] + ';').join(' ') + ' --signal: ' + accent + '; --signalSoft: ' + accent + '33;';
+    const s = this.state || {};
+    const step = typeof s.step === 'number' ? s.step : 10;
+    const jump = s.jump !== false;
+
+    const word = (i) => {
+      const done = 2 * i < step;
+      const active = 2 * i === step;
+      return {
+        status: done ? 'done' : (active ? 'running' : 'queued'),
+        style: (done || active) ? 'color: var(--ink); -webkit-text-stroke: 0px transparent;' : 'color: transparent; -webkit-text-stroke: 1.25px var(--lineStrong);'
+      };
+    };
+    const node = (i) => {
+      if (2 * i < step) return 'fill: var(--ink); stroke: var(--ink);';
+      if (2 * i === step) return 'fill: var(--signal); stroke: var(--signal);';
+      return 'fill: var(--paper); stroke: var(--lineStrong);';
+    };
+    const seg = (i) => (step > 2 * i ? 'var(--ink)' : 'var(--lineStrong)');
+
+    const P = [[110, 198], [110, 332], [260, 332], [260, 466], [410, 466], [410, 600], [560, 600], [560, 700], [1400, 700], [1400, 1299], [86, 1299]];
+    const D = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.45, 0.8, 0.85, 1.05];
+    const p = P[Math.min(step, 10)];
+    const d = D[Math.min(step, 10)];
+    const ease = 'cubic-bezier(0.65, 0, 0.35, 1)';
+    const packetStyle = 'left: ' + (p[0] - 5) + 'px; top: ' + (p[1] - 5) + 'px; transition: ' + (jump ? 'none' : 'left ' + d + 's ' + ease + ', top ' + d + 's ' + ease) + ';';
+
+    const lines = [
+      { at: 0, time: '14:02:11.004', step: 'trigger', text: 'request · "Reconcile March invoices"' },
+      { at: 2, time: '14:02:11.630', step: 'plan', text: '3 steps · 2 tools · 1 check' },
+      { at: 4, time: '14:02:13.902', step: 'act', text: 'sheets → ledger · 41 rows matched' },
+      { at: 6, time: '14:02:19.247', step: 'ship', text: 'verified · report sent to #finance' },
+      { at: 8, time: '14:02:19.250', step: 'done', text: '8.2s · 0 errors · next run: yours ↓' }
+    ];
+    const visible = lines.filter((l) => l.at <= step);
+    const log = visible.map((l, i) => ({
+      time: l.time, step: l.step, text: l.text,
+      rowStyle: i === visible.length - 1 ? 'background: var(--signalSoft); box-shadow: inset 2px 0 0 var(--signal); color: var(--ink);' : 'color: var(--ink2);'
+    }));
+    const stepLabel = step >= 8 ? 'complete · 8.2s' : 'step ' + (Math.floor(step / 2) + 1) + ' / 4';
+
+    const templates = this.templates || [];
+    const tplIdx = typeof s.tpl === 'number' ? s.tpl : 0;
+    let src;
+    if (tplIdx >= 0 && templates[tplIdx]) src = templates[tplIdx].nodes;
+    else if (tplIdx === -2 && this.generic) src = this.generic.nodes;
+    else src = templates.length ? templates[(s.nextTpl || 0)].nodes : [['Trigger', 'Invoice email arrives'], ['Model', 'Extract the fields'], ['Code', 'Match to purchase orders'], ['Human', 'Check if unsure'], ['Tool', 'Post to the ledger']];
+    const revealed = typeof s.revealed === 'number' ? s.revealed : 5;
+    const active = typeof s.active === 'number' ? s.active : -1;
+    const phase = s.phase || 'done';
+    const nodes = src.map((n, i) => {
+      const shown = i < revealed;
+      const isActive = i === active;
+      const isDone = active > i || phase === 'done';
+      const kind = n[0];
+      let mark = 'background: var(--ink);';
+      if (kind === 'Human') mark = 'border: 1px solid var(--ink); box-sizing: border-box;';
+      if (kind === 'Model') mark = 'background: var(--ink); border-radius: 50%;';
+      if (kind === 'Trigger' || kind === 'Schedule') mark = 'background: var(--ink); transform: rotate(45deg) scale(0.8);';
+      if (isActive) mark += ' background: var(--signal);';
+      let box = shown ? 'opacity: 1; transform: translateY(0);' : 'opacity: 0.12; transform: translateY(10px);';
+      box += isActive ? ' border: 1.5px solid var(--signal); box-shadow: 0 0 0 4px var(--signalSoft);' : (isDone && shown ? ' border: 1px solid var(--ink);' : ' border: 1px solid var(--lineStrong);');
+      if (kind === 'Human' && !isActive) box += ' border-style: dashed;';
+      const linkShown = i > 0 && i < revealed;
+      return {
+        num: i + 1, kind: kind, title: n[1], hasLink: i > 0,
+        boxStyle: box, markStyle: mark,
+        linkStyle: linkShown ? 'transform: scaleX(1);' : 'transform: scaleX(0);',
+        packetStyle: (active === i && i > 0) ? 'left: calc(100% - 6px); opacity: 1;' : 'left: 0; opacity: 0;'
+      };
+    });
+    const models = src.filter((n) => n[0] === 'Model').length;
+    const humans = src.filter((n) => n[0] === 'Human').length;
+    let status = 'Waiting for your task';
+    if (phase === 'typing') status = 'Listening';
+    if (phase === 'building') status = 'Designing the system · ' + Math.min(revealed, 5) + ' / 5';
+    if (phase === 'running') status = 'Test run · step ' + (active + 1) + ' / 5';
+    if (phase === 'done') status = 'Ready to build';
+    if (phase === 'erasing') status = 'Next example';
+    const summary = (phase === 'idle' && revealed === 0) ? 'The system appears here' : '5 steps · ' + models + (models === 1 ? ' model' : ' models') + ' · ' + humans + (humans === 1 ? ' human check' : ' human checks') + (tplIdx === -2 ? ' · drafted from your words' : '');
+    const chips = templates.map((tp, i) => ({
+      label: tp.chip,
+      style: i === tplIdx ? 'border-color: var(--ink); background: var(--paper2);' : '',
+      pick: () => this.runUser(tp.prompt, i)
+    }));
+    const lit = step >= 10 || phase === 'typing' || phase === 'building' || phase === 'running' || s.mode === 'user';
+
+    return {
+      vars: vars,
+      w0: word(0), w1: word(1), w2: word(2), w3: word(3),
+      n0: node(0), n1: node(1), n2: node(2), n3: node(3),
+      nOut: step >= 8 ? 'fill: var(--signal); stroke: var(--signal);' : 'fill: var(--paper); stroke: var(--lineStrong);',
+      seg0: seg(0), seg1: seg(1), seg2: seg(2),
+      segOut: step >= 7 ? 'var(--ink)' : 'var(--lineStrong)',
+      segRail: step >= 9 ? 'var(--ink)' : 'var(--lineStrong)',
+      underline: lit ? 'border-color: var(--ink);' : 'border-color: var(--lineStrong);',
+      chevron: lit ? 'color: var(--signal);' : 'color: var(--muted);',
+      packetStyle: packetStyle,
+      log: log,
+      stepLabel: stepLabel,
+      typed: typeof s.typed === 'string' ? s.typed : 'Reconcile invoices from Gmail into our accounting tool',
+      nodes: nodes,
+      chips: chips,
+      status: status,
+      summary: summary,
+      onType: (e) => { this.takeOver(); this.setState({ mode: 'user', typed: e.target.value, phase: 'idle', active: -1 }); },
+      onFocus: () => { if (this.state && this.state.mode === 'auto') { this.takeOver(); this.setState({ mode: 'user', phase: this.state.revealed ? 'done' : 'idle', active: -1 }); } },
+      onKey: (e) => { if (e.key === 'Enter') this.runUser(e.target.value); },
+      onGenerate: () => this.runUser((this.state && this.state.typed) || '')
+    };
+  }
+}
+</script>
+</body>
+</html>
