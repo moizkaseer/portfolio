@@ -8,9 +8,24 @@ import { SECTIONS } from "@/lib/agent/protocol";
 
 const slugs = () => getProjects().map((p) => p.slug);
 
+export const PromptStateSchema = z
+  .object({
+    task: z.string().max(500),
+    nodes: z.array(z.object({ kind: z.string().max(20), title: z.string().max(80) })).max(8),
+    source: z.enum(["template", "generic", "smart"]),
+  })
+  .nullable();
+export type PromptStateInput = z.infer<typeof PromptStateSchema>;
+
 /** Read-only server tools over /content (brief §7). They never send or change anything. */
-export function serverTools() {
+export function serverTools(promptState: PromptStateInput = null) {
   return {
+    get_prompt_state: tool({
+      description:
+        "The system the visitor just sketched in the home page's 'What should run itself?' box: their task in their words and the 5 steps (kind + title). Use it when they ask about 'this system', 'what I built', or whether it could really be built.",
+      inputSchema: z.object({}),
+      execute: async () => promptState ?? { none: "The visitor hasn't built a system in 'What should run itself?' yet." },
+    }),
     search_projects: tool({
       description:
         "Search the owner's projects (runs). Returns slug, run id, title, one-line outcome, category, stack and status. Order is the owner's own ranking (sort: 'impact' keeps it).",

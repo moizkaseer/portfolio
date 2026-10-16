@@ -69,3 +69,14 @@ describe("generated content index", () => {
     }
   });
 });
+
+describe("projects index for browser code", () => {
+  it("lib/content/projects.generated.json matches the projects' frontmatter", async () => {
+    const generated = (await import("@/lib/content/projects.generated.json")).default;
+    for (const g of generated) {
+      const { data } = matter(fs.readFileSync(path.join(DIR, g.slug, "index.mdx"), "utf8"));
+      expect(g).toMatchObject({ runId: data.runId, title: data.title, outcome: data.outcome, category: data.category, featured: data.featured === true });
+    }
+    expect(generated.filter((g) => g.featured)).toHaveLength(1);
+  });
+});

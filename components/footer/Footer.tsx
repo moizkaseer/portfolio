@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/content/site";
-import { WordmarkScrub } from "./WordmarkScrub";
+import { Deferred } from "@/components/Deferred";
 import styles from "./Footer.module.css";
 
 const year = new Date(process.env.BUILD_DATE ?? Date.now()).getUTCFullYear();
@@ -18,8 +18,10 @@ export function Footer() {
             {site.email}
           </a>
           <Link href="/#contact" className={styles.run}>
-            <span aria-hidden="true" className={styles.triangle} />
-            Start a run
+            <span aria-hidden="true" className={`${styles.triangle} nudge`} />
+            <span className="roll" data-label="Start a run">
+              <span>Start a run</span>
+            </span>
           </Link>
         </div>
       </div>
@@ -27,7 +29,7 @@ export function Footer() {
       <div aria-hidden="true" className={styles.wordmark} data-wordmark>
         <span className={styles.wordmarkInner}>{site.name}</span>
       </div>
-      <WordmarkScrub />
+      <Deferred name="wordmark" />
 
       <div className={styles.bottom}>
         <span>

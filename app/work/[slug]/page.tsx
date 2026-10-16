@@ -11,6 +11,8 @@ import { ReplayProvider } from "@/components/run/ReplayContext";
 import { TraceReplay } from "@/components/run/TraceReplay";
 import { RunTitle } from "@/components/run/RunTitle";
 import { RunRail } from "@/components/run/RunRail";
+import { site } from "@/lib/content/site";
+import { abs, siteUrl } from "@/lib/seo";
 import home from "@/components/home/home.module.css";
 import styles from "./run.module.css";
 
@@ -26,7 +28,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/work/[slug]">): Promise<Metadata> {
   const p = getProject((await params).slug);
-  return p ? { title: `RUN #${p.runId} ${p.title}`, description: p.outcome } : {};
+  return p ? { title: `RUN #${p.runId} ${p.title}`, description: p.outcome, alternates: { canonical: `/work/${p.slug}` } } : {};
 }
 
 /** "with a *real number.*" → the starred phrase in serif italic (RunReport.html lead). */
@@ -79,14 +81,31 @@ export default async function RunReport({ params }: PageProps<"/work/[slug]">) {
 
   return (
     <div className={`${home.section} ${styles.page}`} data-rail-root data-page="work">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: p.title,
+            headline: p.title,
+            description: p.outcome,
+            url: abs(`/work/${p.slug}`),
+            genre: p.category,
+            keywords: p.stack.join(", "),
+            creator: { "@type": "Person", name: site.name, url: siteUrl() },
+            ...(/^\d{4}$/.test(p.year) ? { dateCreated: p.year } : {}),
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className={styles.crumbs}>
         <span>
-          <Link href="/work" className={styles.crumbLink}>
+          <Link href="/work" className={`${styles.crumbLink} text-link`}>
             ← All runs
           </Link>
           <span className={styles.muted}> / RUN #{p.runId}</span>
         </span>
-        <Link href={`/work/${next.slug}`} prefetch className={styles.muted}>
+        <Link href={`/work/${next.slug}`} prefetch className={`${styles.muted} text-link`}>
           Next · RUN #{next.runId} →
         </Link>
       </div>
@@ -95,7 +114,7 @@ export default async function RunReport({ params }: PageProps<"/work/[slug]">) {
         <div className={styles.meta}>
           <span>RUN #{p.runId}</span>
           <span className={styles.status}>
-            <span aria-hidden="true" className={live ? styles.led : styles.ledOff} />
+            <span aria-hidden="true" className={live ? `${styles.led} pulse` : styles.ledOff} />
             {live ? `In production since ${p.since}` : "Handed over"}
           </span>
           <span className={styles.muted}>{p.runsLine}</span>

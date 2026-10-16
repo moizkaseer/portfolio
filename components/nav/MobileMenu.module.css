@@ -32,7 +32,9 @@
   z-index: 60;
   display: flex;
   flex-direction: column;
-  padding: 0 16px 24px;
+  padding: 0 max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--paper);
   color: var(--ink);
 }
@@ -73,7 +75,8 @@
   min-height: 44px;
   color: var(--ink);
   text-decoration: none;
-  font-size: clamp(48px, 15vw, 88px);
+  /* phones in landscape: sized by the height too, so all links fit */
+  font-size: clamp(32px, min(15vw, 11.5dvh), 88px);
   font-weight: 600;
   letter-spacing: -0.05em;
   line-height: 1;

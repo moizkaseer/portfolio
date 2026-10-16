@@ -1,5 +1,5 @@
 import { SectionHeader } from "./SectionHeader";
-import { ManifestoMotion } from "./ManifestoMotion";
+import { Deferred } from "@/components/Deferred";
 import home from "./home.module.css";
 import styles from "./Manifesto.module.css";
 
@@ -31,7 +31,7 @@ export function Manifesto() {
           </span>
         </span>
       </p>
-      <ManifestoMotion />
+      <Deferred name="manifesto" />
     </section>
   );
 }

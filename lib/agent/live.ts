@@ -5,6 +5,7 @@ import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls, type
 import { agentStore, type Message, type ToolRow } from "./store";
 import { createTurn } from "./turn";
 import { traceLabel } from "./protocol";
+import { getPromptState } from "@/lib/prompt-store";
 
 /**
  * The live agent (AI SDK Chat over /api/agent). Loaded only when a model is configured.
@@ -52,7 +53,8 @@ function sync() {
 function ensureChat() {
   if (chat) return chat;
   chat = new Chat<UIMessage>({
-    transport: new DefaultChatTransport({ api: "/api/agent" }),
+    // every request carries the visitor's last "What should run itself?" system (get_prompt_state)
+    transport: new DefaultChatTransport({ api: "/api/agent", body: () => ({ promptState: getPromptState() }) }),
     sendAutomaticallyWhen: (o) => lastAssistantMessageIsCompleteWithToolCalls(o),
     async onToolCall({ toolCall }) {
       if (toolCall.dynamic || !toolCall.toolName.startsWith("ui_")) return;

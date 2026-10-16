@@ -1,0 +1,22 @@
+{
+  "_todo": "PLACEHOLDERS for the owner: bio, what you're working on now, timeline, photo. Every bracketed value is a [TODO].",
+  "lead": "[One or two sentences about who you are and the kind of work you take on — in your own words.]",
+  "photo": null,
+  "photoAlt": "[Portrait of YOUR NAME]",
+  "bio": [
+    "[TODO: Bio paragraph 1 — how you got into building agents and automations.]",
+    "[TODO: Bio paragraph 2 — the kind of teams and problems you work best with.]",
+    "[TODO: Bio paragraph 3 — how you work: what a project with you looks like.]"
+  ],
+  "now": [
+    "[TODO: What you're building right now]",
+    "[TODO: What you're learning or exploring]",
+    "[TODO: What you're open to next]"
+  ],
+  "timeline": [
+    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" },
+    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" },
+    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" },
+    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" }
+  ]
+}

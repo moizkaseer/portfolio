@@ -907,7 +907,11 @@
     gap: 8px;
     padding: 0 16px;
     overflow-x: auto;
+    scrollbar-width: none; /* swipeable chip row, as in the design: no visible bar */
     white-space: nowrap;
+  }
+  .chips::-webkit-scrollbar {
+    display: none;
   }
   .tryLabel {
     display: none;

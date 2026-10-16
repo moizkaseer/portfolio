@@ -1,0 +1,25 @@
+.dot {
+  position: fixed;
+  left: -4px;
+  top: -4px;
+  z-index: 90;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--signal);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.4;
+  transition:
+    opacity 0.2s var(--ease-ui),
+    scale 0.2s var(--ease-ui);
+}
+.dot[data-on="true"] {
+  opacity: 1;
+  scale: 1;
+}
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .dot {
+    display: none;
+  }
+}

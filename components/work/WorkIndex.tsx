@@ -93,7 +93,7 @@ function Status({ item }: { item: WorkItem }) {
   const live = item.status === "in-production";
   return (
     <span className={live ? runs.status : `${runs.status} ${runs.handedOver}`}>
-      <span aria-hidden="true" className={live ? runs.led : runs.ledOff} />
+      <span aria-hidden="true" className={live ? `${runs.led} pulse` : runs.ledOff} />
       {live ? "In production" : "Handed over"}
     </span>
   );

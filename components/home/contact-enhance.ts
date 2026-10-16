@@ -52,6 +52,7 @@ export function enhanceContactForm(form: HTMLFormElement) {
     }
     button.disabled = true;
     label.textContent = "Running…";
+    label.parentElement!.dataset.label = "Running…";
     setStatus("");
     form.removeAttribute("data-sent");
     try {
@@ -79,6 +80,7 @@ export function enhanceContactForm(form: HTMLFormElement) {
     } finally {
       button.disabled = false;
       label.textContent = "Run";
+      label.parentElement!.dataset.label = "Run";
     }
   });
 }

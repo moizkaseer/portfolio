@@ -1,6 +1,6 @@
 import { convertToModelMessages, createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream, type UIMessage } from "ai";
 import { agentModel } from "@/lib/server/agent-model";
-import { serverTools, systemPrompt, uiTools } from "@/lib/server/agent-tools";
+import { PromptStateSchema, serverTools, systemPrompt, uiTools } from "@/lib/server/agent-tools";
 import { clientIp, createLimiter } from "@/lib/server/rate-limit";
 import { MAX_INPUT_CHARS, MAX_TURNS } from "@/lib/agent/protocol";
 
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     model,
     system: systemPrompt(),
     messages: await convertToModelMessages(messages),
-    tools: { ...serverTools(), ...uiTools() },
+    tools: { ...serverTools(PromptStateSchema.safeParse(body?.promptState ?? null).data ?? null), ...uiTools() },
     stopWhen: stepCountIs(6),
     maxOutputTokens: 500,
   });

@@ -19,3 +19,27 @@ export function systemSummary(task: string, nodes: { kind: string; title: string
   const steps = nodes.map((n, i) => `${i + 1}. ${n.title} (${n.kind.toLowerCase()})`).join("\n");
   return `${task.trim() || "My task"}\n\nThe system you sketched:\n${steps}`;
 }
+
+/** The system the visitor last built in "What should run itself?" — for the agent's get_prompt_state. */
+export interface PromptState {
+  task: string;
+  nodes: { kind: string; title: string }[];
+  source: "template" | "generic" | "smart";
+}
+let promptState: PromptState | null = null;
+export const getPromptState = () => promptState;
+export const setPromptState = (s: PromptState) => (promptState = s);
+
+/**
+ * The smart engine (loaded on first use of the prompt input) replaces the generic template's
+ * nodes with the ones drafted from the visitor's words. The hero only applies this overlay.
+ */
+type Overlay = (<T>(p: T) => T) | null;
+let overlay: Overlay = null;
+const overlayListeners = new Set<() => void>();
+export const getPromptOverlay = () => overlay;
+export const subscribePromptOverlay = (l: () => void) => (overlayListeners.add(l), () => void overlayListeners.delete(l));
+export function setPromptOverlay(o: unknown) {
+  overlay = o as Overlay;
+  overlayListeners.forEach((l) => l());
+}

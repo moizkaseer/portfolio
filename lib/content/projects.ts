@@ -19,6 +19,8 @@ const FrontmatterSchema = z.object({
   year: z.string(),
   order: z.number().int(),
   placeholder: z.boolean().default(false),
+  /** the run the agent shows when asked for the best project */
+  featured: z.boolean().default(false),
   category: z.enum(["Agents", "Automations", "Tools", "Experiments"]),
   /** run report lead; *asterisks* mark the serif-italic phrase */
   lead: z.string(),

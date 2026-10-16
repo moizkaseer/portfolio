@@ -1,11 +1,12 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef, useSyncExternalStore } from "react";
 import { deriveVisuals, LOG_ROWS } from "@/lib/motion/hero-motion";
 import { NavClock } from "@/components/nav/NavClock";
 import type { Site } from "@/lib/content/site";
 import { useHeroEngine, useLayout } from "./useHeroEngine";
-import { prefillContact, systemSummary } from "@/lib/prompt-store";
+import { getPromptOverlay, prefillContact, setPromptState, subscribePromptOverlay, systemSummary } from "@/lib/prompt-store";
+import { FREEZE_ALLOWED } from "@/lib/freeze";
 import styles from "./HeroStage.module.css";
 
 const LINES = [
@@ -20,11 +21,31 @@ const LINES = [
  * (1440 × 1840 desktop, 390 × 1970 phone), scaled uniformly with the viewport.
  * Sources: design-reference/source/HeroCombo.html and HeroComboMobile.html.
  */
-export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "heroStats"> }) {
-  const { stageRef, packetRef, packetStyle, state, mode, isStatic, onFocus, onType, runUser, templates } = useHeroEngine();
+// the smart engine (C2) loads on first use of the input, and only when a model is configured
+let smartModule: Promise<typeof import("@/lib/prompt/smart")> | null = null;
+const loadSmart = () => (smartModule ??= import("@/lib/prompt/smart"));
+
+export function HeroStage({ site, smart = false }: { site: Pick<Site, "city" | "timezone" | "heroStats" | "summary">; smart?: boolean }) {
+  const { stageRef, packetRef, packetStyle, state, mode, isStatic, onFocus, onType, runUser, beginDesign, templates } = useHeroEngine();
   const layout = useLayout();
   const v = deriveVisuals(state, mode);
-  const { hero, prompt } = v;
+  const { hero } = v;
+  const overlay = useSyncExternalStore(subscribePromptOverlay, getPromptOverlay, () => null);
+  const prompt = overlay && state.tpl === -2 ? overlay(v.prompt) : v.prompt;
+
+  const smartOn = () => smart || (FREEZE_ALLOWED && new URLSearchParams(location.search).has("smart"));
+  const request = useRef(0);
+  /** Enter / Generate: the smart engine when configured (≤ 2.5s, else silent fallback), the instant templates otherwise. */
+  const submit = async (text: string) => {
+    const id = ++request.current;
+    if (!smartOn() || !text.trim()) return runUser(text);
+    beginDesign(text);
+    const m = await loadSmart();
+    const nodes = await m.smartNodes(text);
+    if (id !== request.current) return; // the visitor moved on
+    m.showSmart(nodes);
+    runUser(text, nodes ? -2 : undefined);
+  };
 
   // "Build this with me →": prefill the contact form with the task and its generated steps (C2)
   const buildThis = () => {
@@ -32,6 +53,17 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
     const nodes = prompt.nodes.map((n) => ({ kind: n.kind, title: n.title }));
     prefillContact({ summary: systemSummary(task, nodes), system: { task, nodes } });
   };
+
+  // remember the visitor's system for the agent (get_prompt_state)
+  const built = mode === "user" && state.phase === "done";
+  useEffect(() => {
+    if (built && state.typed.trim())
+      setPromptState({
+        task: state.typed,
+        nodes: prompt.nodes.map((n) => ({ kind: n.kind, title: n.title })),
+        source: state.tpl !== -2 ? "template" : overlay ? "smart" : "generic",
+      });
+  }, [built, state.typed, state.tpl, prompt.nodes, overlay]);
 
   const announcement =
     mode === "user" && state.phase === "done"
@@ -173,14 +205,22 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
             </ol>
 
             <p className={styles.sub} data-geo="sub">
-              I design, build and run AI agents and automations for teams that are done doing the same work twice.
+              {site.summary}
             </p>
             <div className={styles.ctas} data-geo="ctas">
               <a href="#contact" className={styles.btnPrimary}>
-                Start a project <span aria-hidden="true">→</span>
+                <span className="roll" data-label="Start a project">
+                  <span>Start a project</span>
+                </span>{" "}
+                <span aria-hidden="true" className="nudge">
+                  →
+                </span>
               </a>
               <a href="#your-turn" className={styles.btnGhost}>
-                Try it on your task{" "}
+                <span className="roll" data-label="Try it on your task">
+                  <span>Try it on your task</span>
+                </span>
+                {" "}
                 <span aria-hidden="true">↓</span>
               </a>
             </div>
@@ -223,13 +263,19 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
                 autoComplete="off"
                 value={prompt.typed}
                 placeholder={layout === "desktop" ? "Describe something your team does by hand…" : "Describe a task…"}
-                onFocus={onFocus}
-                onChange={(e) => onType(e.target.value)}
+                onFocus={() => {
+                  if (smartOn()) void loadSmart();
+                  onFocus();
+                }}
+                onChange={(e) => {
+                  request.current++;
+                  onType(e.target.value);
+                }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") runUser(e.currentTarget.value);
+                  if (e.key === "Enter") void submit(e.currentTarget.value);
                 }}
               />
-              <button type="button" className={styles.gen} onClick={() => runUser(state.typed)}>
+              <button type="button" className={styles.gen} onClick={() => void submit(state.typed)}>
                 <span className={styles.genWord}>Generate{" "}</span>
                 <span aria-hidden="true">↵</span>
               </button>
@@ -244,7 +290,10 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
                   className={styles.chip}
                   data-selected={prompt.selectedChip === i}
                   aria-pressed={prompt.selectedChip === i}
-                  onClick={() => runUser(t.prompt, i)}
+                  onClick={() => {
+                    request.current++;
+                    runUser(t.prompt, i);
+                  }}
                 >
                   {t.chip}
                 </button>
@@ -286,6 +335,7 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
                       data-border={n.border}
                       data-dashed={n.dashed}
                       aria-hidden={!n.shown}
+                      data-ghost={!n.shown || undefined}
                     >
                       <span className={styles.boxTop}>
                         <span className={styles.kind}>
@@ -310,10 +360,17 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
               </p>
               <div className={styles.ctaBtns}>
                 <a href="#work" className={styles.seeRuns}>
-                  See real runs
+                  <span className="roll" data-label="See real runs">
+                    <span>See real runs</span>
+                  </span>
                 </a>
                 <a href="#contact" className={styles.build} onClick={buildThis}>
-                  Build this with me <span aria-hidden="true">→</span>
+                  <span className="roll" data-label="Build this with me">
+                    <span>Build this with me</span>
+                  </span>{" "}
+                  <span aria-hidden="true" className="nudge">
+                    →
+                  </span>
                 </a>
               </div>
             </div>

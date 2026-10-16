@@ -34,7 +34,7 @@ function Status({ item, long }: { item: RunItem; long?: boolean }) {
   const live = item.status === "in-production";
   return (
     <span className={live ? styles.status : `${styles.status} ${styles.handedOver}`}>
-      <span aria-hidden="true" className={live ? styles.led : styles.ledOff} />
+      <span aria-hidden="true" className={live ? `${styles.led} pulse` : styles.ledOff} />
       {live ? (long ? `In production since ${item.since}` : "In production") : "Handed over"}
     </span>
   );
@@ -139,7 +139,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
                       <span>{item.stack.join(" · ")}</span>
                       <Status item={item} long />
                       <span className={styles.ink}>
-                        Open run report <span aria-hidden="true">→</span>
+                        Open run report <span aria-hidden="true" className="nudge">→</span>
                       </span>
                     </div>
                   </div>

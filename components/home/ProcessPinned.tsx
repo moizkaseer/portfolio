@@ -53,7 +53,7 @@ export function ProcessPinned({ steps, kinds }: { steps: Step[]; kinds: string[]
           {steps.map((s, i) => (
             <Fragment key={s.id}>
               {i > 0 && <span className={styles.conn} data-drawn={i <= step} />}
-              <div className={styles.box} data-shown={i <= step} data-active={i === step}>
+              <div className={styles.box} data-shown={i <= step} data-active={i === step} data-ghost={i > step || undefined}>
                 <span className={styles.itemTop}>
                   <span className={styles.kind}>
                     <span className={styles.mark} data-kind={kinds[i]} data-active={i === step} />

@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "support-inbox-agent",
+    "runId": "014",
+    "title": "[Support inbox agent]",
+    "outcome": "[One-line outcome with a real number]",
+    "category": "Agents",
+    "featured": false,
+    "order": 1
+  },
+  {
+    "slug": "invoice-extraction-pipeline",
+    "runId": "011",
+    "title": "[Invoice extraction pipeline]",
+    "outcome": "[One-line outcome with a real number]",
+    "category": "Automations",
+    "featured": true,
+    "order": 2
+  },
+  {
+    "slug": "lead-research-agent",
+    "runId": "009",
+    "title": "[Lead research agent]",
+    "outcome": "[One-line outcome with a real number]",
+    "category": "Agents",
+    "featured": false,
+    "order": 3
+  },
+  {
+    "slug": "weekly-ops-report",
+    "runId": "006",
+    "title": "[Weekly ops report]",
+    "outcome": "[One-line outcome with a real number]",
+    "category": "Automations",
+    "featured": false,
+    "order": 4
+  }
+]

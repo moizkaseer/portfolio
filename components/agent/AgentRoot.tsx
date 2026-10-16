@@ -74,6 +74,27 @@ export default function AgentRoot({ mode }: { mode: "demo" | "live" }) {
     document.documentElement.toggleAttribute("data-agent-panel", showPanel);
   }, [showPanel]);
 
+  // brief: the favicon — a single --signal square — pulses in the tab while the agent answers
+  // (tabs don't animate SVG icons, so the icon is swapped between two frames)
+  useEffect(() => {
+    if (!s.busy) return;
+    const links = [...document.querySelectorAll<HTMLLinkElement>("link[rel~='icon']")];
+    const original = links.map((l) => l.href);
+    const frame = (o: number) =>
+      `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" fill="#FF4F1A" fill-opacity="${o}"/></svg>`)}`;
+    const frames = [frame(0.35), frame(1)];
+    let i = 0;
+    const tick = () => links.forEach((l) => (l.href = frames[i++ % 2]));
+    tick();
+    const id = window.setInterval(tick, 600);
+    document.documentElement.dataset.agentBusy = "";
+    return () => {
+      window.clearInterval(id);
+      links.forEach((l, j) => (l.href = original[j]));
+      delete document.documentElement.dataset.agentBusy;
+    };
+  }, [s.busy]);
+
   return (
     <>
       {slot && createPortal(<ChatView variant="section" initialInput={slot.input} />, slot.el)}
