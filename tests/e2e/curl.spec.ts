@@ -6,7 +6,7 @@ const width = (t: string) => Math.max(...t.replace(/\x1b\[[0-9;]*m/g, "").split(
 const RUNS = ["support-inbox-agent", "invoice-extraction-pipeline", "lead-research-agent", "weekly-ops-report"];
 
 test.describe("curl version", () => {
-  test.beforeEach(({}, info) => test.skip(info.project.name === "phone", "HTTP-only tests"));
+  test.beforeEach(({}, info) => test.skip(!!info.project.use.isMobile, "HTTP-only tests"));
 
   test("curl gets text/plain with the name, an email, orange accents and Vary", async ({ request }) => {
     const res = await request.get("/", { headers: CURL });
@@ -15,7 +15,7 @@ test.describe("curl version", () => {
     expect(res.headers()["vary"]).toContain("User-Agent, Accept");
     const text = await res.text();
     expect(text).toContain("AI agents & automation");
-    expect(text).toMatch(/\[you@yourdomain\.com\]|@/);
+    expect(text).toContain("moizkaseer@gmail.com");
     expect(text).toContain("\x1b[38;5;202m"); // ANSI 256-colour 202
     expect(text).toContain("Try: curl");
   });

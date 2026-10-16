@@ -85,17 +85,14 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 ## 6. Content Gaps (everything the owner must provide)
 
 **Identity and status**
-- [ ] Name exactly as it should appear (nav, footer wordmark, colophon, JSON-LD, curl). The wordmark is set at 15.2vw, so name length affects the footer.
 - [ ] One-line positioning. The approved hero line is "I build agents that do the work."; confirm it.
-- [ ] City (nav clock, meta row `Online · [CITY]`) — timezone set to Europe/Skopje (2026-10-15)
+- [ ] City (nav clock, meta row `Online · [CITY]`)
 - [ ] Availability: "Available for projects" or "Booked until [month]"
 - [ ] Domain (canonical URLs, `Try curl [domain]`, OG, llms.txt)
 - [ ] The old site's real URL and/or files in `legacy/`: bio, services, project write-ups, CV, images you own
 
 **Contact**
-- [ ] Email for the contact link and Resend delivery
 - [ ] Booking link
-- [ ] GitHub, LinkedIn, X/other URLs
 
 **Projects (3–5), for each:**
 - [ ] Name, client/industry, and whether the client can be named (y/n)
@@ -162,5 +159,8 @@ Process copy provided (applied verbatim). Toolbox, booking link and contact deli
 ## 15. Phase 7 additions to the Content Gaps (2026-10-16)
 - [ ] About page (`content/about.json`): lead sentence, bio (3 paragraphs), "Now" (3 lines + the month it was updated), timeline (year · role or milestone · one line), and a portrait (4:5; set `photo` to its path in `/public`, and `photoAlt`). Everything there is `[TODO]` for now.
 - [ ] Domain: once `content/site.json` → `domain` is real (or `NEXT_PUBLIC_SITE_URL` is set), canonical links, the sitemap, robots, OG images and JSON-LD use it. Before that they use Vercel's production URL on Vercel, and localhost locally.
-- [ ] Person JSON-LD leaves out the city and social links while they are placeholders; they appear automatically once filled in.
+- [ ] Person JSON-LD leaves out the city while it is a placeholder; it appears automatically once filled in.
 - [x] 404, OG images, JSON-LD, sitemap, robots, /llms.txt, favicon, console message (Phase 7).
+
+## 16. Owner decisions (Phase 7 review, 2026-10-16)
+Name **Moiz Ali**, email **moizkaseer@gmail.com**, GitHub, LinkedIn and X links and timezone Europe/Skopje are in `content/site.json` and appear everywhere from there (nav, footer and its wordmark "MOIZ ALI", About, contact, agent answers, curl, JSON-LD, llms.txt, share images); removed from §6. Still placeholders: city, domain, booking link, hero stats, projects, toolbox, bio, now, timeline, portrait.

@@ -11,13 +11,22 @@
   overflow-x: clip;
 }
 
-/* --s = min(width, 1920) / 1440 — unitless, via tan(atan2()) so CSS can divide lengths. */
+/*
+ * --s: the stage's inner edges (64px in on the 1440 design, 1312 between them) line up with
+ * every other section's content column: width − 2 × margin, at most --max (1680) — so the
+ * hero stops growing exactly where the rest of the page does (owner decision, Phase 7 review).
+ *   ≤ 1440: width / 1440 (the margin is 4.4vw, which is the design's 64/1440)
+ *   above:  (width − 128) / 1312, capped at 1680 / 1312
+ * Unitless via tan(atan2()) so CSS can divide lengths.
+ */
 .frame {
-  --s: tan(atan2(min(100cqw, 1920px), 1440px));
+  --s: tan(atan2(min(max(100cqw * 1312 / 1440, 100cqw - 128px), 1680px), 1312px));
   position: relative;
   width: calc(1440px * var(--s));
   height: calc(1840px * var(--s));
-  margin-inline: auto;
+  /* centred even when the stage is a little wider than the screen (1440–1808px: its 64px inner
+     margin is then wider than the page's), which auto margins can't do; .shell clips the overflow */
+  margin-inline: calc((100cqw - 1440px * var(--s)) / 2);
 }
 
 .stage {
@@ -689,6 +698,7 @@
     --s: tan(atan2(min(100cqw, 560px), 390px));
     width: calc(390px * var(--s));
     height: calc(1970px * var(--s));
+    margin-inline: calc((100cqw - 390px * var(--s)) / 2);
   }
   .stage {
     width: 390px;
@@ -1019,5 +1029,6 @@
 @supports not (width: calc(1px * tan(atan2(1px, 1px)))) {
   .frame {
     --s: 1;
+    margin-inline: auto;
   }
 }

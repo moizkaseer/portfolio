@@ -9,7 +9,7 @@ test.describe("/work index", () => {
   test("lists every run and filters by category", async ({ page }, info) => {
     await page.goto("/work");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("All runs.");
-    const rows = info.project.name === "phone" ? page.locator("[data-work-card]") : page.locator("[data-work-row]");
+    const rows = !!info.project.use.isMobile ? page.locator("[data-work-card]") : page.locator("[data-work-row]");
     await expect(rows).toHaveCount(4);
     await page.getByRole("button", { name: /^Agents/ }).click();
     await expect(page.getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true");
@@ -20,7 +20,7 @@ test.describe("/work index", () => {
   });
 
   test("nav marks Work as the current section", async ({ page }, info) => {
-    test.skip(info.project.name === "phone", "the phone nav has no section links");
+    test.skip(!!info.project.use.isMobile, "the phone nav has no section links");
     await page.goto("/work");
     const work = page.locator('header nav a[data-nav="work"]');
     await expect(work).toHaveCSS("border-bottom-width", "1px");
@@ -108,7 +108,7 @@ test.describe("run report", () => {
 
 test.describe("title morph", () => {
   test("opening a run from home navigates inside a view transition", async ({ page }, info) => {
-    test.skip(info.project.name === "phone");
+    test.skip(!!info.project.use.isMobile);
     await page.addInitScript(() => {
       const w = window as unknown as { __vt: number };
       w.__vt = 0;
@@ -126,6 +126,35 @@ test.describe("title morph", () => {
     await row.click();
     await expect(page).toHaveURL(/\/work\/lead-research-agent$/);
     expect(await page.evaluate(() => (window as unknown as { __vt: number }).__vt)).toBeGreaterThan(0);
+  });
+});
+
+test.describe("title-morph links navigate in every browser (plain navigation without View Transitions)", () => {
+  const target = "lead-research-agent";
+  const arrive = async (page: import("@playwright/test").Page) => {
+    await expect(page).toHaveURL(new RegExp(`/work/${target}$`));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("[Lead research agent]");
+  };
+
+  test("home: run row (desktop) or card (phone)", async ({ page }, info) => {
+    await page.goto("/");
+    await page.locator("[data-hero-stage][data-ready]").waitFor();
+    const link = page.locator(info.project.use.isMobile ? `[data-card="${target}"]` : `[data-run="${target}"]`);
+    await link.scrollIntoViewIfNeeded();
+    await link.click();
+    await arrive(page);
+  });
+
+  test("/work: row (desktop) or card (phone)", async ({ page }, info) => {
+    await page.goto("/work");
+    await page.locator(info.project.use.isMobile ? `[data-work-card="${target}"]` : `[data-work-row="${target}"]`).click();
+    await arrive(page);
+  });
+
+  test("run report: Next run", async ({ page }) => {
+    await page.goto(RUN);
+    await page.locator("[data-next-run]").click();
+    await arrive(page);
   });
 });
 
@@ -151,7 +180,7 @@ test.describe("quality", () => {
   });
 
   test("home initial JS stays within the 190KB budget (owner decision)", async ({ request }, info) => {
-    test.skip(info.project.name === "phone");
+    test.skip(!!info.project.use.isMobile);
     const html = await (await request.get("/")).text();
     const scripts = [...new Set(html.match(/\/_next\/static\/chunks\/[^"]+\.js/g) ?? [])];
     let total = 0;

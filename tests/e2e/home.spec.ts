@@ -41,7 +41,7 @@ test.describe("home structure", () => {
 
 test.describe("04 selected runs", () => {
   test("desktop: hover opens a row (media, outcome, trace that plays to the end)", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!!info.project.use.isMobile);
     await ready(page);
     const row = page.locator('[data-run="lead-research-agent"]');
     await row.scrollIntoViewIfNeeded();
@@ -52,14 +52,14 @@ test.describe("04 selected runs", () => {
   });
 
   test("desktop: keyboard focus opens the row too", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!!info.project.use.isMobile);
     await ready(page);
     await page.locator('[data-run="weekly-ops-report"]').focus();
     await expect(page.locator('[data-run="weekly-ops-report"]')).toHaveAttribute("data-active", "true");
   });
 
   test("freeze home-hover: RUN #011 highlighted by the agent, as in the design", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!!info.project.use.isMobile);
     await page.goto("/?freeze=home-hover");
     const row = page.locator('[data-run="invoice-extraction-pipeline"]');
     await expect(row).toHaveAttribute("data-active", "true");
@@ -68,7 +68,7 @@ test.describe("04 selected runs", () => {
   });
 
   test("phone: stacked cards, the featured run first with its media", async ({ page }, info) => {
-    test.skip(info.project.name !== "phone");
+    test.skip(!info.project.use.isMobile);
     await ready(page);
     const cards = page.locator("[data-card]");
     await expect(cards).toHaveCount(4);
@@ -79,7 +79,7 @@ test.describe("04 selected runs", () => {
 
 test.describe("07 toolbox", () => {
   test("hovering a tool highlights the runs that use it", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!!info.project.use.isMobile);
     await ready(page);
     await page.locator("html[data-home-ready]").waitFor({ state: "attached" }); // idle-loaded behaviour
     await page.getByRole("button", { name: /^\[Slack\]/ }).hover();
@@ -117,7 +117,7 @@ test.describe("08 contact form", () => {
   });
 
   test("API: invalid → 422, honeypot → silently ok, unconfigured delivery → 503, rate limit → 429", async ({ request }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!!info.project.use.isMobile);
     const ip = { "x-forwarded-for": `203.0.113.${Math.floor(Math.random() * 200)}` };
     const bad = await request.post("/api/contact", { data: { task: "hi", email: "nope" }, headers: ip });
     expect(bad.status()).toBe(422);
@@ -135,18 +135,19 @@ test.describe("08 contact form", () => {
   });
 
   test("copy email shows the toast", async ({ page, context }, info) => {
-    test.skip(info.project.name !== "desktop");
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    test.skip(!!info.project.use.isMobile);
+    // Chromium needs the grant; WebKit allows a write from the click itself (and rejects these names)
+    if (info.project.use.defaultBrowserType === "chromium") await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await ready(page);
     await page.locator("html[data-home-ready]").waitFor({ state: "attached" }); // idle-loaded behaviour
-    await page.locator("#contact").getByRole("button", { name: /yourdomain/ }).click();
+    await page.locator("#contact").getByRole("button", { name: /moizkaseer@gmail\.com/ }).click();
     await expect(page.getByText("Copied — talk soon")).toBeVisible();
   });
 });
 
 test.describe("05 process", () => {
   test("desktop: the pinned diagram advances with scroll", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop");
+    test.skip(!!info.project.use.isMobile);
     await ready(page);
     const pin = page.locator("[data-process-pin]");
     const box = await pin.boundingBox();
@@ -158,7 +159,7 @@ test.describe("05 process", () => {
   });
 
   test("phone: the stacked list", async ({ page }, info) => {
-    test.skip(info.project.name !== "phone");
+    test.skip(!info.project.use.isMobile);
     await ready(page);
     await expect(page.locator("[data-process-list] li")).toHaveCount(5);
     await expect(page.locator("[data-process-list] li").first()).toBeVisible();
@@ -177,7 +178,7 @@ test.describe("C3 rail", () => {
       const [, x, y] = path.match(/M([\d.]+) ([\d.]+)/)!.map(Number);
       const s = stage.width / (phone ? 390 : 1440);
       return { x, y, ex: stage.left + (phone ? 382 : 1400) * s, ey: stage.top + window.scrollY + (phone ? 1283 : 1300) * s };
-    }, info.project.name === "phone");
+    }, !!info.project.use.isMobile);
     expect(Math.abs(geo.x - geo.ex)).toBeLessThan(1);
     expect(Math.abs(geo.y - geo.ey)).toBeLessThan(1);
     const before = await page.locator("[data-rail] svg path").nth(1).evaluate((p) => getComputedStyle(p).strokeDashoffset);

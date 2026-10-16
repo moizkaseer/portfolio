@@ -61,7 +61,7 @@ export function WorkIndex({ items }: { items: WorkItem[] }) {
           <Link key={item.slug} href={`/work/${item.slug}`} prefetch className={`${runs.cols} ${runs.row}`} data-work-row={item.slug}>
             <span className={runs.id}>RUN #{item.runId}</span>
             <span className={runs.name}>
-              <RunTitle slug={item.slug}>{item.title}</RunTitle>
+              <RunTitle slug={item.slug} layout="rows">{item.title}</RunTitle>
             </span>
             <span className={runs.outcome}>{item.outcome}</span>
             <span className={runs.stack}>{item.stack.join(" · ")}</span>
@@ -79,7 +79,7 @@ export function WorkIndex({ items }: { items: WorkItem[] }) {
               <Status item={item} />
             </span>
             <span className={runs.cardTitle}>
-              <RunTitle slug={item.slug}>{item.title}</RunTitle>
+              <RunTitle slug={item.slug} layout="cards">{item.title}</RunTitle>
             </span>
             <span className={runs.outcome}>{item.outcome}</span>
           </Link>

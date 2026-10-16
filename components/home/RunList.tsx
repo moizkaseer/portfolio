@@ -131,7 +131,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
                   <div className={styles.activeBody}>
                     <span className={styles.activeName}>
                       <span aria-hidden="true" className={styles.nameMark} />
-                      <RunTitle slug={item.slug}>{item.title}</RunTitle>
+                      <RunTitle slug={item.slug} layout="rows">{item.title}</RunTitle>
                     </span>
                     <span className={styles.activeOutcome}>{item.outcomeLong}</span>
                     <MiniTrace nodes={item.trace} play={!frozen} frozenAt={frozen ? 2 : undefined} />
@@ -150,7 +150,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
                 <>
                   <span className={styles.id}>RUN #{item.runId}</span>
                   <span className={styles.name}>
-                    <RunTitle slug={item.slug}>{item.title}</RunTitle>
+                    <RunTitle slug={item.slug} layout="rows">{item.title}</RunTitle>
                   </span>
                   <span className={styles.outcome}>{item.outcome}</span>
                   <span className={styles.stack}>{item.stack.join(" · ")}</span>
@@ -173,7 +173,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
               <Status item={item} />
             </span>
             <span className={i === 0 ? styles.cardTitleFeatured : styles.cardTitle}>
-              <RunTitle slug={item.slug}>{item.title}</RunTitle>
+              <RunTitle slug={item.slug} layout="cards">{item.title}</RunTitle>
             </span>
             {i === 0 && (
               <>

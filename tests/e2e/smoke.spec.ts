@@ -11,7 +11,7 @@ test.describe("shell", () => {
   });
 
   test("theme toggle switches and persists", async ({ page }, info) => {
-    test.skip(info.project.name === "phone", "desktop toggle; the phone toggle lives in the menu");
+    test.skip(!!info.project.use.isMobile, "desktop toggle; the phone toggle lives in the menu");
     await page.goto("/");
     await page.locator("header [data-theme-toggle]:visible").click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");

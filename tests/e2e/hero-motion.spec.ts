@@ -74,8 +74,11 @@ async function packetCentre(page: Page, layout: "desktop" | "mobile") {
 test.describe("hero motion matches the design timeline", () => {
   test.setTimeout(180_000);
 
-  test("four loops, every event, and every packet stop", async ({ page }, info) => {
-    const layout = info.project.name === "phone" ? "mobile" : "desktop";
+  // The motion code is the same in every browser: Chromium plays all four loops, WebKit one
+  // complete loop (example 1) with the same checks, then the hand-off into example 2.
+  test("every loop's events and packet stops (four on Chromium, one on WebKit)", async ({ page }, info) => {
+    const layout = !!info.project.use.isMobile ? "mobile" : "desktop";
+    const loops = info.project.use.defaultBrowserType === "webkit" ? 1 : 4;
     await page.clock.install();
     await page.goto("/?freeze=manual");
     await page.waitForFunction(() => !!window.__heroTest);
@@ -92,7 +95,7 @@ test.describe("hero motion matches the design timeline", () => {
     };
 
     let offset = 0;
-    for (let k = 0; k < 4; k++) {
+    for (let k = 0; k < loops; k++) {
       const times = [...new Set(buildLoopEvents(k).events.map((e) => e.t))];
       // packet checks: after each move has finished — or on the last ms of the hold where the
       // design starts the next move first (steps 1, 3, 5: 480ms hold, 500ms move; < 0.1px short)
@@ -120,10 +123,10 @@ test.describe("hero motion matches the design timeline", () => {
       offset += loopDuration(k);
     }
 
-    // after the fourth loop the cycle starts again with example 1 (73.7s total)
-    expect(offset).toBe(73686);
+    // after the fourth loop the cycle starts again with example 1 (73.7s total); after one, example 2 begins
+    if (loops === 4) expect(offset).toBe(73686);
     await advanceTo(offset + 1);
-    expect(await readDom(page, layout)).toEqual(expected(0, 1, layout));
+    expect(await readDom(page, layout)).toEqual(expected(loops % 4, 1, layout));
     const [x, y] = await packetCentre(page, layout);
     expect([Math.round(x), Math.round(y)]).toEqual([...PACKET_POINTS[layout][0]]);
   });

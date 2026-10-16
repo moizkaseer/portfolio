@@ -74,11 +74,12 @@ function check(got: Record<string, Box>, want: Record<string, Box>) {
 
 test.describe("hero geometry", () => {
   test("positions within 2px of the design", async ({ page }, info) => {
-    const phone = info.project.name === "phone";
+    const phone = !!info.project.use.isMobile;
     await page.goto("/?freeze=prompt-done");
     await page.evaluate(() => document.fonts.ready);
-    const { scale, boxes } = await measure(page, phone ? 390 : 1440);
-    expect(scale).toBeCloseTo(1, 3);
+    const designW = phone ? 390 : 1440;
+    const { scale, boxes } = await measure(page, designW);
+    expect(scale).toBeCloseTo(page.viewportSize()!.width / designW, 3);
     check(boxes, phone ? PHONE : DESKTOP);
   });
 
@@ -88,7 +89,7 @@ test.describe("hero geometry", () => {
     [320, 640],
   ]) {
     test(`phone ${w}px shows the same design scaled by ${(w / 390).toFixed(3)}`, async ({ page }, info) => {
-      test.skip(info.project.name !== "phone");
+      test.skip(!info.project.use.isMobile);
       await page.setViewportSize({ width: w, height: h });
       await page.goto("/?freeze=prompt-done");
       await page.evaluate(() => document.fonts.ready);
@@ -100,21 +101,23 @@ test.describe("hero geometry", () => {
     });
   }
 
-  for (const w of [1024, 1280, 1920]) {
-    test(`desktop ${w}px shows the same design scaled by ${(w / 1440).toFixed(3)}`, async ({ page }, info) => {
-      test.skip(info.project.name !== "desktop");
+  // Above 1440 the stage's inner edges follow the content column (width − 128, max 1680) — HeroStage.module.css
+  const desktopScale = (w: number) => (w <= 1440 ? w / 1440 : Math.min(w - 128, 1680) / 1312);
+  for (const w of [1024, 1280, 1600, 1920]) {
+    test(`desktop ${w}px shows the same design scaled by ${desktopScale(w).toFixed(3)}`, async ({ page }, info) => {
+      test.skip(!!info.project.use.isMobile);
       await page.setViewportSize({ width: w, height: 900 });
       await page.goto("/?freeze=prompt-done");
       await page.evaluate(() => document.fonts.ready);
       const { scale, boxes } = await measure(page, 1440);
-      expect(scale).toBeCloseTo(w / 1440, 3);
+      expect(scale).toBeCloseTo(desktopScale(w), 3);
       check(boxes, DESKTOP);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(w);
     });
   }
 
   test("tablet 768px: the 390 stage at 560px, centred", async ({ page }, info) => {
-    test.skip(info.project.name !== "phone");
+    test.skip(!info.project.use.isMobile);
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto("/?freeze=prompt-done");
     const r = await page.evaluate(() => document.querySelector("[data-hero-stage]")!.getBoundingClientRect().toJSON());

@@ -27,7 +27,7 @@ export function Footer() {
       </div>
 
       <div aria-hidden="true" className={styles.wordmark} data-wordmark>
-        <span className={styles.wordmarkInner}>{site.name}</span>
+        <span className={styles.wordmarkInner}>{site.name.toUpperCase()}</span>
       </div>
       <Deferred name="wordmark" />
 

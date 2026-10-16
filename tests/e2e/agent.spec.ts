@@ -30,7 +30,7 @@ test.describe("agent — demo replay drives the site", () => {
   test("“Show me your best project”: scroll, highlight, open — and the conversation follows", async ({ page }, info) => {
     test.setTimeout(60_000);
     await home(page);
-    if (info.project.name === "phone") {
+    if (!!info.project.use.isMobile) {
       await page.locator("[data-askbar]").click();
       await panel(page).getByRole("button", { name: "Show me your best project" }).click();
       // while the agent acts, the sheet shrinks to a pill with the current action
@@ -51,7 +51,7 @@ test.describe("agent — demo replay drives the site", () => {
   });
 
   test("the visitor takes control: a scroll cancels the rest", async ({ page }, info) => {
-    test.skip(info.project.name === "phone");
+    test.skip(!!info.project.use.isMobile);
     test.setTimeout(40_000);
     await home(page);
     await page.locator("#agent").scrollIntoViewIfNeeded();
@@ -105,7 +105,7 @@ test.describe("agent — demo replay drives the site", () => {
   });
 
   test("reduced motion: no glide, the actions still happen", async ({ browser }, info) => {
-    test.skip(info.project.name === "phone");
+    test.skip(!!info.project.use.isMobile);
     const ctx = await browser.newContext({ reducedMotion: "reduce", viewport: info.project.use.viewport! });
     const page = await ctx.newPage();
     await home(page);
