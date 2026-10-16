@@ -87,7 +87,7 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 **Identity and status**
 - [ ] Name exactly as it should appear (nav, footer wordmark, colophon, JSON-LD, curl). The wordmark is set at 15.2vw, so name length affects the footer.
 - [ ] One-line positioning. The approved hero line is "I build agents that do the work."; confirm it.
-- [ ] City + IANA timezone (nav clock, meta row `Online · [CITY]`)
+- [ ] City (nav clock, meta row `Online · [CITY]`) — timezone set to Europe/Skopje (2026-10-15)
 - [ ] Availability: "Available for projects" or "Booked until [month]"
 - [ ] Domain (canonical URLs, `Try curl [domain]`, OG, llms.txt)
 - [ ] The old site's real URL and/or files in `legacy/`: bio, services, project write-ups, CV, images you own
@@ -110,7 +110,7 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 - [ ] Decisions and tradeoffs (guardrails, evals, failure handling), and what you'd change
 
 **Site-wide**
-- [ ] Hero stats: "Agents in production" and "Hours automated / yr" (or OK to remove)
+- [ ] Hero stats: numbers for "Agents in production" and "Hours automated / yr" (block is kept; owner reply had `[LABEL]: [NUMBER]` placeholders)
 - [ ] Toolbox: tools you actually use, grouped (Orchestration / Models / Data / Surfaces …)
 - [ ] Testimonials (optional; without them Proof is omitted) and any real counters
 - [ ] Confirm the manifesto wording is true to how you work
@@ -129,3 +129,6 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 4. The full nav wins on every page; the nav strip is noted, not counted, in the visual comparison.
 5. The owner's reply listed name, city, timezone, email, domain, booking link, socials and old site as template brackets, so **every item in §6 is still open**. They live in `content/site.json`, marked `[TODO]`.
 6. Projects are not ready: placeholders stay; continue with Phase 1–2.
+
+## 9. Owner decisions (Phase 2 review, 2026-10-15)
+Contrast fix applied (`--muted-raised`), JS budget 190KB, Geist from Vercel's files, timezone Europe/Skopje. Name, city, email, domain, booking link, socials and hero stat numbers stay placeholders until before launch. Projects use the design's placeholder projects (`content/projects/*`, every field marked `[TODO]`) until the owner sends real ones.

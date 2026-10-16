@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { site } from "@/lib/content/site";
 import { NAV_LINKS } from "./nav-links";
 import { NavClock } from "./NavClock";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./MobileMenu.module.css";
 
 /** Full-screen phone menu: mega links staggered in, local time + status at the bottom (brief §4). */
-export function MobileMenu() {
+export function MobileMenu({ city, timezone, statusLabel }: { city: string; timezone: string | null; statusLabel: string }) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -93,6 +92,7 @@ export function MobileMenu() {
               key={l.href}
               href={l.href}
               className={styles.link}
+              prefetch={l.built ? undefined : false}
               style={{ transitionDelay: `${60 + i * 60}ms` }}
               onClick={() => setOpen(false)}
             >
@@ -104,11 +104,11 @@ export function MobileMenu() {
 
         <div className={styles.bottom}>
           <span>
-            <span className={styles.ink}>Online</span> · {site.city} <NavClock timezone={site.timezone} />
+            <span className={styles.ink}>Online</span> · {city} <NavClock timezone={timezone} />
           </span>
           <span className={styles.status}>
             <span aria-hidden="true" className="led" />
-            {site.availability.label}
+            {statusLabel}
           </span>
           <ThemeToggle className={styles.trigger} />
         </div>

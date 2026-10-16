@@ -13,6 +13,7 @@
   --ink: #ece9e2;
   --ink-2: #b5b2aa;
   --muted: #8c8980;
+  --muted-raised: #8c8980; /* muted text on --paper-2 surfaces (AA) */
   --line: rgba(236, 233, 226, 0.12);
   --line-strong: rgba(236, 233, 226, 0.3);
   --ok: #3dba6f;
@@ -27,6 +28,7 @@
   --ink: #0e0e0c;
   --ink-2: #3b3a36;
   --muted: #6a675f;
+  --muted-raised: #64615a; /* muted text on --paper-2 surfaces: #6A675F is 4.33:1 there, this is 4.73:1 (AA) */
   --line: rgba(14, 14, 12, 0.14);
   --line-strong: rgba(14, 14, 12, 0.32);
   --ok: #2e9b5a;

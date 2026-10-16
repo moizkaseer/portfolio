@@ -1,47 +1,33 @@
 "use client";
 
 import { useEffect } from "react";
-import Lenis from "lenis";
-import { gsap, ScrollTrigger } from "./gsap";
 import { useReducedMotion } from "./reduced-motion";
 import { readFreeze } from "@/lib/freeze";
 
-let lenis: Lenis | null = null;
-
-/** The active Lenis instance, or null (reduced motion, or not mounted yet). */
-export function getLenis() {
-  return lenis;
-}
-
-/** Scroll to an element or selector — through Lenis when it runs, natively otherwise. */
-export function scrollToTarget(target: string | HTMLElement) {
-  const el = typeof target === "string" ? document.querySelector<HTMLElement>(target) : target;
-  if (!el) return;
-  if (lenis) lenis.scrollTo(el, { offset: -parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) });
-  else el.scrollIntoView({ block: "start" });
-}
-
 /**
- * Lenis driven from GSAP's ticker (Tier A). Never instantiated when the visitor
- * prefers reduced motion, and not in ?freeze screenshots.
+ * Smooth scrolling (Tier A). Never created under reduced motion or in ?freeze
+ * screenshots, and loaded after the page is idle so GSAP + Lenis stay out of the
+ * initial bundle (brief §9).
  */
 export function SmoothScroll() {
   const reduced = useReducedMotion();
 
   useEffect(() => {
     if (reduced || readFreeze()) return;
-
-    const instance = new Lenis({ anchors: { offset: -64 } });
-    lenis = instance;
-    instance.on("scroll", ScrollTrigger.update);
-    const raf = (time: number) => instance.raf(time * 1000);
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
+    let stop: (() => void) | undefined;
+    let cancelled = false;
+    const start = () =>
+      import("./lenis-setup").then((m) => {
+        if (!cancelled) stop = m.startSmoothScroll();
+      });
+    // Safari has no requestIdleCallback
+    const ric = window.requestIdleCallback as typeof window.requestIdleCallback | undefined;
+    const id = ric ? ric(start, { timeout: 2000 }) : window.setTimeout(start, 1200);
     return () => {
-      gsap.ticker.remove(raf);
-      instance.destroy();
-      lenis = null;
+      cancelled = true;
+      if (ric) window.cancelIdleCallback(id);
+      else window.clearTimeout(id);
+      stop?.();
     };
   }, [reduced]);
 

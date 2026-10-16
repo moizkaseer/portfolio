@@ -45,3 +45,6 @@ next-env.d.ts
 /playwright-report/
 /lighthouse-report/
 /.lighthouseci/
+
+# large local recordings (shared separately)
+/docs/fidelity/**/*.webm

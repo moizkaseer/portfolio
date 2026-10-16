@@ -11,7 +11,7 @@ function isTyping(target: EventTarget | null) {
 }
 
 /** ⌘K / Ctrl+K / "/" opens the command palette. */
-export function CommandPaletteLauncher() {
+export function CommandPaletteLauncher({ email }: { email: string }) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -39,7 +39,7 @@ export function CommandPaletteLauncher() {
   if (!loaded) return null;
   return (
     <Suspense fallback={null}>
-      <CommandPalette open={open} onClose={() => setOpen(false)} />
+      <CommandPalette open={open} onClose={() => setOpen(false)} email={email} />
     </Suspense>
   );
 }

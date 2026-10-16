@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { axeViolations } from "./helpers/axe";
 
 test.describe("shell", () => {
   test("home renders with one h1, nav, footer and night shift by default", async ({ page }) => {
@@ -21,6 +21,7 @@ test.describe("shell", () => {
 
   test("command palette opens with Ctrl+K and closes with Escape", async ({ page }) => {
     await page.goto("/");
+    await page.locator("[data-hero-stage][data-ready]").waitFor();
     await page.keyboard.press("Control+K");
     const dialog = page.getByRole("dialog", { name: "Command palette" });
     await expect(dialog).toBeVisible();
@@ -28,9 +29,12 @@ test.describe("shell", () => {
     await expect(dialog).toBeHidden();
   });
 
-  test("no axe violations", async ({ page }) => {
-    await page.goto("/");
-    const results = await new AxeBuilder({ page }).analyze();
-    expect(results.violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
-  });
+  for (const theme of ["dark", "light"]) {
+    test(`no axe violations (${theme})`, async ({ page }) => {
+      await page.addInitScript((t) => localStorage.setItem("mr-theme", t), theme);
+      await page.goto("/?freeze=prompt-done");
+      const { violations } = await axeViolations(page);
+      expect(violations).toEqual([]);
+    });
+  }
 });

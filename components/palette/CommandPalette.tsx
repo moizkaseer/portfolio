@@ -2,9 +2,8 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { site } from "@/lib/content/site";
 import { getTheme, setTheme } from "@/lib/theme";
-import { scrollToTarget } from "@/lib/motion/SmoothScroll";
+import { scrollToTarget } from "@/lib/motion/scroll";
 import styles from "./CommandPalette.module.css";
 
 interface Command {
@@ -20,7 +19,7 @@ interface Command {
  * Command palette skeleton (brief §4). Phase 4 adds every project, Phase 5 wires
  * "Ask the agent". Native <dialog>: focus trap, Esc and inert background for free.
  */
-export default function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function CommandPalette({ open, onClose, email }: { open: boolean; onClose: () => void; email: string }) {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [query, setQuery] = useState("");
@@ -48,14 +47,14 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
         id: "email",
         group: "Actions",
         label: "Copy email",
-        hint: site.email,
+        hint: email,
         run: () => {
-          navigator.clipboard?.writeText(site.email).catch(() => {});
+          navigator.clipboard?.writeText(email).catch(() => {});
         },
       },
       { id: "agent-ask", group: "Actions", label: "Ask the agent", hint: "coming soon", disabled: true, run: () => {} },
     ];
-  }, [router]);
+  }, [router, email]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

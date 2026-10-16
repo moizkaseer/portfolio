@@ -24,7 +24,7 @@ export function Nav() {
 
         <nav aria-label="Primary" className={styles.links}>
           {NAV_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className={styles.link}>
+            <Link key={l.href} href={l.href} className={styles.link} prefetch={l.built ? undefined : false}>
               <span className={styles.index}>{l.index}</span> {l.label}
             </Link>
           ))}
@@ -47,7 +47,7 @@ export function Nav() {
             aria-label={site.availability.label}
             className={available ? "led" : `led ${styles.ledBooked}`}
           />
-          <MobileMenu />
+          <MobileMenu city={site.city} timezone={site.timezone} statusLabel={site.availability.label} />
         </div>
       </div>
     </header>
