@@ -100,7 +100,7 @@ test.describe("run report", () => {
     expect((await request.get(fresh)).status()).toBe(404);
     const res = await page.goto(`${fresh}-page`);
     expect(res!.status()).toBe(404);
-    await expect(page.getByText(/could not be found/i)).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Run failed: route not found.");
     // known runs are unaffected
     expect((await request.get("/work/invoice-extraction-pipeline")).status()).toBe(200);
   });

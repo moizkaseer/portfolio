@@ -23,7 +23,7 @@ export function Contact() {
           <CopyEmail email={site.email} />
           {site.bookingUrl ? (
             <a href={site.bookingUrl} className={styles.booking}>
-              Book a call <span aria-hidden="true">→</span>
+              Book a call <span aria-hidden="true" className="nudge">→</span>
             </a>
           ) : (
             <span className={styles.bookingTodo}>Book a call · [booking link]</span>

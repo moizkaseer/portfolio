@@ -24,7 +24,7 @@ export function proxy(request: NextRequest) {
     // the text route reads the original path and ?nocolor from the request URL
     res = NextResponse.rewrite(new URL(`/api/text${request.nextUrl.search}`, request.url));
   } else {
-    const slug = pathname.startsWith("/work/") ? pathname.split("/")[2] : undefined;
+    const slug = pathname.startsWith("/work/") && pathname !== "/work/opengraph-image" ? pathname.split("/")[2] : undefined;
     res = slug && !KNOWN.has(decodeURIComponent(slug)) ? NextResponse.rewrite(new URL("/_unknown-run", request.url)) : NextResponse.next();
   }
   res.headers.set("Vary", "User-Agent, Accept");

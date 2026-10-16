@@ -18,8 +18,10 @@ export function Footer() {
             {site.email}
           </a>
           <Link href="/#contact" className={styles.run}>
-            <span aria-hidden="true" className={styles.triangle} />
-            Start a run
+            <span aria-hidden="true" className={`${styles.triangle} nudge`} />
+            <span className="roll" data-label="Start a run">
+              <span>Start a run</span>
+            </span>
           </Link>
         </div>
       </div>

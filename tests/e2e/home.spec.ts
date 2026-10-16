@@ -81,6 +81,7 @@ test.describe("07 toolbox", () => {
   test("hovering a tool highlights the runs that use it", async ({ page }, info) => {
     test.skip(info.project.name !== "desktop");
     await ready(page);
+    await page.locator("html[data-home-ready]").waitFor({ state: "attached" }); // idle-loaded behaviour
     await page.getByRole("button", { name: /^\[Slack\]/ }).hover();
     await expect(page.locator('[data-run="weekly-ops-report"]')).toHaveAttribute("data-tool-lit", "true");
     await expect(page.locator('[data-run="support-inbox-agent"]')).toHaveAttribute("data-tool-dim", "true");
@@ -137,6 +138,7 @@ test.describe("08 contact form", () => {
     test.skip(info.project.name !== "desktop");
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await ready(page);
+    await page.locator("html[data-home-ready]").waitFor({ state: "attached" }); // idle-loaded behaviour
     await page.locator("#contact").getByRole("button", { name: /yourdomain/ }).click();
     await expect(page.getByText("Copied — talk soon")).toBeVisible();
   });

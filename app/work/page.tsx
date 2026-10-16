@@ -5,7 +5,7 @@ import { WorkIndex, type WorkItem } from "@/components/work/WorkIndex";
 import home from "@/components/home/home.module.css";
 import styles from "@/components/work/WorkIndex.module.css";
 
-export const metadata: Metadata = { title: "All runs", description: "Every system I have built, as run reports." };
+export const metadata: Metadata = { title: "All runs", description: "Every system I have built, as run reports.", alternates: { canonical: "/work" } };
 
 /** /work — all runs, filterable (brief §4). Not in the design canvas: built from its run table (DESIGN_SPEC §7). */
 export default function Work() {
@@ -23,7 +23,7 @@ export default function Work() {
     <div className={`${home.section} ${styles.page}`} data-page="work">
       <div className={styles.crumbs}>
         <span>
-          <Link href="/" className={styles.crumbLink}>
+          <Link href="/" className={`${styles.crumbLink} text-link`}>
             ← Home
           </Link>
           <span className={styles.muted}> / Work</span>

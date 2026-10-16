@@ -209,10 +209,18 @@ export function HeroStage({ site, smart = false }: { site: Pick<Site, "city" | "
             </p>
             <div className={styles.ctas} data-geo="ctas">
               <a href="#contact" className={styles.btnPrimary}>
-                Start a project <span aria-hidden="true">→</span>
+                <span className="roll" data-label="Start a project">
+                  <span>Start a project</span>
+                </span>{" "}
+                <span aria-hidden="true" className="nudge">
+                  →
+                </span>
               </a>
               <a href="#your-turn" className={styles.btnGhost}>
-                Try it on your task{" "}
+                <span className="roll" data-label="Try it on your task">
+                  <span>Try it on your task</span>
+                </span>
+                {" "}
                 <span aria-hidden="true">↓</span>
               </a>
             </div>
@@ -352,10 +360,17 @@ export function HeroStage({ site, smart = false }: { site: Pick<Site, "city" | "
               </p>
               <div className={styles.ctaBtns}>
                 <a href="#work" className={styles.seeRuns}>
-                  See real runs
+                  <span className="roll" data-label="See real runs">
+                    <span>See real runs</span>
+                  </span>
                 </a>
                 <a href="#contact" className={styles.build} onClick={buildThis}>
-                  Build this with me <span aria-hidden="true">→</span>
+                  <span className="roll" data-label="Build this with me">
+                    <span>Build this with me</span>
+                  </span>{" "}
+                  <span aria-hidden="true" className="nudge">
+                    →
+                  </span>
                 </a>
               </div>
             </div>

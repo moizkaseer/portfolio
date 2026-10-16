@@ -158,3 +158,9 @@ Process copy provided (applied verbatim). Toolbox, booking link and contact deli
 - [ ] Confirm the `featured: true` run (what the agent shows as "the best project"; placeholder: the invoice pipeline).
 - [ ] Smart prompt and live agent stay off until `AGENT_MODEL` + a provider key are set (owner adds them).
 - [ ] Domain for the curl version (`content/site.json` → `domain`; the text currently says `[yourdomain.com]`).
+
+## 15. Phase 7 additions to the Content Gaps (2026-10-16)
+- [ ] About page (`content/about.json`): lead sentence, bio (3 paragraphs), "Now" (3 lines + the month it was updated), timeline (year · role or milestone · one line), and a portrait (4:5; set `photo` to its path in `/public`, and `photoAlt`). Everything there is `[TODO]` for now.
+- [ ] Domain: once `content/site.json` → `domain` is real (or `NEXT_PUBLIC_SITE_URL` is set), canonical links, the sitemap, robots, OG images and JSON-LD use it. Before that they use Vercel's production URL on Vercel, and localhost locally.
+- [ ] Person JSON-LD leaves out the city and social links while they are placeholders; they appear automatically once filled in.
+- [x] 404, OG images, JSON-LD, sitemap, robots, /llms.txt, favicon, console message (Phase 7).
