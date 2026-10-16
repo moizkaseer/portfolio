@@ -1,9 +1,8 @@
 {
-  "_todo": "[TODO: the owner's real tools.] Until then the groups hold the same bracketed placeholders the design uses in each project's stack, so hovering a tool already highlights the projects that list it.",
   "groups": [
-    { "category": "Orchestration", "tools": ["[Orchestrator]", "[Scheduler]"] },
-    { "category": "Models", "tools": ["[Model]"] },
-    { "category": "Data", "tools": ["[CRM]", "[Sheets]", "[Search]", "[Accounting API]"] },
-    { "category": "Surfaces", "tools": ["[Slack]"] }
+    { "category": "Models", "tools": ["Claude", "scikit-learn", "XGBoost"] },
+    { "category": "Backend", "tools": ["Python", "FastAPI", "Docker", "TypeScript", "Next.js"] },
+    { "category": "Data", "tools": ["Postgres", "Redis", "SQLite", "Exa"] },
+    { "category": "Ops", "tools": ["OpenTelemetry", "Railway", "Supabase", "GitHub Actions"] }
   ]
 }

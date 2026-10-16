@@ -2,8 +2,8 @@ import { site } from "@/lib/content/site";
 
 /**
  * The site's absolute URL for canonical links, sitemap, OG and JSON-LD. Uses NEXT_PUBLIC_SITE_URL
- * when set, else the domain from content/site.json once it's a real one (it's still the
- * "[yourdomain.com]" placeholder — AUDIT.md), else Vercel's production URL, else localhost.
+ * when set, else the domain from content/site.json (moizali.tech) if it is a real host name,
+ * else Vercel's production URL, else localhost.
  */
 export function siteUrl(): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL?.trim();

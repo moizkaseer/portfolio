@@ -20,9 +20,10 @@ export function SelectedRuns() {
     since: p.since,
     year: p.year,
     trace: mainPath(p.graph),
+    media: p.media,
   }));
-  // The design highlights the invoice pipeline (RUN #011) and leads with it on phones.
-  const featured = items.find((i) => i.runId === "011")?.slug ?? items[0].slug;
+  // the featured run is the one the agent highlights, and phones lead with it
+  const featured = projects.find((p) => p.featured)?.slug ?? items[0].slug;
   const count = String(items.length).padStart(2, "0");
 
   return (

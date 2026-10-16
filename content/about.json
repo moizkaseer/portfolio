@@ -1,22 +1,24 @@
 {
-  "_todo": "PLACEHOLDERS for the owner: bio, what you're working on now, timeline, photo. Every bracketed value is a [TODO].",
-  "lead": "[One or two sentences about who you are and the kind of work you take on — in your own words.]",
+  "_review": "DRAFTED from the owner's GitHub repos on 2026-10-16. The owner should check every line, especially the SEEU entry and the 'how I work' paragraph.",
+  "lead": "I'm Moiz Ali. I build AI agents and automations in Tetovo, and I care most about what comes after the demo: evals, guardrails and an off switch.",
   "photo": null,
   "photoAlt": "Portrait of Moiz Ali",
+  "updated": "October 2026",
   "bio": [
-    "[TODO: Bio paragraph 1 — how you got into building agents and automations.]",
-    "[TODO: Bio paragraph 2 — the kind of teams and problems you work best with.]",
-    "[TODO: Bio paragraph 3 — how you work: what a project with you looks like.]"
+    "I started with React in 2025, building a website for the Karakoram Alpine Club, a mountaineering club in northern Pakistan, and a run of small apps to learn the craft. In early 2026 I moved to automation: an n8n voice agent, then a workspace where creators hand tasks to AI agents.",
+    "I work best with small teams who have a repetitive job a person still does by hand: research, outreach, reporting, data entry. I like problems where a wrong answer is expensive, because that is where checks written in code earn their keep.",
+    "A project with me starts with the task as it is done today, then a working pipeline on real inputs, measured: what it costs, how long it takes and how often it is right. A person stays in the loop wherever a mistake would matter, and every run is logged so you can see what it did."
   ],
   "now": [
-    "[TODO: What you're building right now]",
-    "[TODO: What you're learning or exploring]",
-    "[TODO: What you're open to next]"
+    "Building Concord, a supervisor that keeps multi-agent runs alive through crashes",
+    "Taking the cold outreach agent to its first real email, and measuring its reply classifier",
+    "Open to projects that take a repetitive job off a small team"
   ],
   "timeline": [
-    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" },
-    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" },
-    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" },
-    { "year": "[YYYY]", "title": "[Role or milestone]", "note": "[One line about it]" }
+    { "year": "2025", "title": "Started with React", "note": "A website for a mountaineering club in northern Pakistan, and small apps to learn the craft" },
+    { "year": "2025", "title": "SEEU Connect", "note": "A student platform for South East European University, later rebuilt in C# and PHP" },
+    { "year": "2026", "title": "First agents", "note": "An n8n voice agent and an AI-agent workspace for creators" },
+    { "year": "2026", "title": "World Cup 2026 predictor", "note": "A data warehouse, six features and five models compared" },
+    { "year": "2026", "title": "Agents you can check", "note": "The cold outreach agent and Concord: evals, guardrails and crash recovery" }
   ]
 }

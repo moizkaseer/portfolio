@@ -17,7 +17,7 @@ describe("agent UI tools — allow-list (C1)", () => {
   });
 
   it("projects must be real slugs (no other URLs can be opened)", () => {
-    expect(validateUiAction("ui_open_project", { slug: "invoice-extraction-pipeline" }, TOOLS)).toMatchObject({ tool: "ui_open_project" });
+    expect(validateUiAction("ui_open_project", { slug: "cold-outreach-agent" }, TOOLS)).toMatchObject({ tool: "ui_open_project" });
     expect(typeof validateUiAction("ui_open_project", { slug: "../../evil" }, TOOLS)).toBe("string");
     expect(typeof validateUiAction("ui_open_project", { slug: "https://evil.example" }, TOOLS)).toBe("string");
   });
@@ -30,7 +30,7 @@ describe("agent UI tools — allow-list (C1)", () => {
 
   it("at most 3 UI actions per turn; traces read like the design", () => {
     expect(MAX_UI_ACTIONS_PER_TURN).toBe(3);
-    expect(traceLabel("ui_open_project", { slug: "invoice-extraction-pipeline" })).toBe('ui.open_project("invoice-extraction-pipeline")');
+    expect(traceLabel("ui_open_project", { slug: "cold-outreach-agent" })).toBe('ui.open_project("cold-outreach-agent")');
     expect(traceLabel("search_projects", { sort: "impact" })).toBe('search_projects(sort: "impact")');
   });
 });

@@ -3,20 +3,20 @@ import { gzipSync } from "node:zlib";
 import { test, expect } from "@playwright/test";
 import { axeViolations } from "./helpers/axe";
 
-const RUN = "/work/invoice-extraction-pipeline";
+const RUN = "/work/cold-outreach-agent";
 
 test.describe("/work index", () => {
   test("lists every run and filters by category", async ({ page }, info) => {
     await page.goto("/work");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("All runs.");
     const rows = !!info.project.use.isMobile ? page.locator("[data-work-card]") : page.locator("[data-work-row]");
-    await expect(rows).toHaveCount(4);
+    await expect(rows).toHaveCount(3);
     await page.getByRole("button", { name: /^Agents/ }).click();
     await expect(page.getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true");
-    await expect(rows).toHaveCount(2);
-    await expect(page.getByRole("button", { name: /^Tools/ })).toBeDisabled();
+    await expect(rows).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /^Automations/ })).toBeDisabled();
     await page.getByRole("button", { name: /^All/ }).click();
-    await expect(rows).toHaveCount(4);
+    await expect(rows).toHaveCount(3);
   });
 
   test("nav marks Work as the current section", async ({ page }, info) => {
@@ -30,15 +30,17 @@ test.describe("/work index", () => {
 });
 
 test.describe("run report", () => {
-  test("the replay sentence comes from the trace file (sample until the owner's real run)", async ({ page }) => {
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("the replay sentence comes from the trace file (sample until the owner's real run)", async ({ page }) => {
     await page.goto(RUN);
     await expect(page.getByText("This is a sample run showing how the system works.")).toBeVisible();
     await expect(page.getByText(/This is a real run/)).toHaveCount(0);
   });
 
-  test("freeze run-report: the design's frame", async ({ page }) => {
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("freeze run-report: the design's frame", async ({ page }) => {
     await page.goto(`${RUN}?freeze=run-report`);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("[Invoice extraction pipeline]");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Cold outreach agent");
     await expect(page.locator("[data-status]")).toHaveText("Replaying · 4 / 6");
     await expect(page.locator("[data-elapsed]")).toHaveText("1.34s");
     await expect(page.locator('[role="img"][aria-label^="Workflow: Invoice email arrives → Extract fields"]')).toBeAttached();
@@ -48,7 +50,8 @@ test.describe("run report", () => {
     }
   });
 
-  test("the replay autoplays once in view, finishes, and Replay / Speed work", async ({ page }) => {
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("the replay autoplays once in view, finishes, and Replay / Speed work", async ({ page }) => {
     await page.clock.install();
     await page.goto(RUN);
     await page.locator("[data-trace-terminal]").scrollIntoViewIfNeeded();
@@ -62,7 +65,8 @@ test.describe("run report", () => {
     await expect(page.getByRole("button", { name: /speed/i })).toHaveText("Speed 2×");
   });
 
-  test("reduced motion: the finished run, no autoplay", async ({ browser }, info) => {
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("reduced motion: the finished run, no autoplay", async ({ browser }, info) => {
     const ctx = await browser.newContext({ reducedMotion: "reduce", viewport: info.project.use.viewport! });
     const page = await ctx.newPage();
     await page.goto(RUN);
@@ -75,21 +79,21 @@ test.describe("run report", () => {
     await page.goto(RUN);
     await expect(page.getByRole("link", { name: "← All runs" })).toHaveAttribute("href", "/work");
     await page.locator("[data-next-run]").click();
-    await expect(page).toHaveURL(/\/work\/lead-research-agent$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("[Lead research agent]");
+    await expect(page).toHaveURL(/\/work\/concord$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Concord");
   });
 
   test("every run report renders; brief §6 sections come from MDX", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(String(e)));
-    for (const slug of ["support-inbox-agent", "invoice-extraction-pipeline", "lead-research-agent", "weekly-ops-report"]) {
+    for (const slug of ["cold-outreach-agent", "concord", "worldcup-2026-prediction"]) {
       await page.goto(`/work/${slug}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expect(page.getByRole("heading", { name: /— The problem$/ })).toBeVisible();
       await expect(page.getByRole("heading", { name: /— Decisions & tradeoffs$/ })).toBeVisible();
     }
     // without a trace.json there is no replay: Results is 02 and the MDX sections follow
-    await page.goto("/work/support-inbox-agent");
+    await page.goto("/work/concord");
     await expect(page.getByRole("heading", { name: "02 — Results" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "03 — The problem" })).toBeVisible();
     expect(errors).toEqual([]);
@@ -102,7 +106,7 @@ test.describe("run report", () => {
     expect(res!.status()).toBe(404);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Run failed: route not found.");
     // known runs are unaffected
-    expect((await request.get("/work/invoice-extraction-pipeline")).status()).toBe(200);
+    expect((await request.get("/work/cold-outreach-agent")).status()).toBe(200);
   });
 });
 
@@ -121,19 +125,19 @@ test.describe("title morph", () => {
     });
     await page.goto("/");
     await page.locator("[data-hero-stage][data-ready]").waitFor();
-    const row = page.locator('[data-run="lead-research-agent"]');
+    const row = page.locator('[data-run="concord"]');
     await row.scrollIntoViewIfNeeded();
     await row.click();
-    await expect(page).toHaveURL(/\/work\/lead-research-agent$/);
+    await expect(page).toHaveURL(/\/work\/concord$/);
     expect(await page.evaluate(() => (window as unknown as { __vt: number }).__vt)).toBeGreaterThan(0);
   });
 });
 
 test.describe("title-morph links navigate in every browser (plain navigation without View Transitions)", () => {
-  const target = "lead-research-agent";
+  const target = "concord";
   const arrive = async (page: import("@playwright/test").Page) => {
     await expect(page).toHaveURL(new RegExp(`/work/${target}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("[Lead research agent]");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Concord");
   };
 
   test("home: run row (desktop) or card (phone)", async ({ page }, info) => {

@@ -26,7 +26,7 @@ for (const c of [
     await page.mouse.move(200, 200);
     await page.locator("#agent").getByRole("button", { name: "Show me your best project" }).click();
   }
-  await page.waitForURL(/invoice-extraction-pipeline/, { timeout: 30000 });
+  await page.waitForURL(/cold-outreach-agent/, { timeout: 30000 });
   await page.waitForTimeout(3000);
   const video = page.video();
   await ctx.close();

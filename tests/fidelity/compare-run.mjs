@@ -25,7 +25,7 @@ for (const theme of ["light", "dark"]) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
   await ctx.addInitScript((x) => { try { localStorage.setItem("mr-theme", x); } catch {} }, theme);
   const page = await ctx.newPage();
-  await page.goto(`${base}/work/invoice-extraction-pipeline?freeze=run-report`, { waitUntil: "networkidle" });
+  await page.goto(`${base}/work/cold-outreach-agent?freeze=run-report`, { waitUntil: "networkidle" });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(400);
   const shot = PNG.sync.read(await page.screenshot({ fullPage: true }));

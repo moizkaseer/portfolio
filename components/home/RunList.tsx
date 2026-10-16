@@ -9,6 +9,7 @@ import { MiniTrace } from "./MiniTrace";
 import { MediaBox } from "./MediaBox";
 import { GhostPointer } from "./GhostPointer";
 import { RunTitle } from "@/components/run/RunTitle";
+import { isLive, statusLabel, type RunStatus } from "@/lib/content/status";
 import styles from "./SelectedRuns.module.css";
 
 export interface RunItem {
@@ -18,10 +19,11 @@ export interface RunItem {
   outcome: string;
   outcomeLong: string;
   stack: string[];
-  status: "in-production" | "handed-over";
+  status: RunStatus;
   since: string;
   year: string;
   trace: TraceNode[];
+  media?: { src: string; alt: string };
 }
 
 const noop = () => () => {};
@@ -31,11 +33,11 @@ function useFrozenHover() {
 }
 
 function Status({ item, long }: { item: RunItem; long?: boolean }) {
-  const live = item.status === "in-production";
+  const live = isLive(item.status);
   return (
     <span className={live ? styles.status : `${styles.status} ${styles.handedOver}`}>
       <span aria-hidden="true" className={live ? `${styles.led} pulse` : styles.ledOff} />
-      {live ? (long ? `In production since ${item.since}` : "In production") : "Handed over"}
+      {statusLabel(item.status, long ? item.since : undefined)}
     </span>
   );
 }
@@ -143,7 +145,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
                       </span>
                     </div>
                   </div>
-                  <MediaBox reveal={!frozen} />
+                  <MediaBox media={item.media} reveal={!frozen} />
                   {frozen && <GhostPointer label="agent · highlight_project" style={{ left: "47%", top: 52 }} />}
                 </>
               ) : (
@@ -167,7 +169,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
       <div className={styles.cards}>
         {ordered.map((item, i) => (
           <Link key={item.slug} href={`/work/${item.slug}`} prefetch className={i === 0 ? styles.cardFeatured : styles.card} data-card={item.slug}>
-            {i === 0 && <MediaBox compact />}
+            {i === 0 && <MediaBox media={item.media} compact />}
             <span className={styles.cardMeta}>
               <span className={styles.muted}>RUN #{item.runId}</span>
               <Status item={item} />

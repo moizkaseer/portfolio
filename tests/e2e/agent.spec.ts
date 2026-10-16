@@ -40,13 +40,13 @@ test.describe("agent — demo replay drives the site", () => {
       await page.locator("#agent").getByRole("button", { name: "Show me your best project" }).click();
       await expect(page.locator(".agent-ghost")).toHaveAttribute("data-on", "true", { timeout: 10_000 });
     }
-    await expect(page).toHaveURL(/\/work\/invoice-extraction-pipeline$/, { timeout: 25_000 });
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("[Invoice extraction pipeline]");
+    await expect(page).toHaveURL(/\/work\/cold-outreach-agent$/, { timeout: 25_000 });
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Cold outreach agent");
     const log = panel(page).getByRole("log");
     await expect(log).toContainText('ui.scroll_to("work")');
-    await expect(log).toContainText('ui.highlight_project("invoice-extraction-pipeline")');
-    await expect(log.locator('[data-state="done"]', { hasText: 'ui.open_project("invoice-extraction-pipeline")' })).toBeVisible();
-    await expect(log).toContainText("This is RUN #011, [Invoice extraction pipeline].");
+    await expect(log).toContainText('ui.highlight_project("cold-outreach-agent")');
+    await expect(log.locator('[data-state="done"]', { hasText: 'ui.open_project("cold-outreach-agent")' })).toBeVisible();
+    await expect(log).toContainText("This is RUN #003, Cold outreach agent.");
     await expect(panel(page)).toContainText("Demo replay");
   });
 
@@ -111,7 +111,7 @@ test.describe("agent — demo replay drives the site", () => {
     await home(page);
     await page.locator("#agent").scrollIntoViewIfNeeded();
     await page.locator("#agent").getByRole("button", { name: "Show me your best project" }).click();
-    await expect(page).toHaveURL(/\/work\/invoice-extraction-pipeline$/, { timeout: 25_000 });
+    await expect(page).toHaveURL(/\/work\/cold-outreach-agent$/, { timeout: 25_000 });
     await expect(page.locator(".agent-ghost")).toHaveCount(0);
     await ctx.close();
   });

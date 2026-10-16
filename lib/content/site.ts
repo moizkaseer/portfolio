@@ -17,7 +17,8 @@ const SiteSchema = z.object({
   domain: z.string(),
   bookingUrl: z.string().url().nullable(),
   socials: z.array(z.object({ label: z.string(), url: z.string().url().nullable() })),
-  heroStats: z.array(z.object({ label: z.string(), value: z.string() })).length(2),
+  /** up to two; empty hides the block (owner decision: no numbers that can't be backed up) */
+  heroStats: z.array(z.object({ label: z.string(), value: z.string() })).max(2),
 });
 
 export type Site = z.infer<typeof SiteSchema>;

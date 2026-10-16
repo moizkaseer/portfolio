@@ -1,16 +1,15 @@
 {
-  "_todo": "Every bracketed value is a [TODO] the owner still has to provide. See AUDIT.md §6.",
   "name": "Moiz Ali",
   "positioning": "AI agents & automation",
   "summary": "I design, build and run AI agents and automations for teams that are done doing the same work twice.",
-  "city": "[CITY]",
+  "city": "Tetovo",
   "timezone": "Europe/Skopje",
   "availability": {
     "status": "available",
     "label": "Available for projects"
   },
   "email": "moizkaseer@gmail.com",
-  "domain": "[yourdomain.com]",
+  "domain": "moizali.tech",
   "bookingUrl": null,
   "socials": [
     {
@@ -26,14 +25,5 @@
       "url": "https://x.com/Sp0143729983"
     }
   ],
-  "heroStats": [
-    {
-      "label": "Agents in production",
-      "value": "[N]"
-    },
-    {
-      "label": "Hours automated / yr",
-      "value": "[N]"
-    }
-  ]
+  "heroStats": []
 }

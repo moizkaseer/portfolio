@@ -2,6 +2,7 @@ import "server-only";
 import { getNextProject, getProject, getProjects, type ProjectMeta } from "@/lib/content/projects";
 import { site } from "@/lib/content/site";
 import { mainPath } from "@/lib/graph/layout";
+import { isLive, statusLabel } from "@/lib/content/status";
 import toolbox from "@/content/toolbox.json";
 import process from "@/content/process.json";
 import { blockText } from "./font";
@@ -54,7 +55,7 @@ function header(s: ReturnType<typeof styler>): string[] {
   return out;
 }
 
-const status = (p: ProjectMeta) => (p.status === "in-production" ? `● In production` : "○ Handed over");
+const status = (p: ProjectMeta, long = false) => `${isLive(p.status) ? "●" : "○"} ${statusLabel(p.status, long ? p.since : undefined)}`;
 
 export function renderHome(color: boolean): string {
   const s = styler(color);
@@ -93,7 +94,7 @@ export function renderRun(slug: string, color: boolean): string | null {
   if (!p) return null;
   const s = styler(color);
   const next = getNextProject(slug);
-  const out: string[] = ["", `${s.accent(`RUN #${p.runId}`)}  ·  ${status(p).replace("●", s.accent("●"))}${p.status === "in-production" ? ` since ${p.since}` : ""}  ·  ${p.runsLine}`, ""];
+  const out: string[] = ["", `${s.accent(`RUN #${p.runId}`)}  ·  ${status(p, true).replace("●", s.accent("●"))}  ·  ${p.runsLine}`, ""];
   out.push(...wrap(p.title).map(s.bold), "", ...wrap(p.lead.replace(/\*/g, "")), "");
   for (const [k, v] of [
     ["Client", p.industry],

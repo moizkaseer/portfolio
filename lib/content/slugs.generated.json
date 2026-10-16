@@ -1,6 +1,5 @@
 [
-  "invoice-extraction-pipeline",
-  "lead-research-agent",
-  "support-inbox-agent",
-  "weekly-ops-report"
+  "cold-outreach-agent",
+  "concord",
+  "worldcup-2026-prediction"
 ]

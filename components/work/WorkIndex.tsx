@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { RunTitle } from "@/components/run/RunTitle";
+import { isLive, statusLabel, type RunStatus } from "@/lib/content/status";
 import runs from "@/components/home/SelectedRuns.module.css";
 import styles from "./WorkIndex.module.css";
 
@@ -12,7 +13,7 @@ export interface WorkItem {
   title: string;
   outcome: string;
   stack: string[];
-  status: "in-production" | "handed-over";
+  status: RunStatus;
   year: string;
   category: "Agents" | "Automations" | "Tools" | "Experiments";
 }
@@ -90,11 +91,11 @@ export function WorkIndex({ items }: { items: WorkItem[] }) {
 }
 
 function Status({ item }: { item: WorkItem }) {
-  const live = item.status === "in-production";
+  const live = isLive(item.status);
   return (
     <span className={live ? runs.status : `${runs.status} ${runs.handedOver}`}>
       <span aria-hidden="true" className={live ? `${runs.led} pulse` : runs.ledOff} />
-      {live ? "In production" : "Handed over"}
+      {statusLabel(item.status)}
     </span>
   );
 }

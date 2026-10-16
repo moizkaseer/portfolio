@@ -22,27 +22,27 @@ for (const theme of ["dark", "light"]) {
   const t = theme === "dark" ? "night" : "day";
   await shoot("/work?freeze=1", `work-desktop-${t}.png`, 1440, 900, theme);
   await shoot("/work?freeze=1", `work-phone-${t}.png`, 390, 844, theme);
-  await shoot("/work/invoice-extraction-pipeline?freeze=run-report", `run-report-phone-${t}.png`, 390, 844, theme);
+  await shoot("/work/cold-outreach-agent?freeze=run-report", `run-report-phone-${t}.png`, 390, 844, theme);
 }
-await shoot("/work/support-inbox-agent?freeze=1", "run-report-no-trace-desktop-day.png", 1440, 900, "light");
+await shoot("/work/concord?freeze=1", "run-report-no-trace-desktop-day.png", 1440, 900, "light");
 
 // the title morph, recorded (Chromium supports same-document view transitions)
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, recordVideo: { dir: path.join(outDir, ".video"), size: { width: 1440, height: 900 } } });
 await ctx.addInitScript(() => localStorage.setItem("mr-theme", "dark"));
 const page = await ctx.newPage();
 await page.goto(base + "/", { waitUntil: "networkidle" });
-const row = page.locator('[data-run="lead-research-agent"]');
+const row = page.locator('[data-run="concord"]');
 await row.scrollIntoViewIfNeeded();
 await page.waitForTimeout(800);
 await row.hover();
 await page.waitForTimeout(900);
 await row.click();
-await page.waitForURL(/lead-research-agent/);
+await page.waitForURL(/concord/);
 await page.waitForTimeout(1500);
 await page.locator("[data-next-run]").scrollIntoViewIfNeeded();
 await page.waitForTimeout(600);
 await page.locator("[data-next-run]").click();
-await page.waitForURL(/weekly-ops-report/);
+await page.waitForURL(/worldcup-2026-prediction/);
 await page.waitForTimeout(1500);
 const video = page.video();
 await ctx.close();

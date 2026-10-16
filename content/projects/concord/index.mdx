@@ -1,0 +1,44 @@
+---
+runId: "002"
+title: "Concord"
+outcome: "A supervisor that keeps multi-agent runs alive through crashes"
+outcomeLong: "A reliability layer for multi-agent runs: it catches dead workers, repeated work and off-task output, and a run survives its process being killed."
+industry: "Own project · multi-agent infrastructure"
+stack: ["Claude", "Python", "Redis", "OpenTelemetry"]
+status: building
+since: "2026"
+year: "2026"
+order: 2
+category: Tools
+lead: "A planner splits a task into subgoals, workers run them from a shared blackboard, and a supervisor catches stalls, repeated work and off-task output, *measured under injected faults.*"
+runsLine: "80 fault tests · 19 real questions"
+role: "Design · build · evaluate"
+timeline: "1 week"
+resultsPeriod: "80 fault-injection scenarios"
+media: { src: "/media/concord.png", alt: "An OpenTelemetry trace of one Concord run: two attempts lost to a dead worker, requeued by the supervisor and retried" }
+results:
+  - { value: "8", unit: "/8", label: "runs with a dead worker recover (0/8 without the supervisor)" }
+  - { value: "0", unit: "", label: "finished subgoals re-run across 10 kill-and-resume trials" }
+  - { value: "11.2", unit: "%", label: "tokens saved on runs with a duplicate subgoal" }
+---
+
+## The problem
+
+When several agents split a task, things fail in ways a single agent never hits. A worker dies and the run hangs. Two subgoals ask for the same thing and the work is paid for twice. A specialist finishes with an answer about something else, and everything downstream builds on it. I wanted a runtime that notices these, and numbers that show when it does and when it doesn't.
+
+## Decisions & tradeoffs
+
+- **All state lives in Redis.** Every state change is an atomic Lua script that also appends to an event stream, so a new process can resume a run without redoing recorded work.
+- **The model proposes, the code decides.** Plans and re-plans are checked for cycles, size and depth before they apply. The drift check asks a model five yes/no questions, and code turns the answers into a verdict.
+- **Bounded on purpose.** An output is sent back at most once, re-plans are capped per run, and the supervisor halts a run that goes over its token budget.
+- **One run is one OpenTelemetry trace**, so a lost attempt, the requeue and the retry all show up.
+
+## What I measured, honestly
+
+On 19 real research questions with Claude Sonnet 5.5, the team's answer was judged better 12 times to 6, at about 2.9× the token cost. That judge is a model, not a person. The supervisor did nothing on those healthy runs; its value shows under faults. Reworded duplicates are not caught yet (0/16), and how often the model reviewer is right is not measured yet.
+
+## What's next
+
+A real embedding model for paraphrased duplicates, measuring the drift reviewer against 100 labelled cases, and running the model re-planner against the real API.
+
+[Code on GitHub](https://github.com/moizkaseer/Concord)

@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 
 const CURL = { "User-Agent": "curl/8.7.1", Accept: "*/*" };
 const width = (t: string) => Math.max(...t.replace(/\x1b\[[0-9;]*m/g, "").split("\n").map((l) => l.length));
-const RUNS = ["support-inbox-agent", "invoice-extraction-pipeline", "lead-research-agent", "weekly-ops-report"];
+const RUNS = ["cold-outreach-agent", "concord", "worldcup-2026-prediction"];
 
 test.describe("curl version", () => {
   test.beforeEach(({}, info) => test.skip(!!info.project.use.isMobile, "HTTP-only tests"));
@@ -34,11 +34,9 @@ test.describe("curl version", () => {
   });
 
   test("/work/<slug> is the run report in text; unknown runs are a 404", async ({ request }) => {
-    const text = await (await request.get("/work/invoice-extraction-pipeline?nocolor", { headers: CURL })).text();
-    expect(text).toContain("[Invoice extraction pipeline]");
+    const text = await (await request.get("/work/cold-outreach-agent?nocolor", { headers: CURL })).text();
+    expect(text).toContain("Cold outreach agent");
     expect(text).toContain("01 — THE SYSTEM");
-    expect(text).toContain("This is a sample run showing how the system works.");
-    expect(text).toContain("branch: when confidence < 0.9");
     const missing = await request.get("/work/no-such-run", { headers: CURL });
     expect(missing.status()).toBe(404);
     expect(await missing.text()).toContain("Run failed: route not found");

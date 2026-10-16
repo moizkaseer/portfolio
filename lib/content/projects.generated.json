@@ -1,38 +1,29 @@
 [
   {
-    "slug": "support-inbox-agent",
-    "runId": "014",
-    "title": "[Support inbox agent]",
-    "outcome": "[One-line outcome with a real number]",
+    "slug": "cold-outreach-agent",
+    "runId": "003",
+    "title": "Cold outreach agent",
+    "outcome": "Researched cold emails where every claim has a source",
     "category": "Agents",
-    "featured": false,
+    "featured": true,
     "order": 1
   },
   {
-    "slug": "invoice-extraction-pipeline",
-    "runId": "011",
-    "title": "[Invoice extraction pipeline]",
-    "outcome": "[One-line outcome with a real number]",
-    "category": "Automations",
-    "featured": true,
+    "slug": "concord",
+    "runId": "002",
+    "title": "Concord",
+    "outcome": "A supervisor that keeps multi-agent runs alive through crashes",
+    "category": "Tools",
+    "featured": false,
     "order": 2
   },
   {
-    "slug": "lead-research-agent",
-    "runId": "009",
-    "title": "[Lead research agent]",
-    "outcome": "[One-line outcome with a real number]",
-    "category": "Agents",
+    "slug": "worldcup-2026-prediction",
+    "runId": "001",
+    "title": "World Cup 2026 predictor",
+    "outcome": "Ranks all 48 teams by their chance of winning the 2026 World Cup",
+    "category": "Experiments",
     "featured": false,
     "order": 3
-  },
-  {
-    "slug": "weekly-ops-report",
-    "runId": "006",
-    "title": "[Weekly ops report]",
-    "outcome": "[One-line outcome with a real number]",
-    "category": "Automations",
-    "featured": false,
-    "order": 4
   }
 ]

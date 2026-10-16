@@ -194,6 +194,21 @@
   color: var(--ink-2);
 }
 
+.bodyList li {
+  list-style: square;
+  padding-left: 0.3em;
+}
+.bodyList li + li {
+  margin-top: 12px;
+}
+.bodyList li::marker {
+  color: var(--signal);
+}
+.bodyList strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
 .next {
   display: flex;
   flex-wrap: wrap;

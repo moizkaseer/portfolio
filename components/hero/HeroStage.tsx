@@ -224,14 +224,16 @@ export function HeroStage({ site, smart = false }: { site: Pick<Site, "city" | "
                 <span aria-hidden="true">↓</span>
               </a>
             </div>
-            <dl className={styles.stats} data-geo="stats">
-              {site.heroStats.map((s) => (
-                <div key={s.label} className={styles.stat}>
-                  <dt>{s.label}</dt>
-                  <dd>{s.value}</dd>
-                </div>
-              ))}
-            </dl>
+            {site.heroStats.length > 0 && (
+              <dl className={styles.stats} data-geo="stats">
+                {site.heroStats.map((s) => (
+                  <div key={s.label} className={styles.stat}>
+                    <dt>{s.label}</dt>
+                    <dd>{s.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </section>
 
           {/* 02 — Your turn (§4, C2) */}

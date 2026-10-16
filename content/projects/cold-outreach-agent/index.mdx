@@ -1,0 +1,48 @@
+---
+runId: "003"
+title: "Cold outreach agent"
+outcome: "Researched cold emails where every claim has a source"
+outcomeLong: "Researches a company, drafts a short cold email, and proves every claim with a URL and an exact quote before a person approves it."
+industry: "Own product · B2B sales teams"
+stack: ["Claude", "Python", "FastAPI", "Postgres", "Redis"]
+status: building
+since: "2026"
+year: "2026"
+order: 1
+featured: true
+category: Agents
+lead: "Give it a company website and a person's role. It researches the company and drafts a short email, *and code rejects any claim it cannot source.*"
+runsLine: "Live on Railway · 329 tests"
+role: "Design · build · evaluate"
+timeline: "2 weeks"
+resultsPeriod: "10 real leads"
+media: { src: "/media/cold-outreach-agent.png", alt: "A drafted email to PostHog next to the source URL and exact quote behind each claim, from a real run on the deployed system" }
+results:
+  - { value: "10", unit: "/10", label: "drafts passed the claim verifier" }
+  - { value: "$0.14", unit: " max", label: "cost per researched lead ($0.08 at the low end)" }
+  - { value: "34–78", unit: "s", label: "from lead to draft" }
+---
+
+## The problem
+
+Sales reps know a researched email beats a template, but researching by hand is slow, so most teams send templates. Asking a model to "personalise it" is fast, but it invents facts. One made-up funding round in a cold email costs the sender their credibility. I wanted the speed of a model with the honesty of a person who actually read the page.
+
+## Decisions & tradeoffs
+
+- **Code makes the final call.** The pipeline is a plain Python state machine. A fact is kept only if its URL was fetched in this run and its quote appears in the page text. The verifier maps every claim in the email to a fact, and code decides pass or fail.
+- **One autonomous agent, with no dangerous tools.** Only the research step loops on its own. It has three tools, and none of them can send, write or delete. Fetched pages are wrapped as untrusted data.
+- **A hand-written agent loop on the Anthropic SDK**, with no framework, so cost, retries and turn limits stay visible.
+- **Cheap checks first.** A poor-fit lead is rejected for about $0.0013, before any research is paid for.
+- **A person approves every email.** An opt-out in a reply is caught by plain code, even if the model is down. An email is claimed in one conditional `UPDATE` before sending, so it goes out at most once.
+
+## What broke
+
+- **240 tests passed, and the API could not start.** The tests injected their own dependencies and never ran real startup. Now a smoke test boots the real server, worker, Postgres and Redis.
+- **The LLM judge said 92% faithful; reading the facts myself said about 75%.** Changing only the judge moved the same 24 facts from 0.92 to 0.67. I rebuilt it so the model names a quote for each detail, and code derives the verdict.
+- **A rate limit let 5 of 6 requests through.** "Check, then create" is two steps. A Postgres advisory lock makes it exactly one of six.
+
+## What's next
+
+One real email through the provider, measuring the reply classifier, a review screen, and a fit signal such as "do they already use a competitor?". The sample is still small. How real sales people rate the emails, and reply rates, are not measured yet.
+
+[Code on GitHub](https://github.com/moizkaseer/cold-outreach-agent)

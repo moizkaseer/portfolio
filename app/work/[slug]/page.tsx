@@ -10,6 +10,7 @@ import { SystemDiagram } from "@/components/graph/SystemDiagram";
 import { ReplayProvider } from "@/components/run/ReplayContext";
 import { TraceReplay } from "@/components/run/TraceReplay";
 import { RunTitle } from "@/components/run/RunTitle";
+import { isLive, statusLabel } from "@/lib/content/status";
 import { RunRail } from "@/components/run/RunRail";
 import { site } from "@/lib/content/site";
 import { abs, siteUrl } from "@/lib/seo";
@@ -54,7 +55,7 @@ export default async function RunReport({ params }: PageProps<"/work/[slug]">) {
   if (!p) notFound();
   const next = getNextProject(slug);
   const layout = diagramLayout(p.graph);
-  const live = p.status === "in-production";
+  const live = isLive(p.status);
 
   // brief §6 sections the design doesn't show (problem, decisions, what's next) come from the
   // MDX body, numbered after the design's three
@@ -115,7 +116,7 @@ export default async function RunReport({ params }: PageProps<"/work/[slug]">) {
           <span>RUN #{p.runId}</span>
           <span className={styles.status}>
             <span aria-hidden="true" className={live ? `${styles.led} pulse` : styles.ledOff} />
-            {live ? `In production since ${p.since}` : "Handed over"}
+            {statusLabel(p.status, p.since)}
           </span>
           <span className={styles.muted}>{p.runsLine}</span>
         </div>
@@ -141,7 +142,7 @@ export default async function RunReport({ params }: PageProps<"/work/[slug]">) {
             <dt>Status</dt>
             <dd className={styles.status}>
               <span aria-hidden="true" className={live ? styles.ledPlain : styles.ledOff} />
-              {live ? "In production" : "Handed over"}
+              {statusLabel(p.status)}
             </dd>
           </div>
         </dl>

@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    { "id": "load", "label": "Load match data", "kind": "Trigger", "short": "load", "detail": "results 1872–2024 · FIFA ranks" },
+    { "id": "warehouse", "label": "Build the warehouse", "kind": "Code", "short": "warehouse", "detail": "SQLite · star schema" },
+    { "id": "features", "label": "Engineer features", "kind": "Code", "short": "features", "detail": "2-year window · no leakage" },
+    { "id": "train", "label": "Compare 5 models", "kind": "Model", "short": "train", "detail": "train 1998–2018 · test 2022" },
+    { "id": "rank", "label": "Rank the 48 teams", "kind": "Model", "short": "rank", "detail": "logistic regression · 2026" }
+  ],
+  "edges": [["load", "warehouse"], ["warehouse", "features"], ["features", "train"], ["train", "rank"]]
+}

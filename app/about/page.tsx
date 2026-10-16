@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "About", description: about.lead, alt
 /**
  * /about — about, now, timeline, toolbox (brief §4). Not in the design canvas: built from its
  * language (DESIGN_SPEC §7): the run report's breadcrumb and title, mono section headers,
- * hairlines, Geist + Instrument Serif. Content from content/about.json (placeholders for now).
+ * hairlines, Geist + Instrument Serif. Content from content/about.json (drafted from the owner's repos; photo still to come).
  */
 export default function About() {
   const live = site.availability.status === "available";
@@ -44,24 +44,13 @@ export default function About() {
           </h1>
           <p className={styles.lead}>{about.lead}</p>
         </div>
-        <figure className={styles.photo}>
-          {about.photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
+        {/* no portrait yet: the box is left out rather than shown as a placeholder */}
+        {about.photo && (
+          <figure className={styles.photo}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={about.photo} alt={about.photoAlt} />
-          ) : (
-            <div className={styles.photoTodo} role="img" aria-label={`${about.photoAlt} — coming soon`}>
-              <span className={styles.photoTop}>
-                <span>Portrait</span>
-                <span>4 : 5</span>
-              </span>
-              <span>[Photo]</span>
-              <span className={styles.photoTop}>
-                <span>{site.name}</span>
-                <span>{site.city}</span>
-              </span>
-            </div>
-          )}
-        </figure>
+          </figure>
+        )}
       </section>
 
       <section aria-labelledby="bio-h" className={styles.block}>
@@ -74,7 +63,7 @@ export default function About() {
       </section>
 
       <section aria-labelledby="now-h" className={styles.block}>
-        <SectionHeader index="02" title="Now" id="now-h" meta="Updated [month YYYY]" />
+        <SectionHeader index="02" title="Now" id="now-h" meta={`Updated ${about.updated}`} />
         <ul className={styles.now}>
           {about.now.map((n, i) => (
             <li key={i}>

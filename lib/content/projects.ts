@@ -4,6 +4,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { z } from "zod";
 import { GraphSchema, type Graph } from "@/lib/graph/schema";
+import { RUN_STATUSES } from "@/lib/content/status";
 
 const DIR = path.join(process.cwd(), "content", "projects");
 
@@ -14,7 +15,7 @@ const FrontmatterSchema = z.object({
   outcomeLong: z.string(),
   industry: z.string(),
   stack: z.array(z.string()).min(1),
-  status: z.enum(["in-production", "handed-over"]),
+  status: z.enum(RUN_STATUSES),
   since: z.string(),
   year: z.string(),
   order: z.number().int(),
@@ -28,6 +29,8 @@ const FrontmatterSchema = z.object({
   role: z.string(),
   timeline: z.string(),
   resultsPeriod: z.string(),
+  /** a real screenshot of the system, in /public; without one the home row shows no media */
+  media: z.object({ src: z.string().startsWith("/"), alt: z.string().min(1) }).optional(),
   results: z.array(z.object({ value: z.string(), unit: z.string(), label: z.string() })).min(1).max(4),
 });
 

@@ -43,25 +43,25 @@ test.describe("04 selected runs", () => {
   test("desktop: hover opens a row (media, outcome, trace that plays to the end)", async ({ page }, info) => {
     test.skip(!!info.project.use.isMobile);
     await ready(page);
-    const row = page.locator('[data-run="lead-research-agent"]');
+    const row = page.locator('[data-run="concord"]');
     await row.scrollIntoViewIfNeeded();
     await row.hover();
     await expect(row).toHaveAttribute("data-active", "true");
     await expect(row.locator("[data-trace]")).toHaveAttribute("data-current", "4", { timeout: 4000 });
-    await expect(row).toHaveAttribute("href", "/work/lead-research-agent");
+    await expect(row).toHaveAttribute("href", "/work/concord");
   });
 
   test("desktop: keyboard focus opens the row too", async ({ page }, info) => {
     test.skip(!!info.project.use.isMobile);
     await ready(page);
-    await page.locator('[data-run="weekly-ops-report"]').focus();
-    await expect(page.locator('[data-run="weekly-ops-report"]')).toHaveAttribute("data-active", "true");
+    await page.locator('[data-run="worldcup-2026-prediction"]').focus();
+    await expect(page.locator('[data-run="worldcup-2026-prediction"]')).toHaveAttribute("data-active", "true");
   });
 
-  test("freeze home-hover: RUN #011 highlighted by the agent, as in the design", async ({ page }, info) => {
+  test("freeze home-hover: RUN #003 highlighted by the agent, as in the design", async ({ page }, info) => {
     test.skip(!!info.project.use.isMobile);
     await page.goto("/?freeze=home-hover");
-    const row = page.locator('[data-run="invoice-extraction-pipeline"]');
+    const row = page.locator('[data-run="cold-outreach-agent"]');
     await expect(row).toHaveAttribute("data-active", "true");
     await expect(row.getByText("agent · highlight_project")).toBeVisible();
     await expect(row.locator("[data-trace]")).toHaveAttribute("data-current", "2");
@@ -71,9 +71,9 @@ test.describe("04 selected runs", () => {
     test.skip(!info.project.use.isMobile);
     await ready(page);
     const cards = page.locator("[data-card]");
-    await expect(cards).toHaveCount(4);
-    await expect(cards.first()).toHaveAttribute("data-card", "invoice-extraction-pipeline");
-    await expect(cards.first().getByRole("img", { name: /Screen recording/ })).toBeVisible();
+    await expect(cards).toHaveCount(3);
+    await expect(cards.first()).toHaveAttribute("data-card", "cold-outreach-agent");
+    await expect(cards.first().getByRole("img", { name: /drafted email to PostHog/ })).toBeVisible();
   });
 });
 
@@ -82,9 +82,9 @@ test.describe("07 toolbox", () => {
     test.skip(!!info.project.use.isMobile);
     await ready(page);
     await page.locator("html[data-home-ready]").waitFor({ state: "attached" }); // idle-loaded behaviour
-    await page.getByRole("button", { name: /^\[Slack\]/ }).hover();
-    await expect(page.locator('[data-run="weekly-ops-report"]')).toHaveAttribute("data-tool-lit", "true");
-    await expect(page.locator('[data-run="support-inbox-agent"]')).toHaveAttribute("data-tool-dim", "true");
+    await page.getByRole("button", { name: /^SQLite/ }).hover();
+    await expect(page.locator('[data-run="worldcup-2026-prediction"]')).toHaveAttribute("data-tool-lit", "true");
+    await expect(page.locator('[data-run="concord"]')).toHaveAttribute("data-tool-dim", "true");
   });
 });
 

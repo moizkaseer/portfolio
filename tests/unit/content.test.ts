@@ -6,11 +6,12 @@ import { GraphSchema } from "@/lib/graph/schema";
 import { mainPath } from "@/lib/graph/layout";
 
 const DIR = path.join(__dirname, "..", "..", "content", "projects");
+const FIXTURES = path.join(__dirname, "fixtures");
 const slugs = fs.readdirSync(DIR).filter((d) => fs.statSync(path.join(DIR, d)).isDirectory());
 
 describe("project content", () => {
-  it("has the four placeholder projects from the design", () => {
-    expect(slugs.sort()).toEqual(["invoice-extraction-pipeline", "lead-research-agent", "support-inbox-agent", "weekly-ops-report"]);
+  it("has the owner's three projects", () => {
+    expect(slugs.sort()).toEqual(["cold-outreach-agent", "concord", "worldcup-2026-prediction"]);
   });
 
   for (const slug of slugs) {
@@ -23,13 +24,13 @@ describe("project content", () => {
   }
 
   it("mini trace of the invoice pipeline matches the design (side branch to the human skipped)", () => {
-    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(DIR, "invoice-extraction-pipeline", "graph.json"), "utf8")));
+    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(FIXTURES, "invoice-graph.json"), "utf8")));
     expect(mainPath(g).map((n) => n.short)).toEqual(["trigger", "extract", "validate", "ledger"]);
     expect(mainPath(g).map((n) => n.id)).toEqual(["trigger", "extract", "validate", "post-to-ledger"]);
   });
 
   it("keeps an approval that sits in the main line", () => {
-    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(DIR, "support-inbox-agent", "graph.json"), "utf8")));
+    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(FIXTURES, "support-graph.json"), "utf8")));
     expect(mainPath(g).map((n) => n.id)).toEqual(["trigger", "classify", "lookup", "draft", "approve", "send"]);
   });
 });
@@ -37,7 +38,7 @@ describe("project content", () => {
 describe("run report diagram layout", () => {
   it("lays out the invoice pipeline like RunReport.html", async () => {
     const { diagramLayout } = await import("@/lib/graph/diagram-layout");
-    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(DIR, "invoice-extraction-pipeline", "graph.json"), "utf8")));
+    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(FIXTURES, "invoice-graph.json"), "utf8")));
     const l = diagramLayout(g);
     expect(l.columns).toBe(7);
     expect(l.nodes.map((n) => [n.id, n.num, n.col, n.row])).toEqual([

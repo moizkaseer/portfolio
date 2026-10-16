@@ -24,7 +24,7 @@ test.describe("404 — Run failed: route not found", () => {
 test.describe("SEO and machine-readable files (from the content files)", () => {
   test("sitemap, robots, llms.txt", async ({ request }) => {
     const sitemap = await (await request.get("/sitemap.xml")).text();
-    for (const p of ["/work", "/about", "/work/invoice-extraction-pipeline", "/work/weekly-ops-report"]) expect(sitemap).toContain(`${p}</loc>`);
+    for (const p of ["/work", "/about", "/work/cold-outreach-agent", "/work/worldcup-2026-prediction"]) expect(sitemap).toContain(`${p}</loc>`);
     const robots = await (await request.get("/robots.txt")).text();
     expect(robots).toContain("Disallow: /api/");
     expect(robots).toMatch(/Sitemap: .*\/sitemap\.xml/);
@@ -32,12 +32,12 @@ test.describe("SEO and machine-readable files (from the content files)", () => {
     expect(llms.headers()["content-type"]).toContain("text/plain");
     const text = await llms.text();
     expect(text).toContain("## Runs (case studies)");
-    expect(text).toContain("/work/invoice-extraction-pipeline");
+    expect(text).toContain("/work/cold-outreach-agent");
     expect(text).toContain("/about");
   });
 
   test("OG images for every page type", async ({ request }) => {
-    for (const p of ["/opengraph-image", "/work/opengraph-image", "/about/opengraph-image", "/work/invoice-extraction-pipeline/opengraph-image"]) {
+    for (const p of ["/opengraph-image", "/work/opengraph-image", "/about/opengraph-image", "/work/cold-outreach-agent/opengraph-image"]) {
       const res = await request.get(p, { headers: { "User-Agent": "Mozilla/5.0" } });
       expect(res.status(), p).toBe(200);
       expect(res.headers()["content-type"]).toBe("image/png");
@@ -49,20 +49,21 @@ test.describe("SEO and machine-readable files (from the content files)", () => {
       page.locator('script[type="application/ld+json"]').evaluateAll((els) => els.map((e) => JSON.parse(e.textContent!)));
     await page.goto("/");
     expect((await ld()).map((d) => d["@type"])).toContain("Person");
-    await page.goto("/work/invoice-extraction-pipeline");
+    await page.goto("/work/cold-outreach-agent");
     const run = (await ld()).find((d) => d["@type"] === "CreativeWork");
-    expect(run.name).toBe("[Invoice extraction pipeline]");
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/work\/invoice-extraction-pipeline$/);
+    expect(run.name).toBe("Cold outreach agent");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/work\/cold-outreach-agent$/);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /opengraph-image/);
   });
 });
 
 test.describe("/about", () => {
-  test("placeholders for bio, now, timeline and photo; nav marks About", async ({ page }, info) => {
+  test("bio, now and timeline; no photo box until there is a photo; nav marks About", async ({ page }, info) => {
     await page.goto("/about");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("at work.");
     for (const h of ["01 — Bio", "02 — Now", "03 — Timeline", "04 — Toolbox"]) await expect(page.getByRole("heading", { name: h })).toBeVisible();
-    await expect(page.getByRole("img", { name: /Portrait of .* coming soon/ })).toBeVisible();
+    await expect(page.getByRole("img", { name: /Portrait of/ })).toHaveCount(0);
+    await expect(page.getByText(/\[TODO|\[Photo\]|\[YYYY\]/)).toHaveCount(0);
     if (!info.project.use.isMobile) await expect(page.locator('header nav a[data-nav="about"]')).toHaveCSS("border-bottom-width", "1px");
   });
 
@@ -145,7 +146,7 @@ test.describe("detail pass", () => {
   test("every focusable element shows a focus indicator", async ({ page }, info) => {
     test.skip(!!info.project.use.isMobile);
     test.setTimeout(90_000);
-    for (const [url, tabs] of [["/?freeze=hero-done", 90], ["/about", 40], ["/no-such-page", 30], ["/work", 40], ["/work/invoice-extraction-pipeline", 40]] as const) {
+    for (const [url, tabs] of [["/?freeze=hero-done", 90], ["/about", 40], ["/no-such-page", 30], ["/work", 40], ["/work/cold-outreach-agent", 40]] as const) {
       await page.goto(url);
       const missing: string[] = [];
       for (let i = 0; i < tabs; i++) {
@@ -166,7 +167,7 @@ test.describe("detail pass", () => {
   test("no horizontal scroll at 320, 2560 and phone landscape", async ({ page }) => {
     for (const [w, h] of [[320, 640], [2560, 1440], [844, 390]]) {
       await page.setViewportSize({ width: w, height: h });
-      for (const url of ["/", "/about", "/work", "/work/invoice-extraction-pipeline", "/no-such-page"]) {
+      for (const url of ["/", "/about", "/work", "/work/cold-outreach-agent", "/no-such-page"]) {
         await page.goto(url);
         expect(await page.evaluate(() => document.documentElement.scrollWidth), `${url} @ ${w}`).toBeLessThanOrEqual(w);
       }
@@ -213,7 +214,7 @@ test.describe("Phase 7 review fixes", () => {
       const [hero, nav, section] = await page.evaluate(() => {
         const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
         return [
-          [r('[data-geo="sub"]').left, r('[data-geo="stats"]').right],
+          [r('[data-geo="sub"]').left, r('[data-geo="secHead"]').right],
           [r("header > div").left, r("header > div").right],
           (() => {
             const work = document.querySelector("#work")!;

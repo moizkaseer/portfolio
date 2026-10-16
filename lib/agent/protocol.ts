@@ -55,7 +55,7 @@ export function validateUiAction(tool: string, input: unknown, toolNames: string
   }
 }
 
-/** How a tool call reads in the trace: ui.open_project("invoice-extraction-pipeline"). */
+/** How a tool call reads in the trace: ui.open_project("cold-outreach-agent"). */
 export function traceLabel(tool: string, input: unknown): string {
   const name = UI_TOOLS[tool as UiToolName] ?? tool;
   const args = Object.entries((input ?? {}) as Record<string, unknown>).map(([k, v]) => {
