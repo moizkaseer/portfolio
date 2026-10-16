@@ -33,3 +33,25 @@ describe("project content", () => {
     expect(mainPath(g).map((n) => n.id)).toEqual(["trigger", "classify", "lookup", "draft", "approve", "send"]);
   });
 });
+
+describe("run report diagram layout", () => {
+  it("lays out the invoice pipeline like RunReport.html", async () => {
+    const { diagramLayout } = await import("@/lib/graph/diagram-layout");
+    const g = GraphSchema.parse(JSON.parse(fs.readFileSync(path.join(DIR, "invoice-extraction-pipeline", "graph.json"), "utf8")));
+    const l = diagramLayout(g);
+    expect(l.columns).toBe(7);
+    expect(l.nodes.map((n) => [n.id, n.num, n.col, n.row])).toEqual([
+      ["trigger", 1, 1, 1],
+      ["extract", 2, 3, 1],
+      ["validate", 3, 5, 1],
+      ["review", 4, 5, 3],
+      ["post-to-ledger", 5, 7, 1],
+    ]);
+    expect(l.branches).toEqual([{ col: 5, from: "validate", to: "review", label: "confidence < 0.9" }]);
+    expect(l.returns).toEqual([{ fromCol: 5, toCol: 7, from: "review", to: "post-to-ledger" }]);
+    expect(l.edgeCount).toBe(5);
+    expect(l.description).toBe(
+      "Workflow: Invoice email arrives → Extract fields → Validate totals → Post to ledger; when confidence < 0.9, Validate totals → Review & approve → Post to ledger.",
+    );
+  });
+});

@@ -134,8 +134,15 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 Contrast fix applied (`--muted-raised`), JS budget 190KB, Geist from Vercel's files, timezone Europe/Skopje. Name, city, email, domain, booking link, socials and hero stat numbers stay placeholders until before launch. Projects use the design's placeholder projects (`content/projects/*`, every field marked `[TODO]`) until the owner sends real ones.
 
 ## 10. Phase 3 additions to the Content Gaps (2026-10-15)
-- [ ] Confirm or rewrite the **Process** copy (`content/process.json`) — draft written from the brief and the design's own wording.
+- [x] **Process** copy — provided by the owner (Phase 3 review).
 - [ ] **Toolbox**: real tools by group (`content/toolbox.json` holds the design's bracketed placeholders).
 - [ ] **Contact delivery**: Resend API key, `CONTACT_TO_EMAIL`, sender address on the domain; optionally Upstash Redis (see `.env.example`).
 - [ ] Booking link (contact section shows `[booking link]`).
 - [ ] Projects: replace the four design placeholders (`content/projects/*`) — frontmatter, `graph.json` steps, recordings.
+
+## 11. Owner decisions (Phase 3 review, 2026-10-15)
+Process copy provided (applied verbatim). Toolbox, booking link and contact delivery keys stay open (the owner adds keys to `.env.local` themselves; the contact form keeps its "email me directly" fallback until then). The agent section's 43ch exception is approved. The home page stays ≤ 190KB initial JS; Phase 4 code lives on its own routes.
+
+## 12. Phase 4 additions to the Content Gaps (2026-10-15)
+- [ ] Per project, for the run reports: lead sentence, role, timeline, 2–4 results with the measurement period, `graph.json` node `detail` lines and branch labels, a sanitized `trace.json` (the invoice pipeline uses the design's sample run), and the MDX body (problem, decisions & tradeoffs, what's next).
+- [ ] Confirm the `/work` categories (placeholders: Agents — support inbox, lead research; Automations — invoice pipeline, weekly ops report).

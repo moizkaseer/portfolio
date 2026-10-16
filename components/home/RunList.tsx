@@ -8,6 +8,7 @@ import { prefersReducedMotion } from "@/lib/motion/reduced-motion";
 import { MiniTrace } from "./MiniTrace";
 import { MediaBox } from "./MediaBox";
 import { GhostPointer } from "./GhostPointer";
+import { RunTitle } from "@/components/run/RunTitle";
 import styles from "./SelectedRuns.module.css";
 
 export interface RunItem {
@@ -113,14 +114,16 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
             <Link
               key={item.slug}
               href={`/work/${item.slug}`}
-              prefetch={false}
+              prefetch
               data-run={item.slug}
               data-active={isActive}
               data-tool-dim={dim}
               data-tool-lit={lit}
               className={isActive ? styles.rowActive : `${styles.cols} ${styles.row}`}
               onPointerEnter={() => activate(item.slug, 120)}
-              onFocus={() => activate(item.slug)}
+              // keyboard focus opens the row at once; a mouse press must not swap the row's
+              // content under the pointer mid-click (hover already opens it)
+              onFocus={(e) => e.currentTarget.matches(":focus-visible") && activate(item.slug)}
             >
               {isActive ? (
                 <>
@@ -128,7 +131,7 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
                   <div className={styles.activeBody}>
                     <span className={styles.activeName}>
                       <span aria-hidden="true" className={styles.nameMark} />
-                      {item.title}
+                      <RunTitle slug={item.slug}>{item.title}</RunTitle>
                     </span>
                     <span className={styles.activeOutcome}>{item.outcomeLong}</span>
                     <MiniTrace nodes={item.trace} play={!frozen} frozenAt={frozen ? 2 : undefined} />
@@ -146,7 +149,9 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
               ) : (
                 <>
                   <span className={styles.id}>RUN #{item.runId}</span>
-                  <span className={styles.name}>{item.title}</span>
+                  <span className={styles.name}>
+                    <RunTitle slug={item.slug}>{item.title}</RunTitle>
+                  </span>
                   <span className={styles.outcome}>{item.outcome}</span>
                   <span className={styles.stack}>{item.stack.join(" · ")}</span>
                   <Status item={item} />
@@ -161,13 +166,15 @@ export function RunList({ items, featured }: { items: RunItem[]; featured: strin
       {/* Phone cards (Mobile.html): the featured run first with its media and trace. */}
       <div className={styles.cards}>
         {ordered.map((item, i) => (
-          <Link key={item.slug} href={`/work/${item.slug}`} prefetch={false} className={i === 0 ? styles.cardFeatured : styles.card} data-card={item.slug}>
+          <Link key={item.slug} href={`/work/${item.slug}`} prefetch className={i === 0 ? styles.cardFeatured : styles.card} data-card={item.slug}>
             {i === 0 && <MediaBox compact />}
             <span className={styles.cardMeta}>
               <span className={styles.muted}>RUN #{item.runId}</span>
               <Status item={item} />
             </span>
-            <span className={i === 0 ? styles.cardTitleFeatured : styles.cardTitle}>{item.title}</span>
+            <span className={i === 0 ? styles.cardTitleFeatured : styles.cardTitle}>
+              <RunTitle slug={item.slug}>{item.title}</RunTitle>
+            </span>
             {i === 0 && (
               <>
                 <span className={styles.outcome}>{item.outcome}</span>

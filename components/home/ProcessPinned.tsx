@@ -39,7 +39,12 @@ export function ProcessPinned({ steps, kinds }: { steps: Step[]; kinds: string[]
   }, [steps.length]);
 
   const current = steps[step];
-  const logRows = steps.slice(0, step + 1).flatMap((s) => s.log.map((l) => ({ step: s.id, text: l })));
+  const logRows = steps.slice(0, step + 1).flatMap((s) =>
+    s.log.map((l) => {
+      const [head, ...rest] = l.split(" · ");
+      return rest.length ? { step: head, text: rest.join(" · ") } : { step: s.id, text: l };
+    }),
+  );
 
   return (
     <div ref={ref} className={styles.pin} data-process-pin data-static={frozenView} aria-hidden="true">

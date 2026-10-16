@@ -1,35 +1,35 @@
 {
-  "_todo": "[TODO: confirm] Draft copy for the Process section (05), written from the brief and the design's own line 'map the work, decide where a model helps, where code is safer, and where a person stays in the loop'. The owner should confirm or rewrite every line.",
+  "_source": "Owner-approved copy (Phase 3 review, 2026-10-15).",
   "steps": [
     {
       "id": "trigger",
       "title": "Trigger",
-      "text": "Find the moment the work starts: an email lands, a form is sent, a schedule fires.",
-      "log": ["watch · inbox, forms, schedules", "event · new item → run starts"]
+      "text": "Something happens: an email lands, a form is sent, a schedule fires. I find the moment where the work really starts.",
+      "log": ["trigger · new email in support@ · 14:02:11"]
     },
     {
       "id": "plan",
       "title": "Plan",
-      "text": "Decide where a model helps, where code is safer, and where a person stays in the loop.",
-      "log": ["plan · 5 steps", "split · 2 model · 2 code · 1 human"]
+      "text": "The agent decides what needs doing and which tools it may use. Limits come first, so it never wanders.",
+      "log": ["plan · 3 steps · 2 tools allowed · 1 check"]
     },
     {
       "id": "act",
       "title": "Act",
-      "text": "Work inside the tools your team already uses. No new app to learn.",
-      "log": ["tool · read the source", "tool · write to the system of record"]
+      "text": "It does the work in your real tools (CRM, sheets, inbox) with the same access a person on your team would have.",
+      "log": ["act · crm.lookup → draft reply · 1.8s"]
     },
     {
       "id": "verify",
       "title": "Verify",
-      "text": "Every run checks itself. Unsure cases go to a person instead of guessing.",
-      "log": ["check · totals recomputed", "route · low confidence → human"]
+      "text": "Every result is checked by code or a second model. When it is unsure, it stops and asks a person instead of guessing.",
+      "log": ["verify · confidence 0.86 → human review"]
     },
     {
       "id": "ship",
       "title": "Ship",
-      "text": "Logged, monitored, and with an off switch from day one.",
-      "log": ["log · every step replayable", "alert · failures fail loudly"]
+      "text": "The result lands where your team already works, and every run is logged so it can be replayed later.",
+      "log": ["ship · posted to #support · run logged"]
     }
   ]
 }

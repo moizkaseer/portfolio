@@ -24,7 +24,7 @@ export function Nav() {
 
         <nav aria-label="Primary" className={styles.links}>
           {NAV_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className={styles.link} prefetch={l.built ? undefined : false}>
+            <Link key={l.href} href={l.href} className={styles.link} prefetch={l.built ? undefined : false} data-nav={l.label.toLowerCase()}>
               <span className={styles.index}>{l.index}</span> {l.label}
             </Link>
           ))}

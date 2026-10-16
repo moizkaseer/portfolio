@@ -1,0 +1,264 @@
+/* /work/[slug] — RunReport.html (DESIGN_SPEC §6). */
+.page {
+  position: relative;
+  padding-top: var(--nav-h);
+}
+
+.muted {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.crumbs {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.crumbLink {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.header {
+  padding-top: 64px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.led,
+.ledPlain,
+.ledOff {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+.led {
+  box-shadow: 0 0 0 3px var(--ok-ring);
+}
+.ledOff {
+  background: transparent;
+  border: 1px solid var(--muted);
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 28px 0 0;
+  max-width: 14ch;
+  font-size: clamp(56px, 8.6vw, 136px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  text-wrap: balance;
+}
+
+.lead {
+  margin: 36px 0 0;
+  max-width: 34ch;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.lead em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+  margin: 72px 0 0;
+  padding: 20px 0 24px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fact dt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.fact dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.block {
+  padding-top: 120px;
+}
+
+.note {
+  margin: 28px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding-top: 40px;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 24px;
+  border-right: 1px solid var(--line);
+}
+.result:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+
+.number {
+  font-size: clamp(56px, 7vw, 104px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+}
+.unit {
+  font-size: 0.4em;
+  letter-spacing: -0.02em;
+}
+
+.resultLabel {
+  /* design: 24ch — Vercel's Geist sets ~1% wider than the reference render; 25ch keeps the
+     design's line breaks (same exception as the agent lead, approved in the Phase 3 review) */
+  max-width: 25ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+/* brief §6 sections from the MDX body (not in the design canvas; same section language) */
+.body {
+  display: flex;
+  flex-direction: column;
+}
+.bodyHead {
+  padding-top: 120px;
+}
+.bodyText {
+  margin: 32px 0 0;
+  max-width: 62ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.bodyList {
+  margin: 24px 0 0;
+  max-width: 62ch;
+  padding-left: 1.2em;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.next {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-top: 140px;
+  padding: 28px 0 56px;
+  border-top: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.nextText {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.nextLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nextTitle,
+.nextArrow {
+  font-size: clamp(44px, 5.4vw, 80px);
+  line-height: 0.95;
+}
+.nextTitle {
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+.nextArrow {
+  font-weight: 400;
+  transition: transform 0.25s var(--ease-ui);
+}
+.next:hover .nextArrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 1023.98px) {
+  .header {
+    padding-top: 40px;
+  }
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 48px;
+  }
+  .block,
+  .bodyHead {
+    padding-top: 88px;
+  }
+  .results {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .result {
+    padding-right: 0;
+    border-right: 0;
+  }
+  .next {
+    margin-top: 96px;
+  }
+}
