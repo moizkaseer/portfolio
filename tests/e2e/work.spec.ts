@@ -1,0 +1,195 @@
+/** Phase 4 — /work index, run reports, trace replay, title morph, and the home JS budget. */
+import { gzipSync } from "node:zlib";
+import { test, expect } from "@playwright/test";
+import { axeViolations } from "./helpers/axe";
+
+const RUN = "/work/cold-outreach-agent";
+
+test.describe("/work index", () => {
+  test("lists every run and filters by category", async ({ page }, info) => {
+    await page.goto("/work");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("All runs.");
+    const rows = !!info.project.use.isMobile ? page.locator("[data-work-card]") : page.locator("[data-work-row]");
+    await expect(rows).toHaveCount(3);
+    await page.getByRole("button", { name: /^Agents/ }).click();
+    await expect(page.getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true");
+    await expect(rows).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /^Automations/ })).toBeDisabled();
+    await page.getByRole("button", { name: /^All/ }).click();
+    await expect(rows).toHaveCount(3);
+  });
+
+  test("nav marks Work as the current section", async ({ page }, info) => {
+    test.skip(!!info.project.use.isMobile, "the phone nav has no section links");
+    await page.goto("/work");
+    const work = page.locator('header nav a[data-nav="work"]');
+    await expect(work).toHaveCSS("border-bottom-width", "1px");
+    await page.goto("/");
+    await expect(work).toHaveCSS("border-bottom-width", "0px");
+  });
+});
+
+test.describe("run report", () => {
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("the replay sentence comes from the trace file (sample until the owner's real run)", async ({ page }) => {
+    await page.goto(RUN);
+    await expect(page.getByText("This is a sample run showing how the system works.")).toBeVisible();
+    await expect(page.getByText(/This is a real run/)).toHaveCount(0);
+  });
+
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("freeze run-report: the design's frame", async ({ page }) => {
+    await page.goto(`${RUN}?freeze=run-report`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Cold outreach agent");
+    await expect(page.locator("[data-status]")).toHaveText("Replaying · 4 / 6");
+    await expect(page.locator("[data-elapsed]")).toHaveText("1.34s");
+    await expect(page.locator('[role="img"][aria-label^="Workflow: Invoice email arrives → Extract fields"]')).toBeAttached();
+    // desktop grid and phone stack show the same states
+    for (const [id, state] of [["validate", "running"], ["review", "pending"], ["trigger", "done"]]) {
+      await expect(page.locator(`[data-node="${id}"]:visible`)).toHaveAttribute("data-state", state);
+    }
+  });
+
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("the replay autoplays once in view, finishes, and Replay / Speed work", async ({ page }) => {
+    await page.clock.install();
+    await page.goto(RUN);
+    await page.locator("[data-trace-terminal]").scrollIntoViewIfNeeded();
+    await page.clock.runFor(2600);
+    await expect(page.locator("[data-status]")).toHaveText("Complete · 6 / 6");
+    await expect(page.locator('[data-node="post-to-ledger"]:visible')).toHaveAttribute("data-state", "done");
+    await page.getByRole("button", { name: /^Replay$/ }).click();
+    await page.clock.runFor(100);
+    await expect(page.locator("[data-status]")).toHaveText("Replaying · 1 / 6");
+    await page.getByRole("button", { name: /speed/i }).click();
+    await expect(page.getByRole("button", { name: /speed/i })).toHaveText("Speed 2×");
+  });
+
+  // no project ships a real trace.json yet (the design's sample trace was removed with the placeholders)
+  test.skip("reduced motion: the finished run, no autoplay", async ({ browser }, info) => {
+    const ctx = await browser.newContext({ reducedMotion: "reduce", viewport: info.project.use.viewport! });
+    const page = await ctx.newPage();
+    await page.goto(RUN);
+    await page.locator("[data-trace-terminal]").scrollIntoViewIfNeeded();
+    await expect(page.locator("[data-status]")).toHaveText("Complete · 6 / 6");
+    await ctx.close();
+  });
+
+  test("breadcrumb and Next run", async ({ page }) => {
+    await page.goto(RUN);
+    await expect(page.getByRole("link", { name: "← All runs" })).toHaveAttribute("href", "/work");
+    await page.locator("[data-next-run]").click();
+    await expect(page).toHaveURL(/\/work\/concord$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Concord");
+  });
+
+  test("every run report renders; brief §6 sections come from MDX", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(String(e)));
+    for (const slug of ["cold-outreach-agent", "concord", "worldcup-2026-prediction"]) {
+      await page.goto(`/work/${slug}`);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(page.getByRole("heading", { name: /— The problem$/ })).toBeVisible();
+      await expect(page.getByRole("heading", { name: /— Decisions & tradeoffs$/ })).toBeVisible();
+    }
+    // without a trace.json there is no replay: Results is 02 and the MDX sections follow
+    await page.goto("/work/concord");
+    await expect(page.getByRole("heading", { name: "02 — Results" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "03 — The problem" })).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test("an unknown run is a real 404 on the first request (owner decision)", async ({ page, request }) => {
+    const fresh = `/work/no-such-run-${Date.now()}`; // never requested before
+    expect((await request.get(fresh)).status()).toBe(404);
+    const res = await page.goto(`${fresh}-page`);
+    expect(res!.status()).toBe(404);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Run failed: route not found.");
+    // known runs are unaffected
+    expect((await request.get("/work/cold-outreach-agent")).status()).toBe(200);
+  });
+});
+
+test.describe("title morph", () => {
+  test("opening a run from home navigates inside a view transition", async ({ page }, info) => {
+    test.skip(!!info.project.use.isMobile);
+    await page.addInitScript(() => {
+      const w = window as unknown as { __vt: number };
+      w.__vt = 0;
+      const orig = document.startViewTransition?.bind(document);
+      if (orig)
+        document.startViewTransition = ((arg: Parameters<typeof orig>[0]) => {
+          w.__vt += 1;
+          return orig(arg);
+        }) as typeof document.startViewTransition;
+    });
+    await page.goto("/");
+    await page.locator("[data-hero-stage][data-ready]").waitFor();
+    const row = page.locator('[data-run="concord"]');
+    await row.scrollIntoViewIfNeeded();
+    await row.click();
+    await expect(page).toHaveURL(/\/work\/concord$/);
+    expect(await page.evaluate(() => (window as unknown as { __vt: number }).__vt)).toBeGreaterThan(0);
+  });
+});
+
+test.describe("title-morph links navigate in every browser (plain navigation without View Transitions)", () => {
+  const target = "concord";
+  const arrive = async (page: import("@playwright/test").Page) => {
+    await expect(page).toHaveURL(new RegExp(`/work/${target}$`));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Concord");
+  };
+
+  test("home: run row (desktop) or card (phone)", async ({ page }, info) => {
+    await page.goto("/");
+    await page.locator("[data-hero-stage][data-ready]").waitFor();
+    const link = page.locator(info.project.use.isMobile ? `[data-card="${target}"]` : `[data-run="${target}"]`);
+    await link.scrollIntoViewIfNeeded();
+    await link.click();
+    await arrive(page);
+  });
+
+  test("/work: row (desktop) or card (phone)", async ({ page }, info) => {
+    await page.goto("/work");
+    await page.locator(info.project.use.isMobile ? `[data-work-card="${target}"]` : `[data-work-row="${target}"]`).click();
+    await arrive(page);
+  });
+
+  test("run report: Next run", async ({ page }) => {
+    await page.goto(RUN);
+    await page.locator("[data-next-run]").click();
+    await arrive(page);
+  });
+});
+
+test.describe("quality", () => {
+  for (const url of ["/work", `${RUN}?freeze=run-report`]) {
+    for (const theme of ["dark", "light"]) {
+      test(`${url.split("?")[0]}: no axe violations (${theme})`, async ({ page }) => {
+        await page.addInitScript((t) => localStorage.setItem("mr-theme", t), theme);
+        await page.goto(url);
+        expect((await axeViolations(page)).violations).toEqual([]);
+      });
+    }
+  }
+
+  test("no horizontal scroll on /work and run reports", async ({ page }) => {
+    for (const w of [320, 390, 768, 1024, 1440, 1920]) {
+      await page.setViewportSize({ width: w, height: 900 });
+      for (const url of ["/work", `${RUN}?freeze=run-report`]) {
+        await page.goto(url);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth), `${url} @ ${w}`).toBeLessThanOrEqual(w);
+      }
+    }
+  });
+
+  test("home initial JS stays within the 190KB budget (owner decision)", async ({ request }, info) => {
+    test.skip(!!info.project.use.isMobile);
+    const html = await (await request.get("/")).text();
+    const scripts = [...new Set(html.match(/\/_next\/static\/chunks\/[^"]+\.js/g) ?? [])];
+    let total = 0;
+    for (const s of scripts) total += gzipSync(await (await request.get(s)).body()).length;
+    console.log(`home initial JS: ${(total / 1024).toFixed(1)}KB gz`);
+    expect(total / 1024).toBeLessThanOrEqual(190);
+  });
+});

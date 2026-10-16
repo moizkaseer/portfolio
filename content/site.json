@@ -1,0 +1,29 @@
+{
+  "name": "Moiz Ali",
+  "positioning": "AI agents & automation",
+  "summary": "I design, build and run AI agents and automations for teams that are done doing the same work twice.",
+  "city": "Tetovo",
+  "timezone": "Europe/Skopje",
+  "availability": {
+    "status": "available",
+    "label": "Available for projects"
+  },
+  "email": "moizkaseer@gmail.com",
+  "domain": "moizali.tech",
+  "bookingUrl": null,
+  "socials": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/moizkaseer"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/moiz-ali-08494a2b1/"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/Sp0143729983"
+    }
+  ],
+  "heroStats": []
+}

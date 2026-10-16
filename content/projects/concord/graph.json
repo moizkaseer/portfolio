@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    { "id": "question", "label": "Task submitted", "kind": "Trigger", "detail": "question + token budget" },
+    { "id": "plan", "label": "Plan subgoals", "kind": "Model", "short": "plan", "detail": "structured output · no cycles" },
+    { "id": "work", "label": "Workers run subgoals", "kind": "Tool", "short": "workers", "detail": "Redis blackboard · leases" },
+    { "id": "supervise", "label": "Supervisor checks", "kind": "Code", "short": "supervise", "detail": "dead workers · duplicates · drift" },
+    { "id": "answer", "label": "Write the answer", "kind": "Model", "short": "answer", "detail": "synthesis specialist" }
+  ],
+  "edges": [["question", "plan"], ["plan", "work"], ["work", "supervise"], ["supervise", "answer"]]
+}

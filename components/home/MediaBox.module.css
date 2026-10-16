@@ -1,0 +1,43 @@
+.media {
+  position: relative;
+  height: 202px;
+  border: 1px solid var(--line-strong);
+  overflow: hidden;
+  background: var(--paper-2);
+  box-sizing: border-box;
+}
+
+.compact {
+  height: 200px;
+}
+
+.media[data-reveal="true"] {
+  animation: clip-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes clip-in {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media[data-reveal="true"] {
+    animation: fade 0.2s linear both;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+}

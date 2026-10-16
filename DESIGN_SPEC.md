@@ -37,6 +37,7 @@ All coordinates below are on the design's **1440 px wide** desktop frame.
 --ink:         #ECE9E2;
 --ink2:        #B5B2AA;
 --muted:       #8C8980;
+--muted-raised:#8C8980;   /* muted text on --paper2 surfaces (owner decision, 2026-10-15) */
 --line:        rgba(236, 233, 226, 0.12);
 --line-strong: rgba(236, 233, 226, 0.28);  /* 0.30 on home/run report */
 --ok:          #3DBA6F;
@@ -51,6 +52,7 @@ All coordinates below are on the design's **1440 px wide** desktop frame.
 --ink:         #0E0E0C;
 --ink2:        #3B3A36;
 --muted:       #6A675F;
+--muted-raised:#64615A;   /* muted text on --paper2 surfaces: 4.73:1 (owner decision, 2026-10-15; #6A675F was 4.33:1) */
 --line:        rgba(14, 14, 12, 0.14);
 --line-strong: rgba(14, 14, 12, 0.30);   /* 0.32 on home/run report */
 --ok:          #2E9B5A;
@@ -64,7 +66,9 @@ All coordinates below are on the design's **1440 px wide** desktop frame.
 ```
 Text on a `--signal` fill is always `#0E0E0C`. `--signal` is never used for text.
 
-**Fonts** (Google Fonts, self-host via `next/font`):
+**Accessibility amendments (owner decision, 2026-10-15).** Muted text on raised `--paper2` surfaces (the live run panel, the prompt node boxes, and on the home page the hovered row and terminals) uses `--muted-raised`. The timestamp of the highlighted (newest) log row uses `--ink2` instead of `--muted` (the muted colour on the highlight was 4.13:1 night / 3.51:1 day). Every text/background pair meets WCAG AA.
+
+**Fonts** (self-hosted via `next/font`; Geist and Geist Mono from the full files in Vercel's `geist` package, so the arrows → ↵ render in Geist on every OS — owner decision, 2026-10-15; Instrument Serif from Google Fonts):
 - `Geist` 300–700 — display and UI. Body copy uses weight 400; headlines 600 (hero) / 500 (section titles).
 - `Geist Mono` 400–600 — labels, logs, tags.
 - `Instrument Serif` italic 400 — the italic phrases only.
@@ -148,7 +152,7 @@ Line *n* (0-based) is `running` when step = 2n, `done` when step > 2n. Wire *n�
 ### 3.4 Live run panel
 Position left 1010, top 112, width 366. Border 1px `--line`, background `--paper2`, mono 12px.
 - Header: padding 10px 14px, border-bottom `--line`, 11px uppercase `letter-spacing 0.08em` `--muted`. Left: 7×7 `--signal` square + `LIVE RUN · DEMO` in `--ink`. Right: `step {n} / 4` or `complete · 8.2s`.
-- Body: padding 8px 0, min-height 168px. Rows: grid `92px 58px 1fr`, gap 10px, padding 6px 14px, line-height 1.45. Past rows `--ink2`; newest row `background: var(--signal-soft); box-shadow: inset 2px 0 0 var(--signal); color: var(--ink)`.
+- Body: padding 8px 0, min-height 168px. Rows: grid `92px 58px 1fr`, gap 10px, padding 6px 14px, line-height 1.45. Past rows `--ink2`; newest row `background: var(--signal-soft); box-shadow: inset 2px 0 0 var(--signal); color: var(--ink)`, its timestamp `--ink2` (accessibility amendment, §1). Muted text in the panel uses `--muted-raised`.
 - Rows appear at steps 0, 2, 4, 6, 8:
 ```
 14:02:11.004  trigger  request · "Reconcile March invoices"

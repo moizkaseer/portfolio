@@ -1,0 +1,265 @@
+/* 04 — Selected runs. Desktop values from Main.html, phone values from Mobile.html (DESIGN_SPEC §5, §8). */
+.section {
+  padding-bottom: 120px;
+}
+
+.mOnly,
+.cards {
+  display: none;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 0.8fr) 200px 56px;
+  gap: 24px;
+}
+
+.colLabels {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.right {
+  text-align: right;
+}
+
+.row {
+  align-items: center;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition: opacity 0.25s var(--ease-ui);
+}
+
+.row[data-tool-dim="true"],
+.rowActive[data-tool-dim="true"] {
+  opacity: 0.35;
+}
+.row[data-tool-lit="true"] .stack,
+.rowActive[data-tool-lit="true"] .activeMeta > span:first-child {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-underline-offset: 4px;
+}
+
+.id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.name {
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.outcome {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.stack {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.handedOver {
+  color: var(--ink-2);
+}
+
+.led {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+.ledOff {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  box-sizing: border-box;
+}
+
+.year {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* the hovered / agent-highlighted row */
+.rowActive {
+  --muted: var(--muted-raised);
+  position: relative;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: start;
+  padding: 28px 20px;
+  margin: 0 -20px;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.activeId {
+  padding-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.activeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.activeName {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 52px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.nameMark {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  background: var(--signal);
+}
+
+.activeOutcome {
+  max-width: 52ch;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.activeMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.activeMeta .status {
+  color: var(--ink);
+}
+
+.ink {
+  color: var(--ink);
+}
+.muted {
+  color: var(--muted);
+}
+
+.allRuns {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 28px;
+}
+
+.allRunsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  box-sizing: border-box;
+}
+
+/* ---------- Phones (Mobile.html) ---------- */
+@media (max-width: 1023.98px) {
+  .section {
+    padding-bottom: 88px;
+  }
+  .dOnly,
+  .table {
+    display: none;
+  }
+  .mOnly {
+    display: inline;
+  }
+  .cards {
+    display: block;
+  }
+
+  .card,
+  .cardFeatured {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .cardFeatured {
+    gap: 14px;
+    padding: 20px 0 24px;
+  }
+
+  .cardMeta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .cardMeta .status {
+    gap: 6px;
+    font-size: 11px;
+  }
+  .cardMeta .led,
+  .cardMeta .ledOff {
+    width: 7px;
+    height: 7px;
+  }
+
+  .cardTitleFeatured {
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .cardTitle {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+}

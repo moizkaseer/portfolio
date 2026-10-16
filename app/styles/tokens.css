@@ -1,0 +1,84 @@
+/*
+ * Design tokens — exact values from DESIGN_SPEC.md §1.
+ * Night shift is the default theme; day shift is opt-in via the toggle.
+ * The site-wide values are the "home / run report" ones; the hero + prompt
+ * stage overrides --paper-2 and --line-strong with its own values (.hero-tokens).
+ */
+
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0c0c0b;
+  --paper-2: #161614;
+  --ink: #ece9e2;
+  --ink-2: #b5b2aa;
+  --muted: #8c8980;
+  --muted-raised: #8c8980; /* muted text on --paper-2 surfaces (AA) */
+  --line: rgba(236, 233, 226, 0.12);
+  --line-strong: rgba(236, 233, 226, 0.3);
+  --ok: #3dba6f;
+  --ok-ring: rgba(61, 186, 111, 0.22);
+  --term: #161614;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #edeae3;
+  --paper-2: #e3dfd6;
+  --ink: #0e0e0c;
+  --ink-2: #3b3a36;
+  --muted: #6a675f;
+  --muted-raised: #64615a; /* muted text on --paper-2 surfaces: #6A675F is 4.33:1 there, this is 4.73:1 (AA) */
+  --line: rgba(14, 14, 12, 0.14);
+  --line-strong: rgba(14, 14, 12, 0.32);
+  --ok: #2e9b5a;
+  --ok-ring: rgba(46, 155, 90, 0.2);
+  --term: #121210;
+}
+
+:root {
+  /* identical in both themes */
+  --signal: #ff4f1a;
+  --signal-soft: #ff4f1a33;
+  --on-signal: #0e0e0c;
+  --term-ink: #ece9e2;
+  --term-muted: #9a978e;
+
+  /* type */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+
+  --fs-mega: clamp(3.5rem, 12vw, 13rem);
+  --fs-display: clamp(2.75rem, 7vw, 7.5rem);
+  --fs-h2: clamp(2rem, 4.2vw, 4rem);
+  --fs-h3: clamp(1.375rem, 2vw, 1.875rem);
+  --fs-body: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
+  --fs-label: 0.75rem;
+
+  /* layout */
+  --margin: clamp(16px, 4.4vw, 64px);
+  --gutter: clamp(16px, 2vw, 32px);
+  --max: 1680px;
+  --nav-h: 64px;
+
+  /* motion */
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ui: cubic-bezier(0.215, 0.61, 0.355, 1); /* power2.out */
+}
+
+@media (max-width: 1023.98px) {
+  :root {
+    --nav-h: 56px;
+  }
+}
+
+/* Hero + "Your turn" stage values (HeroCombo.html / HeroComboMobile.html). */
+.hero-tokens {
+  --paper-2: #141413;
+  --line-strong: rgba(236, 233, 226, 0.28);
+}
+:root[data-theme="light"] .hero-tokens {
+  --paper-2: #e5e1d8;
+  --line-strong: rgba(14, 14, 12, 0.3);
+}

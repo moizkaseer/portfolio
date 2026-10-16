@@ -1,0 +1,355 @@
+/* The agent's chat UI — Main.html's terminal (DESIGN_SPEC §5), loaded on demand. */
+.view {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--term);
+  color: var(--term-ink);
+}
+.view[data-variant="panel"] {
+  height: 100%;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(236, 233, 226, 0.12);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--term-muted);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--term-ink);
+}
+
+.sq {
+  width: 7px;
+  height: 7px;
+  background: var(--term-muted);
+}
+.sq[data-on="true"] {
+  background: var(--signal);
+}
+
+.close {
+  min-width: 44px;
+  min-height: 32px;
+  margin: -8px -10px -8px 4px;
+  background: transparent;
+  border: 0;
+  color: var(--term-ink);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 220px;
+  max-height: 420px;
+  overflow-y: auto;
+  /* the terminal is dark in both themes: its scrollbar is too */
+  scrollbar-color: rgba(236, 233, 226, 0.3) transparent;
+  scrollbar-width: thin;
+  padding: 22px 18px 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.view[data-variant="panel"] .body {
+  flex: 1;
+  max-height: none;
+}
+
+.empty p {
+  margin: 0;
+  color: var(--term-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.chip {
+  min-height: 40px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--term-ink);
+  border: 1px solid rgba(236, 233, 226, 0.24);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.user {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 8px 12px;
+  border: 1px solid rgba(236, 233, 226, 0.2);
+}
+
+.agent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 10px;
+  background: rgba(236, 233, 226, 0.05);
+}
+.tool[data-state="queued"],
+.tool[data-state="cancelled"] {
+  background: transparent;
+  color: var(--term-muted);
+}
+.tool[data-state="cancelled"] .call {
+  text-decoration: line-through;
+}
+
+.call {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--term-ink);
+}
+.tool[data-state="running"] .dot {
+  background: var(--signal);
+}
+.tool[data-state="queued"] .dot,
+.tool[data-state="cancelled"] .dot,
+.tool[data-state="error"] .dot {
+  background: transparent;
+  border: 1px solid var(--term-muted);
+  box-sizing: border-box;
+}
+
+.result {
+  flex: none;
+  color: var(--term-muted);
+}
+.tool[data-state="running"] .result {
+  color: var(--term-ink);
+}
+
+.answer {
+  margin: 10px 0 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 17px;
+  margin-left: 4px;
+  background: var(--signal);
+  vertical-align: -3px;
+}
+
+.notice {
+  margin: 0;
+  font-size: 12px;
+  color: var(--term-muted);
+}
+.notice::before {
+  content: "■ ";
+  color: var(--signal);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  border-top: 1px solid rgba(236, 233, 226, 0.12);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  color: var(--term-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.input::placeholder {
+  color: var(--term-muted);
+}
+.input:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.send {
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--term-ink);
+  color: #0e0e0c;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ---------- floating panel (desktop) / bottom sheet (phones) ---------- */
+.panel {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 55;
+  width: min(440px, calc(100vw - 48px));
+  height: min(600px, calc(100dvh - var(--nav-h) - 48px));
+  border: 1px solid rgba(236, 233, 226, 0.16);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  animation: panel-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.pill {
+  display: none;
+}
+
+@media (max-width: 1023.98px) {
+  .panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: 72dvh;
+    border-width: 1px 0 0;
+    transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* while the agent acts, the sheet shrinks to a pill showing the current action */
+  .panel[data-acting="true"] {
+    left: 16px;
+    right: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    height: 52px;
+    border-width: 1px;
+  }
+  .panel[data-acting="true"] .view {
+    display: none;
+  }
+  .panel[data-acting="true"] .pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    padding: 0 16px;
+    background: var(--term);
+    color: var(--term-ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ---------- page-level pieces (global): the ghost pointer, highlights, the section takeover ---------- */
+:global(.agent-ghost) {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s;
+}
+:global(.agent-ghost[data-on="true"]) {
+  opacity: 1;
+}
+:global(.agent-ghost path) {
+  fill: var(--signal);
+  stroke: var(--paper);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+:global(.agent-ghost span) {
+  margin-top: 16px;
+  padding: 3px 7px;
+  background: var(--signal);
+  color: #0e0e0c;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+:global([data-agent-lit]) {
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+}
+:global([data-agent-flash]) {
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+}
+
+/* while the agent acts, a resting cursor doesn't open other run rows (moving the mouse isn't
+   "taking control"; a wheel, touch, key press or click is, and ends this at once) */
+:global(html[data-agent-acting] [data-run]) {
+  pointer-events: none;
+}
+
+:global([data-agent-terminal][data-live] > :not([data-agent-live])) {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(.agent-ghost) {
+    display: none;
+  }
+}
+
+/* iOS Safari zooms the page into inputs under 16px: touch screens get 16px (design: 13px) */
+@media (pointer: coarse) {
+  .input {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,39 @@
+---
+runId: "001"
+title: "World Cup 2026 predictor"
+outcome: "Ranks all 48 teams by their chance of winning the 2026 World Cup"
+outcomeLong: "A data mining pipeline: 150 years of match results into a SQLite warehouse, six features per team, five models compared, and a ranked win-probability list for 2026."
+industry: "Data mining project · sports analytics"
+stack: ["Python", "scikit-learn", "XGBoost", "SQLite"]
+status: completed
+since: "2026"
+year: "2026"
+order: 3
+category: Experiments
+lead: "Which team characteristics go with winning a World Cup? I trained five models on every tournament since 1998 *and ranked the 48 teams for 2026.*"
+runsLine: "Built in Google Colab · June 2026"
+role: "Data · features · modelling"
+timeline: "3 weeks"
+resultsPeriod: "7 World Cups (1998–2022)"
+results:
+  - { value: "48", unit: "", label: "teams ranked by win probability for 2026" }
+  - { value: "5", unit: "", label: "classifiers compared on a temporal split" }
+  - { value: "224", unit: "", label: "team-tournament rows from 1998 to 2022" }
+---
+
+## The problem
+
+Predicting a World Cup winner is a tiny-data problem dressed up as a big one: there are 150 years of matches, but only one winner per tournament. I wanted to see which pre-tournament signals actually go with winning, without letting the tournament itself leak into the features.
+
+## Decisions & tradeoffs
+
+- **A star-schema warehouse.** Match results from 1872 to 2024 and FIFA rankings go into SQLite: a match fact table with team, tournament and date dimensions.
+- **Six features, from the two years before each tournament:** win rate, goals scored and conceded per game, FIFA rank, host status and confederation. Matches from the tournament itself are excluded to prevent leakage.
+- **A temporal split, not a random one.** Train on 1998–2018, validate on 2022 (won by Argentina).
+- **One winner per ~32 teams** is heavy class imbalance, handled with balanced class weights. I compared Logistic Regression, Decision Tree, Naive Bayes, Random Forest and XGBoost on accuracy, precision, recall and F1. Logistic Regression generalised best.
+
+## What's next
+
+With one positive example per tournament, any single prediction is fragile. Next I'd add Elo ratings and squad-level data, and evaluate with leave-one-tournament-out across every World Cup instead of one validation year.
+
+[Code on GitHub](https://github.com/moizkaseer/Machine-Learning-model)

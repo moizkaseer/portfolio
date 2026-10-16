@@ -1,0 +1,8 @@
+{
+  "groups": [
+    { "category": "Models", "tools": ["Claude", "scikit-learn", "XGBoost"] },
+    { "category": "Backend", "tools": ["Python", "FastAPI", "Docker", "TypeScript", "Next.js"] },
+    { "category": "Data", "tools": ["Postgres", "Redis", "SQLite", "Exa"] },
+    { "category": "Ops", "tools": ["OpenTelemetry", "Railway", "Supabase", "GitHub Actions"] }
+  ]
+}

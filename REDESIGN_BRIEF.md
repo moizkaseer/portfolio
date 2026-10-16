@@ -87,7 +87,7 @@ Swiss-grid editorial layout × control-room instrumentation × lab notebook.
 | Hosting | **Vercel** | Free tier is enough to start. A preview link for every pull request; production on the owner's domain. |
 | QA | Playwright (screenshots + smoke tests), Lighthouse CI, axe-core | See §10. |
 
-**Why Next.js (decision record).** The site's hardest feature is the agent that drives the website (C1): its conversation and ghost pointer must survive page changes, and it shares state with the hero, the prompt (C2) and the contact form. Next.js's persistent root layout and React state handle this without workarounds, and the AI SDK's streaming tool calls fit the visible trace directly. It is also the stack many of the owner's future clients use, so the portfolio doubles as proof of fluency in it. **Astro was considered:** it ships less JavaScript and would be the better choice for a mostly-static content site, but this site's three signature features are interactive and connected, and wiring them across separate islands would cost more than the small speed gain. Next.js still meets every budget in §9.
+**Why Next.js (decision record).** The site's hardest feature is the agent that drives the website (C1): its conversation and ghost pointer must survive page changes, and it shares state with the hero, the prompt (C2) and the contact form. Next.js's persistent root layout and React state handle this without workarounds, and the AI SDK's streaming tool calls fit the visible trace directly. It is also the stack many of the owner's future clients use, so the portfolio doubles as proof of fluency in it. **Astro was considered:** it ships less JavaScript and would be the better choice for a mostly-static content site, but this site's three signature features are interactive and connected, and wiring them across separate islands would cost more than the small speed gain. Next.js meets every budget in §9 (the JS budget was raised to 190KB on 2026-10-15 to fit the framework baseline).
 
 Optional but recommended: install GreenSock's official GSAP agent skills (`github.com/greensock/gsap-skills`) so GSAP code follows current best practice.
 
@@ -343,7 +343,7 @@ These are the reasons people will remember and share the site. Build each one to
 
 - Lighthouse mobile: Performance ≥ 90, Accessibility 100, Best Practices 100, SEO 100.
 - LCP < 2.0s (the hero headline), CLS < 0.05, INP < 200ms.
-- Initial JS ≤ 150KB gzipped on the home route; the agent chat and command palette load on first interaction; GSAP plugins imported per use.
+- Initial JS ≤ 190KB gzipped on the home route (raised from 150KB by the owner on 2026-10-15: an empty Next.js 16.4 app already ships 176KB); the agent chat and command palette load on first interaction; GSAP plugins imported per use.
 - Images: AVIF/WebP via `next/image`, explicit sizes. Videos: muted, `playsinline`, ≤ 2MB each, poster frames, loaded on hover-intent/in-view.
 - Fonts: 3 families max, subset, preload only the display weight.
 - Sustained 60fps while scrolling on a mid-range phone, including while the wire draws and the packet moves.

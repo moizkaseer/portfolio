@@ -1,0 +1,107 @@
+/* Main.html: border-top, padding-top 24px, then the 72px top padding of the closing row. */
+.footer {
+  padding-top: 0;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  padding: 96px 0 56px;
+  border-top: 1px solid var(--line);
+}
+
+.closing {
+  margin: 0;
+  max-width: 16ch;
+  font-size: clamp(40px, 5vw, 76px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+}
+
+.closing em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.email {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  transition: text-underline-offset 0.2s var(--ease-ui);
+}
+.email:hover {
+  text-underline-offset: 3px;
+}
+
+.run {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 22px;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--signal);
+}
+
+.wordmark {
+  overflow: hidden;
+  font-size: 15.2vw;
+  font-weight: 600;
+  letter-spacing: -0.065em;
+  line-height: 0.78;
+  padding-bottom: 0.04em;
+  white-space: nowrap;
+}
+
+.wordmarkInner {
+  display: block;
+  will-change: transform;
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0 28px;
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.curl {
+  color: var(--ink);
+  text-transform: none;
+}

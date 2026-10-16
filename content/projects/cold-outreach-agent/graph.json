@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    { "id": "lead", "label": "Lead submitted", "kind": "Trigger", "detail": "POST /runs · website, name, role" },
+    { "id": "fit", "label": "Check fit", "kind": "Code", "short": "fit", "detail": "validate · dedupe · score" },
+    { "id": "research", "label": "Research the company", "kind": "Model", "short": "research", "detail": "agent loop · URL + exact quote" },
+    { "id": "draft", "label": "Draft the email", "kind": "Model", "short": "draft", "detail": "pain point · under 120 words" },
+    { "id": "verify", "label": "Prove every claim", "kind": "Code", "short": "verify", "detail": "unsupported claims go back" },
+    { "id": "approve", "label": "Approve & send", "kind": "Human", "short": "approve", "detail": "a person approves every email" }
+  ],
+  "edges": [["lead", "fit"], ["fit", "research"], ["research", "draft"], ["draft", "verify"], ["verify", "approve"]]
+}

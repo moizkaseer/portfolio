@@ -85,17 +85,14 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 ## 6. Content Gaps (everything the owner must provide)
 
 **Identity and status**
-- [ ] Name exactly as it should appear (nav, footer wordmark, colophon, JSON-LD, curl). The wordmark is set at 15.2vw, so name length affects the footer.
 - [ ] One-line positioning. The approved hero line is "I build agents that do the work."; confirm it.
-- [ ] City + IANA timezone (nav clock, meta row `Online · [CITY]`)
+- [ ] City (nav clock, meta row `Online · [CITY]`)
 - [ ] Availability: "Available for projects" or "Booked until [month]"
 - [ ] Domain (canonical URLs, `Try curl [domain]`, OG, llms.txt)
 - [ ] The old site's real URL and/or files in `legacy/`: bio, services, project write-ups, CV, images you own
 
 **Contact**
-- [ ] Email for the contact link and Resend delivery
 - [ ] Booking link
-- [ ] GitHub, LinkedIn, X/other URLs
 
 **Projects (3–5), for each:**
 - [ ] Name, client/industry, and whether the client can be named (y/n)
@@ -110,7 +107,7 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 - [ ] Decisions and tradeoffs (guardrails, evals, failure handling), and what you'd change
 
 **Site-wide**
-- [ ] Hero stats: "Agents in production" and "Hours automated / yr" (or OK to remove)
+- [ ] Hero stats: numbers for "Agents in production" and "Hours automated / yr" (block is kept; owner reply had `[LABEL]: [NUMBER]` placeholders)
 - [ ] Toolbox: tools you actually use, grouped (Orchestration / Models / Data / Surfaces …)
 - [ ] Testimonials (optional; without them Proof is omitted) and any real counters
 - [ ] Confirm the manifesto wording is true to how you work
@@ -129,3 +126,41 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 4. The full nav wins on every page; the nav strip is noted, not counted, in the visual comparison.
 5. The owner's reply listed name, city, timezone, email, domain, booking link, socials and old site as template brackets, so **every item in §6 is still open**. They live in `content/site.json`, marked `[TODO]`.
 6. Projects are not ready: placeholders stay; continue with Phase 1–2.
+
+## 9. Owner decisions (Phase 2 review, 2026-10-15)
+Contrast fix applied (`--muted-raised`), JS budget 190KB, Geist from Vercel's files, timezone Europe/Skopje. Name, city, email, domain, booking link, socials and hero stat numbers stay placeholders until before launch. Projects use the design's placeholder projects (`content/projects/*`, every field marked `[TODO]`) until the owner sends real ones.
+
+## 10. Phase 3 additions to the Content Gaps (2026-10-15)
+- [x] **Process** copy — provided by the owner (Phase 3 review).
+- [ ] **Toolbox**: real tools by group (`content/toolbox.json` holds the design's bracketed placeholders).
+- [ ] **Contact delivery**: Resend API key, `CONTACT_TO_EMAIL`, sender address on the domain; optionally Upstash Redis (see `.env.example`).
+- [ ] Booking link (contact section shows `[booking link]`).
+- [ ] Projects: replace the four design placeholders (`content/projects/*`) — frontmatter, `graph.json` steps, recordings.
+
+## 11. Owner decisions (Phase 3 review, 2026-10-15)
+Process copy provided (applied verbatim). Toolbox, booking link and contact delivery keys stay open (the owner adds keys to `.env.local` themselves; the contact form keeps its "email me directly" fallback until then). The agent section's 43ch exception is approved. The home page stays ≤ 190KB initial JS; Phase 4 code lives on its own routes.
+
+## 12. Phase 4 additions to the Content Gaps (2026-10-15)
+- [ ] Per project, for the run reports: lead sentence, role, timeline, 2–4 results with the measurement period, `graph.json` node `detail` lines and branch labels, a sanitized `trace.json` (the invoice pipeline uses the design's sample run), and the MDX body (problem, decisions & tradeoffs, what's next).
+- [ ] Confirm the `/work` categories (placeholders: Agents — support inbox, lead research; Automations — invoice pipeline, weekly ops report).
+
+## 13. Phase 5 additions to the Content Gaps (2026-10-15)
+- [ ] Live agent: `AGENT_MODEL` (+ `AGENT_PROVIDER`) and the provider key in `.env.local` / Vercel; Upstash keys for the shared rate limit (owner adds them; never pasted in chat). Until then the agent runs the labelled demo replay.
+- [ ] Review the agent's recorded demo answers (`lib/agent/replays.ts`).
+- [x] Unknown run addresses answer a real 404 on the first request (Phase 4 review).
+- [x] The replay sentence is in `trace.json` and says it's a sample run (Phase 4 review).
+
+## 14. Phase 6 additions to the Content Gaps (2026-10-15)
+- [ ] Approve or edit the agent's demo answers (full text in docs/PHASE6_REVIEW.md). Facts in them come from the content files.
+- [ ] Confirm the `featured: true` run (what the agent shows as "the best project"; placeholder: the invoice pipeline).
+- [ ] Smart prompt and live agent stay off until `AGENT_MODEL` + a provider key are set (owner adds them).
+- [ ] Domain for the curl version (`content/site.json` → `domain`; the text currently says `[yourdomain.com]`).
+
+## 15. Phase 7 additions to the Content Gaps (2026-10-16)
+- [ ] About page (`content/about.json`): lead sentence, bio (3 paragraphs), "Now" (3 lines + the month it was updated), timeline (year · role or milestone · one line), and a portrait (4:5; set `photo` to its path in `/public`, and `photoAlt`). Everything there is `[TODO]` for now.
+- [ ] Domain: once `content/site.json` → `domain` is real (or `NEXT_PUBLIC_SITE_URL` is set), canonical links, the sitemap, robots, OG images and JSON-LD use it. Before that they use Vercel's production URL on Vercel, and localhost locally.
+- [ ] Person JSON-LD leaves out the city while it is a placeholder; it appears automatically once filled in.
+- [x] 404, OG images, JSON-LD, sitemap, robots, /llms.txt, favicon, console message (Phase 7).
+
+## 16. Owner decisions (Phase 7 review, 2026-10-16)
+Name **Moiz Ali**, email **moizkaseer@gmail.com**, GitHub, LinkedIn and X links and timezone Europe/Skopje are in `content/site.json` and appear everywhere from there (nav, footer and its wordmark "MOIZ ALI", About, contact, agent answers, curl, JSON-LD, llms.txt, share images); removed from §6. Still placeholders: city, domain, booking link, hero stats, projects, toolbox, bio, now, timeline, portrait.

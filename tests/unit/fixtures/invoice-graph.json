@@ -1,0 +1,59 @@
+{
+  "_todo": "Drafted from the design's run report (RunReport.html) and mini trace (Main.html). [TODO: confirm] with the owner's real steps.",
+  "nodes": [
+    {
+      "id": "trigger",
+      "label": "Invoice email arrives",
+      "kind": "Trigger",
+      "detail": "[mail provider] · webhook"
+    },
+    {
+      "id": "extract",
+      "label": "Extract fields",
+      "kind": "Model",
+      "detail": "[model] · structured output"
+    },
+    {
+      "id": "validate",
+      "label": "Validate totals",
+      "kind": "Code",
+      "detail": "line items · VAT · duplicates"
+    },
+    {
+      "id": "review",
+      "label": "Review & approve",
+      "kind": "Human",
+      "detail": "[Slack] · one-click approve"
+    },
+    {
+      "id": "post-to-ledger",
+      "label": "Post to ledger",
+      "kind": "Tool",
+      "short": "ledger",
+      "detail": "[accounting API]"
+    }
+  ],
+  "edges": [
+    [
+      "trigger",
+      "extract"
+    ],
+    [
+      "extract",
+      "validate"
+    ],
+    [
+      "validate",
+      "post-to-ledger"
+    ],
+    [
+      "validate",
+      "review",
+      "confidence < 0.9"
+    ],
+    [
+      "review",
+      "post-to-ledger"
+    ]
+  ]
+}

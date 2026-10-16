@@ -1,0 +1,40 @@
+import Link from "next/link";
+import { getProjects } from "@/lib/content/projects";
+import { mainPath } from "@/lib/graph/layout";
+import { SectionHeader } from "./SectionHeader";
+import { RunList, type RunItem } from "./RunList";
+import home from "./home.module.css";
+import styles from "./SelectedRuns.module.css";
+
+/** 04 — Selected runs (Main.html table; Mobile.html stacked cards). */
+export function SelectedRuns() {
+  const projects = getProjects();
+  const items: RunItem[] = projects.map((p) => ({
+    slug: p.slug,
+    runId: p.runId,
+    title: p.title,
+    outcome: p.outcome,
+    outcomeLong: p.outcomeLong,
+    stack: p.stack,
+    status: p.status,
+    since: p.since,
+    year: p.year,
+    trace: mainPath(p.graph),
+    media: p.media,
+  }));
+  // the featured run is the one the agent highlights, and phones lead with it
+  const featured = projects.find((p) => p.featured)?.slug ?? items[0].slug;
+  const count = String(items.length).padStart(2, "0");
+
+  return (
+    <section aria-labelledby="runs-h" className={`${home.section} ${styles.section}`} id="work">
+      <SectionHeader index="04" title="Selected runs" id="runs-h" meta={<><span className={styles.dOnly}>{count} runs</span><span className={styles.mOnly}>{count}</span></>} markMobile={{ left: "30%", width: "22%" }} />
+      <RunList items={items} featured={featured} />
+      <div className={styles.allRuns}>
+        <Link href="/work" className={styles.allRunsLink}>
+          All runs {items.length} <span aria-hidden="true" className="nudge">→</span>
+        </Link>
+      </div>
+    </section>
+  );
+}

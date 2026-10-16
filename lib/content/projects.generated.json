@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "cold-outreach-agent",
+    "runId": "003",
+    "title": "Cold outreach agent",
+    "outcome": "Researched cold emails where every claim has a source",
+    "category": "Agents",
+    "featured": true,
+    "order": 1
+  },
+  {
+    "slug": "concord",
+    "runId": "002",
+    "title": "Concord",
+    "outcome": "A supervisor that keeps multi-agent runs alive through crashes",
+    "category": "Tools",
+    "featured": false,
+    "order": 2
+  },
+  {
+    "slug": "worldcup-2026-prediction",
+    "runId": "001",
+    "title": "World Cup 2026 predictor",
+    "outcome": "Ranks all 48 teams by their chance of winning the 2026 World Cup",
+    "category": "Experiments",
+    "featured": false,
+    "order": 3
+  }
+]

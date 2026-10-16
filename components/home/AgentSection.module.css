@@ -1,0 +1,237 @@
+/* 06 — Talk to my agent (Main.html, DESIGN_SPEC §5). */
+.section {
+  padding-bottom: 140px;
+}
+
+.cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  padding-top: 56px;
+}
+
+.left {
+  flex: 1 1 380px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(36px, 4vw, 58px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+.title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.lead {
+  margin: 0;
+  /* design: 42ch. Vercel's Geist sets this line ~1% wider than the reference render, which
+     pushed "for." to a third line; 43ch keeps the design's two-line break (noted in PHASE3_REVIEW). */
+  max-width: 43ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip,
+.chipFilled {
+  min-height: 44px;
+  padding: 0 16px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.chipFilled {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.term {
+  flex: 1.4 1 520px;
+  min-width: 0;
+  background: var(--term);
+  color: var(--term-ink);
+  border: 1px solid var(--line);
+}
+
+.termHead {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(236, 233, 226, 0.12);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--term-muted);
+}
+
+.acting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--term-ink);
+}
+
+.sq {
+  width: 7px;
+  height: 7px;
+  background: var(--signal);
+}
+
+.termBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 18px 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.user {
+  align-self: flex-end;
+  padding: 8px 12px;
+  border: 1px solid rgba(236, 233, 226, 0.2);
+}
+
+.tool {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 10px;
+  background: rgba(236, 233, 226, 0.05);
+}
+.tool[data-state="queued"] {
+  background: transparent;
+  color: var(--term-muted);
+}
+
+.call {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--term-ink);
+}
+.tool[data-state="running"] .dot {
+  background: var(--signal);
+}
+.tool[data-state="queued"] .dot {
+  background: transparent;
+  border: 1px solid var(--term-muted);
+  box-sizing: border-box;
+}
+
+.result {
+  flex: none;
+  color: var(--term-muted);
+}
+.tool[data-state="running"] .result {
+  color: var(--term-ink);
+}
+
+.answer {
+  margin: 10px 0 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 17px;
+  margin-left: 4px;
+  background: var(--signal);
+  vertical-align: -3px;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  border-top: 1px solid rgba(236, 233, 226, 0.12);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  color: var(--term-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.input::placeholder {
+  color: var(--term-muted);
+}
+
+.send {
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--term-ink);
+  color: #0e0e0c;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (max-width: 1023.98px) {
+  .section {
+    padding-bottom: 88px;
+  }
+  .cols {
+    gap: 32px;
+    padding-top: 40px;
+  }
+  .left,
+  .term {
+    flex-basis: 100%;
+  }
+  .tool {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .call {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* iOS Safari zooms the page into inputs under 16px: touch screens get 16px (design: 13px) */
+@media (pointer: coarse) {
+  .input {
+    font-size: 16px;
+  }
+}

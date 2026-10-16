@@ -1,0 +1,35 @@
+{
+  "_source": "Owner-approved copy (Phase 3 review, 2026-10-15).",
+  "steps": [
+    {
+      "id": "trigger",
+      "title": "Trigger",
+      "text": "Something happens: an email lands, a form is sent, a schedule fires. I find the moment where the work really starts.",
+      "log": ["trigger · new email in support@ · 14:02:11"]
+    },
+    {
+      "id": "plan",
+      "title": "Plan",
+      "text": "The agent decides what needs doing and which tools it may use. Limits come first, so it never wanders.",
+      "log": ["plan · 3 steps · 2 tools allowed · 1 check"]
+    },
+    {
+      "id": "act",
+      "title": "Act",
+      "text": "It does the work in your real tools (CRM, sheets, inbox) with the same access a person on your team would have.",
+      "log": ["act · crm.lookup → draft reply · 1.8s"]
+    },
+    {
+      "id": "verify",
+      "title": "Verify",
+      "text": "Every result is checked by code or a second model. When it is unsure, it stops and asks a person instead of guessing.",
+      "log": ["verify · confidence 0.86 → human review"]
+    },
+    {
+      "id": "ship",
+      "title": "Ship",
+      "text": "The result lands where your team already works, and every run is logged so it can be replayed later.",
+      "log": ["ship · posted to #support · run logged"]
+    }
+  ]
+}

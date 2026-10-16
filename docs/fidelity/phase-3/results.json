@@ -1,0 +1,34 @@
+[
+  {
+    "state": "home-day-manifesto",
+    "mismatch": "2.338%"
+  },
+  {
+    "state": "home-day-selected-runs",
+    "mismatch": "4.127%"
+  },
+  {
+    "state": "home-day-agent",
+    "mismatch": "5.089%"
+  },
+  {
+    "state": "home-day-footer",
+    "mismatch": "1.042%"
+  },
+  {
+    "state": "home-night-manifesto",
+    "mismatch": "2.344%"
+  },
+  {
+    "state": "home-night-selected-runs",
+    "mismatch": "4.018%"
+  },
+  {
+    "state": "home-night-agent",
+    "mismatch": "5.054%"
+  },
+  {
+    "state": "home-night-footer",
+    "mismatch": "1.056%"
+  }
+]

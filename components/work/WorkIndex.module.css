@@ -1,0 +1,102 @@
+/* /work — not in the design canvas: the run report's breadcrumb + title and the home run table (DESIGN_SPEC §7). */
+.page {
+  padding-top: var(--nav-h);
+  padding-bottom: 120px;
+}
+
+.crumbs {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.crumbLink {
+  color: var(--ink);
+  text-decoration: none;
+}
+.muted {
+  color: var(--muted);
+}
+
+.title {
+  margin: 64px 0 0;
+  font-size: clamp(56px, 8.6vw, 136px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+.title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: 1.08em;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 56px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.filterLabel {
+  margin-right: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.chip[aria-pressed="true"] {
+  --muted: var(--muted-raised);
+  border-color: var(--ink);
+  background: var(--paper-2);
+}
+.chip:disabled {
+  cursor: default;
+  color: var(--muted);
+  border-color: var(--line);
+}
+
+.count {
+  color: var(--muted);
+}
+
+.live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (max-width: 1023.98px) {
+  .title {
+    margin-top: 40px;
+  }
+  .filters {
+    margin-top: 40px;
+  }
+}

@@ -1,0 +1,99 @@
+/* Main.html: mono 11px, 8×8 nodes, 44px connectors (margin 0 10px), packet 6×6 18px into
+   the connector leading to the current node; Mobile.html: 10px, 7×7, 22px (margin 0 7px), packet at 8px. */
+.trace {
+  --conn: 44px;
+  --conn-m: 10px;
+  --node: 8px;
+  --gap: 8px;
+  --rest: 18px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.compact {
+  --conn: 22px;
+  --conn-m: 7px;
+  --node: 7px;
+  --gap: 6px;
+  --rest: 8px;
+  row-gap: 8px; /* wraps only below ~340px; one line at 390 as in Mobile.html */
+  font-size: 10px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+}
+
+.conn {
+  position: relative;
+  width: var(--conn);
+  height: 1px;
+  margin: 0 var(--conn-m);
+  background: var(--line-strong);
+  transition: background-color 0.2s;
+}
+.conn[data-lit="true"] {
+  background: var(--ink);
+}
+
+.packet {
+  position: absolute;
+  left: 0;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--signal);
+  transform: translateX(var(--rest));
+}
+.packet[data-moving="true"] {
+  animation: travel 0.48s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes travel {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--conn) - 6px));
+  }
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  white-space: nowrap;
+}
+
+.mark {
+  width: var(--node);
+  height: var(--node);
+  background: var(--ink);
+}
+.node[data-state="current"] .mark {
+  background: var(--signal);
+}
+.node[data-state="pending"] {
+  color: var(--muted);
+}
+.node[data-state="pending"] .mark {
+  width: 6px;
+  height: 6px;
+  background: transparent;
+  border: 1px solid var(--muted);
+  box-sizing: border-box;
+}
+/* phones: the pending last step is just its label (Mobile.html) */
+.compact .node[data-state="pending"] .mark {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .packet[data-moving="true"] {
+    animation: none;
+  }
+}
