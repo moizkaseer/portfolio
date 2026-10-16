@@ -44,7 +44,7 @@ const rule = (label: string, s: ReturnType<typeof styler>) => {
   return `${s.dim("──")}${s.bold(head)}${s.dim("─".repeat(Math.max(0, WIDTH - 2 - head.length)))}`;
 };
 
-const host = () => site.domain;
+const host = () => site.domain; // used as `curl -L ${host()}…`
 
 function header(s: ReturnType<typeof styler>): string[] {
   const block = blockText(site.name, WIDTH);
@@ -68,7 +68,7 @@ export function renderHome(color: boolean): string {
     const gap = Math.max(2, WIDTH - id.length - 2 - title.length - right.length);
     out.push(`${s.accent(id)}  ${s.bold(title)}${" ".repeat(gap)}${right.replace("●", s.accent("●"))}`);
     out.push(...wrap(p.outcome, "          "));
-    out.push(...wrap(`→ curl ${host()}/work/${p.slug}`, "          ").map(s.dim), "");
+    out.push(...wrap(`→ curl -L ${host()}/work/${p.slug}`, "          ").map(s.dim), "");
   }
   out.push(rule("How I work", s), "");
   process.steps.forEach((st, i) => {
@@ -85,7 +85,7 @@ export function renderHome(color: boolean): string {
   out.push(`${s.bold("Book a call".padEnd(15))}${site.bookingUrl ?? "[booking link]"}`);
   for (const so of site.socials) out.push(`${s.bold("".padEnd(15))}${so.url ?? so.label}`);
   out.push("", ...wrap(`Have work that should run itself? Write to ${site.email}.`));
-  out.push("", s.dim(`Try: curl ${host()}/work/<slug>  ·  no colour: add ?nocolor`), "");
+  out.push("", s.dim(`Try: curl -L ${host()}/work/<slug>  ·  no colour: add ?nocolor`), "");
   return out.join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
@@ -133,7 +133,7 @@ export function renderRun(slug: string, color: boolean): string | null {
     out.push("", rule(`0${n++} — ${m[1].trim()}`, s), "");
     for (const para of m[2].trim().split(/\n\s*\n/)) out.push(...wrap(para.replace(/[*_`]/g, "").replace(/\s+/g, " ")), "");
   }
-  out.push("", rule("Next run", s), "", `${s.accent(`RUN #${next.runId}`)}  ${s.bold(next.title)}`, s.dim(`→ curl ${host()}/work/${next.slug}`));
-  out.push("", s.dim(`← all runs: curl ${host()}`), "");
+  out.push("", rule("Next run", s), "", `${s.accent(`RUN #${next.runId}`)}  ${s.bold(next.title)}`, s.dim(`→ curl -L ${host()}/work/${next.slug}`));
+  out.push("", s.dim(`← all runs: curl -L ${host()}`), "");
   return out.join("\n").replace(/\n{3,}/g, "\n\n");
 }

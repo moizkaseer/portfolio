@@ -13,7 +13,8 @@ import { RunTitle } from "@/components/run/RunTitle";
 import { isLive, statusLabel } from "@/lib/content/status";
 import { RunRail } from "@/components/run/RunRail";
 import { site } from "@/lib/content/site";
-import { abs, siteUrl } from "@/lib/seo";
+import { abs, breadcrumbJsonLd, pageMetadata, siteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
 import home from "@/components/home/home.module.css";
 import styles from "./run.module.css";
 
@@ -29,7 +30,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/work/[slug]">): Promise<Metadata> {
   const p = getProject((await params).slug);
-  return p ? { title: `RUN #${p.runId} ${p.title}`, description: p.outcome, alternates: { canonical: `/work/${p.slug}` } } : {};
+  return p ? pageMetadata({ title: `${p.title} · RUN #${p.runId}`, description: p.outcomeLong, path: `/work/${p.slug}`, type: "article" }) : {};
 }
 
 /** "with a *real number.*" → the starred phrase in serif italic (RunReport.html lead). */
@@ -82,22 +83,23 @@ export default async function RunReport({ params }: PageProps<"/work/[slug]">) {
 
   return (
     <div className={`${home.section} ${styles.page}`} data-rail-root data-page="work">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <JsonLd
+        data={[
+          {
             "@context": "https://schema.org",
             "@type": "CreativeWork",
             name: p.title,
             headline: p.title,
-            description: p.outcome,
+            description: p.outcomeLong,
             url: abs(`/work/${p.slug}`),
             genre: p.category,
             keywords: p.stack.join(", "),
-            creator: { "@type": "Person", name: site.name, url: siteUrl() },
+            creator: { "@type": "Person", "@id": `${siteUrl()}/#person`, name: site.name, url: siteUrl() },
+            ...(p.media ? { image: abs(p.media.src) } : {}),
             ...(/^\d{4}$/.test(p.year) ? { dateCreated: p.year } : {}),
-          }).replace(/</g, "\\u003c"),
-        }}
+          },
+          breadcrumbJsonLd([["All runs", "/work"], [p.title, `/work/${p.slug}`]]),
+        ]}
       />
       <div className={styles.crumbs}>
         <span>

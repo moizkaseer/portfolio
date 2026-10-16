@@ -58,11 +58,11 @@ test.describe("SEO and machine-readable files (from the content files)", () => {
 });
 
 test.describe("/about", () => {
-  test("bio, now and timeline; no photo box until there is a photo; nav marks About", async ({ page }, info) => {
+  test("bio, now, timeline and the GitHub avatar; nav marks About", async ({ page }, info) => {
     await page.goto("/about");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("at work.");
     for (const h of ["01 — Bio", "02 — Now", "03 — Timeline", "04 — Toolbox"]) await expect(page.getByRole("heading", { name: h })).toBeVisible();
-    await expect(page.getByRole("img", { name: /Portrait of/ })).toHaveCount(0);
+    await expect(page.getByRole("img", { name: /GitHub avatar/ })).toBeVisible();
     await expect(page.getByText(/\[TODO|\[Photo\]|\[YYYY\]/)).toHaveCount(0);
     if (!info.project.use.isMobile) await expect(page.locator('header nav a[data-nav="about"]')).toHaveCSS("border-bottom-width", "1px");
   });

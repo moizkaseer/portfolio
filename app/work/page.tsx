@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getProjects } from "@/lib/content/projects";
+import { pageMetadata } from "@/lib/seo";
 import { WorkIndex, type WorkItem } from "@/components/work/WorkIndex";
 import home from "@/components/home/home.module.css";
 import styles from "@/components/work/WorkIndex.module.css";
 
-export const metadata: Metadata = { title: "All runs", description: "Every system I have built, as run reports.", alternates: { canonical: "/work" } };
+export const metadata: Metadata = pageMetadata({
+  title: "All runs",
+  description: `Run reports for every system I have built: ${getProjects().map((p) => p.title).join(", ")}. What each one does, how it is built, and what it measured.`,
+  path: "/work",
+});
 
 /** /work — all runs, filterable (brief §4). Not in the design canvas: built from its run table (DESIGN_SPEC §7). */
 export default function Work() {

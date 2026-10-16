@@ -3,11 +3,13 @@ import Link from "next/link";
 import about from "@/content/about.json";
 import toolbox from "@/content/toolbox.json";
 import { site } from "@/lib/content/site";
+import { abs, breadcrumbJsonLd, pageMetadata, personJsonLd } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
 import { SectionHeader } from "@/components/home/SectionHeader";
 import home from "@/components/home/home.module.css";
 import styles from "./about.module.css";
 
-export const metadata: Metadata = { title: "About", description: about.lead, alternates: { canonical: "/about" } };
+export const metadata: Metadata = pageMetadata({ title: "About", description: about.lead, path: "/about", type: "profile" });
 
 /**
  * /about — about, now, timeline, toolbox (brief §4). Not in the design canvas: built from its
@@ -18,6 +20,7 @@ export default function About() {
   const live = site.availability.status === "available";
   return (
     <div className={`${home.section} ${styles.page}`} data-page="about">
+      <JsonLd data={[{ "@context": "https://schema.org", "@type": "ProfilePage", url: abs("/about"), mainEntity: personJsonLd() }, breadcrumbJsonLd([["About", "/about"]])]} />
       <div className={styles.crumbs}>
         <span>
           <Link href="/" className={`${styles.crumbLink} text-link`}>
@@ -44,7 +47,6 @@ export default function About() {
           </h1>
           <p className={styles.lead}>{about.lead}</p>
         </div>
-        {/* no portrait yet: the box is left out rather than shown as a placeholder */}
         {about.photo && (
           <figure className={styles.photo}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

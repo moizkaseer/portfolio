@@ -150,19 +150,17 @@ export function HeroStage({ site, smart = false }: { site: Pick<Site, "city" | "
             </p>
 
             {/* The headline is the workflow. Tags are visual only; the h1 reads "I build agents that do the work." */}
+            {/* step tags are drawn from data-tag by CSS, so the heading's text (what search engines
+                read) is just "I build agents that do the work." */}
             <h1 className={styles.h1}>
               {LINES.map((l, i) => (
                 <span key={l.tag} className={`${styles.line} ${l.cls}`} data-line={i} data-status={hero.lines[i]}>
-                  <span aria-hidden="true" className={styles.tag}>
-                    {l.tag} · {hero.lines[i]}
-                  </span>
+                  <span aria-hidden="true" className={styles.tag} data-tag={`${l.tag} · ${hero.lines[i]}`} />
                   {l.text}{" "}
                 </span>
               ))}
               <em className={`${styles.line} ${styles.l4}`} data-line={3} data-status={hero.lines[3]}>
-                <span aria-hidden="true" className={styles.tag}>
-                  04 SHIP · {hero.lines[3]}
-                </span>
+                <span aria-hidden="true" className={styles.tag} data-tag={`04 SHIP · ${hero.lines[3]}`} />
                 the work.
               </em>
             </h1>

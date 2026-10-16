@@ -1,8 +1,8 @@
 {
   "_review": "DRAFTED from the owner's GitHub repos on 2026-10-16. The owner should check every line, especially the SEEU entry and the 'how I work' paragraph.",
   "lead": "I'm Moiz Ali. I build AI agents and automations in Tetovo, and I care most about what comes after the demo: evals, guardrails and an off switch.",
-  "photo": null,
-  "photoAlt": "Portrait of Moiz Ali",
+  "photo": "/media/avatar.jpg",
+  "photoAlt": "Moiz Ali's GitHub avatar: a red rune on a black background",
   "updated": "October 2026",
   "bio": [
     "I started with React in 2025, building a website for the Karakoram Alpine Club, a mountaineering club in northern Pakistan, and a run of small apps to learn the craft. In early 2026 I moved to automation: an n8n voice agent, then a workspace where creators hand tasks to AI agents.",
@@ -15,10 +15,30 @@
     "Open to projects that take a repetitive job off a small team"
   ],
   "timeline": [
-    { "year": "2025", "title": "Started with React", "note": "A website for a mountaineering club in northern Pakistan, and small apps to learn the craft" },
-    { "year": "2025", "title": "SEEU Connect", "note": "A student platform for South East European University, later rebuilt in C# and PHP" },
-    { "year": "2026", "title": "First agents", "note": "An n8n voice agent and an AI-agent workspace for creators" },
-    { "year": "2026", "title": "World Cup 2026 predictor", "note": "A data warehouse, six features and five models compared" },
-    { "year": "2026", "title": "Agents you can check", "note": "The cold outreach agent and Concord: evals, guardrails and crash recovery" }
+    {
+      "year": "2025",
+      "title": "Started with React",
+      "note": "A website for a mountaineering club in northern Pakistan, and small apps to learn the craft"
+    },
+    {
+      "year": "2025",
+      "title": "SEEU Connect",
+      "note": "A student platform for South East European University, later rebuilt in C# and PHP"
+    },
+    {
+      "year": "2026",
+      "title": "First agents",
+      "note": "An n8n voice agent and an AI-agent workspace for creators"
+    },
+    {
+      "year": "2026",
+      "title": "World Cup 2026 predictor",
+      "note": "A data warehouse, six features and five models compared"
+    },
+    {
+      "year": "2026",
+      "title": "Agents you can check",
+      "note": "The cold outreach agent and Concord: evals, guardrails and crash recovery"
+    }
   ]
 }

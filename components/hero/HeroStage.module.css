@@ -215,6 +215,9 @@
   -webkit-text-stroke: 0;
   white-space: nowrap;
 }
+.tag::before {
+  content: attr(data-tag);
+}
 .l4 .tag {
   left: 6px;
   top: 6px;
