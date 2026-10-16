@@ -5,6 +5,7 @@ import { deriveVisuals, LOG_ROWS } from "@/lib/motion/hero-motion";
 import { NavClock } from "@/components/nav/NavClock";
 import type { Site } from "@/lib/content/site";
 import { useHeroEngine, useLayout } from "./useHeroEngine";
+import { prefillContact, systemSummary } from "@/lib/prompt-store";
 import styles from "./HeroStage.module.css";
 
 const LINES = [
@@ -24,6 +25,13 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
   const layout = useLayout();
   const v = deriveVisuals(state, mode);
   const { hero, prompt } = v;
+
+  // "Build this with me →": prefill the contact form with the task and its generated steps (C2)
+  const buildThis = () => {
+    const task = prompt.typed || templates[Math.max(0, state.tpl >= 0 ? state.tpl : state.nextTpl)]?.prompt || "";
+    const nodes = prompt.nodes.map((n) => ({ kind: n.kind, title: n.title }));
+    prefillContact({ summary: systemSummary(task, nodes), system: { task, nodes } });
+  };
 
   const announcement =
     mode === "user" && state.phase === "done"
@@ -304,7 +312,7 @@ export function HeroStage({ site }: { site: Pick<Site, "city" | "timezone" | "he
                 <a href="#work" className={styles.seeRuns}>
                   See real runs
                 </a>
-                <a href="#contact" className={styles.build}>
+                <a href="#contact" className={styles.build} onClick={buildThis}>
                   Build this with me <span aria-hidden="true">→</span>
                 </a>
               </div>

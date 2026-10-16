@@ -1,0 +1,304 @@
+/* 05 — Process. Not in the design canvas; built from its tokens, boxes and logs (DESIGN_SPEC §7). */
+.section {
+  padding-bottom: 120px;
+}
+
+/* ---------- pinned (desktop) ---------- */
+.pin {
+  position: relative;
+  height: 250vh; /* 1.5 viewport heights of pinned scroll */
+}
+
+.sticky {
+  position: sticky;
+  top: var(--nav-h);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  gap: 56px var(--gutter);
+  height: calc(100vh - var(--nav-h));
+  padding: 56px 0 48px;
+  box-sizing: border-box;
+}
+
+.diagram {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr) 44px
+    minmax(0, 1fr) 44px minmax(0, 1fr);
+  align-items: center;
+}
+
+.box {
+  --muted: var(--muted-raised);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 112px;
+  box-sizing: border-box;
+  padding: 16px 16px 18px;
+  background: var(--paper-2);
+  border: 1px solid var(--line-strong);
+  opacity: 0.12;
+  transform: translateY(10px);
+  transition:
+    opacity 0.45s var(--ease-reveal),
+    transform 0.45s var(--ease-reveal),
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.box[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+  border-color: var(--ink);
+}
+.box[data-active="true"] {
+  border: 1.5px solid var(--signal);
+  box-shadow: 0 0 0 4px var(--signal-soft);
+}
+
+.boxTitle {
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.conn {
+  display: block;
+  height: 1.5px;
+  background: var(--ink);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.35s var(--ease-reveal);
+}
+.conn[data-drawn="true"] {
+  transform: scaleX(1);
+}
+
+.copy {
+  grid-column: 1 / span 6;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(36px, 4vw, 58px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  animation: rise 0.6s var(--ease-reveal) both;
+}
+
+.text {
+  text-wrap: pretty;
+  margin: 0;
+  max-width: 42ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  animation: rise 0.6s 0.06s var(--ease-reveal) both;
+}
+
+.pin[data-static="true"] *,
+.pin[data-static="true"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.log {
+  --muted: var(--muted-raised);
+  grid-column: 8 / -1;
+  align-self: start;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.logHead {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.logTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.sq {
+  width: 7px;
+  height: 7px;
+  background: var(--signal);
+}
+
+.logBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 200px;
+  padding: 8px 0;
+}
+
+.logRow {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 10px;
+  padding: 6px 14px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.logRow[data-new="true"] {
+  color: var(--ink);
+}
+.logRow[data-new="true"]:last-child {
+  background: var(--signal-soft);
+  box-shadow: inset 2px 0 0 var(--signal);
+}
+
+/* ---------- stacked (phones, reduced motion, no-JS; the accessible version) ---------- */
+.stacked {
+  /* visually hidden on desktop: the pinned diagram shows the same content */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  --muted: var(--muted-raised);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 16px 18px;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+}
+
+.itemTop {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mark {
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+}
+.mark[data-kind="Model"] {
+  border-radius: 50%;
+}
+.mark[data-kind="Trigger"],
+.mark[data-kind="Schedule"] {
+  transform: rotate(45deg) scale(0.8);
+}
+.mark[data-active="true"] {
+  background: var(--signal);
+}
+
+.itemTitle {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.itemText {
+  text-wrap: pretty;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  white-space: normal;
+}
+
+.itemLog {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: normal;
+}
+
+@media (max-width: 1023.98px), (prefers-reduced-motion: reduce) {
+  .pin {
+    display: none;
+  }
+  .stacked {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    display: grid;
+    gap: 16px;
+    padding-top: 32px;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  .section {
+    padding-bottom: 88px;
+  }
+  .stacked {
+    gap: 16px;
+  }
+  /* vertical connectors between the stacked steps, like the prompt boxes on phones */
+  .item + .item {
+    position: relative;
+  }
+  .item + .item::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: -17px;
+    width: 1.5px;
+    height: 16px;
+    background: var(--ink);
+  }
+}

@@ -1,34 +1,34 @@
 [
   {
     "state": "desktop-night-start",
-    "mismatch": "1.339%"
+    "mismatch": "1.381%"
   },
   {
     "state": "desktop-day-start",
-    "mismatch": "1.227%"
+    "mismatch": "1.269%"
   },
   {
     "state": "desktop-night-prompt-done",
-    "mismatch": "1.487%"
+    "mismatch": "1.529%"
   },
   {
     "state": "desktop-day-prompt-done",
-    "mismatch": "1.424%"
+    "mismatch": "1.466%"
   },
   {
     "state": "phone-night-start",
-    "mismatch": "2.065%"
+    "mismatch": "2.246%"
   },
   {
     "state": "phone-day-start",
-    "mismatch": "1.836%"
+    "mismatch": "2.017%"
   },
   {
     "state": "phone-night-prompt-done",
-    "mismatch": "2.506%"
+    "mismatch": "2.686%"
   },
   {
     "state": "phone-day-prompt-done",
-    "mismatch": "2.423%"
+    "mismatch": "2.604%"
   }
 ]

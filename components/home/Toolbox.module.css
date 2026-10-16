@@ -1,0 +1,111 @@
+/* 07 — Toolbox. Not in the design canvas; built from its mono labels and hairlines (DESIGN_SPEC §7). */
+.section {
+  padding-bottom: 120px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 var(--gutter);
+  padding-top: 32px;
+}
+
+.group {
+  min-width: 0;
+}
+
+.category {
+  margin: 0;
+  padding-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ink);
+}
+
+.tool {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: left;
+  cursor: default;
+  transition: color 0.2s var(--ease-ui);
+}
+
+.toolName {
+  position: relative;
+  padding-left: 0;
+  transition: padding 0.2s var(--ease-ui);
+}
+.toolName::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  background: var(--signal);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-ui);
+}
+
+.tool:hover .toolName,
+.tool:focus-visible .toolName {
+  padding-left: 14px;
+}
+.tool:hover .toolName::before,
+.tool:focus-visible .toolName::before {
+  opacity: 1;
+}
+
+.runs {
+  flex: 0 1 auto;
+  text-align: right;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+@media (max-width: 1023.98px) {
+  .section {
+    padding-bottom: 88px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
+    padding-top: 24px;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolName,
+  .toolName::before {
+    transition: none;
+  }
+}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/content/site";
+import { WordmarkScrub } from "./WordmarkScrub";
 import styles from "./Footer.module.css";
 
 const year = new Date(process.env.BUILD_DATE ?? Date.now()).getUTCFullYear();
@@ -23,9 +24,10 @@ export function Footer() {
         </div>
       </div>
 
-      <div aria-hidden="true" className={styles.wordmark}>
-        {site.name}
+      <div aria-hidden="true" className={styles.wordmark} data-wordmark>
+        <span className={styles.wordmarkInner}>{site.name}</span>
       </div>
+      <WordmarkScrub />
 
       <div className={styles.bottom}>
         <span>

@@ -29,6 +29,9 @@ for (const c of CASES) {
   const page = await ctx.newPage();
   await page.goto(`${base}/?freeze=${c.freeze}`, { waitUntil: "networkidle" });
   await page.evaluate(() => document.fonts.ready);
+  // The phone "Ask the agent" bar (Mobile.html) is fixed to the viewport bottom; in these tall
+  // frame-sized screenshots it would sit over the stage, so it is hidden for this comparison.
+  await page.addStyleTag({ content: "[data-askbar]{display:none!important}" });
   await page.waitForTimeout(300);
   const shotPath = path.join(outDir, `${c.name}.png`);
   await page.screenshot({ path: shotPath, clip: { x: 0, y: 0, width: c.w, height: c.h } });

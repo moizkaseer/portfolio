@@ -132,3 +132,10 @@ Process (05), Toolbox (07), Proof (08), contact form fields, `/work` index, abou
 
 ## 9. Owner decisions (Phase 2 review, 2026-10-15)
 Contrast fix applied (`--muted-raised`), JS budget 190KB, Geist from Vercel's files, timezone Europe/Skopje. Name, city, email, domain, booking link, socials and hero stat numbers stay placeholders until before launch. Projects use the design's placeholder projects (`content/projects/*`, every field marked `[TODO]`) until the owner sends real ones.
+
+## 10. Phase 3 additions to the Content Gaps (2026-10-15)
+- [ ] Confirm or rewrite the **Process** copy (`content/process.json`) — draft written from the brief and the design's own wording.
+- [ ] **Toolbox**: real tools by group (`content/toolbox.json` holds the design's bracketed placeholders).
+- [ ] **Contact delivery**: Resend API key, `CONTACT_TO_EMAIL`, sender address on the domain; optionally Upstash Redis (see `.env.example`).
+- [ ] Booking link (contact section shows `[booking link]`).
+- [ ] Projects: replace the four design placeholders (`content/projects/*`) — frontmatter, `graph.json` steps, recordings.

@@ -1,0 +1,43 @@
+/* Mobile.html: left/right 16, bottom 20, min-height 52, padding 0 8 0 16, --term background. */
+.bar {
+  display: none;
+}
+
+@media (max-width: 1023.98px) {
+  .bar {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 8px 0 16px;
+    background: var(--term);
+    color: var(--term-ink);
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .sq {
+    width: 7px;
+    height: 7px;
+    background: var(--signal);
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--term-muted);
+  }
+}

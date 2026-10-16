@@ -1,0 +1,11 @@
+{
+  "_todo": "Drafted from the design's run report (RunReport.html) and mini trace (Main.html). [TODO: confirm] with the owner's real steps.",
+  "nodes": [
+    { "id": "trigger", "label": "Invoice email arrives", "kind": "Trigger" },
+    { "id": "extract", "label": "Extract fields", "kind": "Model" },
+    { "id": "validate", "label": "Validate totals", "kind": "Code" },
+    { "id": "review", "label": "Review & approve", "kind": "Human" },
+    { "id": "post-to-ledger", "label": "Post to ledger", "kind": "Tool", "short": "ledger" }
+  ],
+  "edges": [["trigger", "extract"], ["extract", "validate"], ["validate", "post-to-ledger"], ["validate", "review"], ["review", "post-to-ledger"]]
+}

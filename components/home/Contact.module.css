@@ -1,0 +1,325 @@
+/* 08 — Contact. Not in the design canvas; built from its type, buttons and prompt underline (DESIGN_SPEC §7). */
+.section {
+  padding-bottom: 120px;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 48px var(--gutter);
+  padding-top: 56px;
+}
+
+.left {
+  grid-column: 1 / span 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(44px, 5.4vw, 80px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+}
+.title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: 1.08em;
+}
+
+.lead {
+  text-wrap: pretty;
+  margin: 0;
+  max-width: 34ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.email {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+}
+
+.copyHint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.booking,
+.bookingTodo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+}
+.bookingTodo {
+  color: var(--muted);
+  border-bottom-color: var(--line-strong);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: translate(-50%, 16px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s var(--ease-ui),
+    transform 0.25s var(--ease-ui);
+}
+.toast[data-show="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.toastSq {
+  width: 7px;
+  height: 7px;
+  background: var(--signal);
+}
+
+/* the form, as a workflow trigger */
+.form {
+  grid-column: 7 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* wire between the steps */
+.field + .field::before {
+  content: "";
+  position: absolute;
+  left: 3.25px;
+  top: -28px;
+  width: 1.5px;
+  height: 28px;
+  background: var(--line-strong);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kind {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.mark {
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+}
+.mark[data-kind="Trigger"] {
+  transform: rotate(45deg) scale(0.8);
+}
+.mark[data-kind="Human"] {
+  background: transparent;
+  border: 1px solid var(--ink);
+  box-sizing: border-box;
+}
+.field:focus-within .mark {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.textarea,
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 0 12px;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--line-strong);
+  border-radius: 0;
+  color: var(--ink);
+  caret-color: var(--signal);
+  font-family: var(--font-sans);
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  transition: border-color 0.3s var(--ease-ui);
+}
+.textarea {
+  resize: vertical;
+  min-height: 108px;
+}
+.textarea::placeholder,
+.input::placeholder {
+  color: var(--muted);
+}
+.textarea:focus,
+.input:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+.textarea:focus-visible,
+.input:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+.field[data-invalid="true"] .textarea,
+.field[data-invalid="true"] .input {
+  border-bottom-color: var(--signal);
+}
+
+.error {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+.error::before {
+  content: "■ ";
+  color: var(--signal);
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.attached {
+  margin: -8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.run {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 22px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.run:disabled {
+  cursor: progress;
+  opacity: 0.8;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--signal);
+}
+
+.status,
+.statusError {
+  min-height: 1.5em;
+  margin: -12px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.statusError::before {
+  content: "■ ";
+  color: var(--signal);
+}
+.statusError {
+  color: var(--ink);
+}
+
+@media (max-width: 1023.98px) {
+  .section {
+    padding-bottom: 88px;
+  }
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-top: 40px;
+  }
+  .textarea,
+  .input {
+    font-size: 19px;
+  }
+  .submitRow .run {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: opacity 0.2s linear;
+    transform: translate(-50%, 0);
+  }
+}
