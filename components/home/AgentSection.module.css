@@ -58,7 +58,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.02em;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 .chipFilled {
   background: var(--ink);
@@ -205,7 +205,7 @@
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 @media (max-width: 1023.98px) {

@@ -5,7 +5,6 @@ import { Process } from "@/components/home/Process";
 import { AgentSection } from "@/components/home/AgentSection";
 import { Toolbox } from "@/components/home/Toolbox";
 import { Contact } from "@/components/home/Contact";
-import { AskBar } from "@/components/home/AskBar";
 import { Rail } from "@/components/rail/Rail";
 import { site } from "@/lib/content/site";
 
@@ -21,7 +20,6 @@ export default function Home() {
       <Toolbox />
       <Contact />
       <Rail />
-      <AskBar />
     </div>
   );
 }

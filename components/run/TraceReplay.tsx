@@ -25,9 +25,7 @@ export function TraceReplay() {
         <p className={styles.title}>
           Every run is logged. <em>Replay one.</em>
         </p>
-        <p className={styles.text}>
-          This is a real run with customer details removed. When the model is unsure, it stops and asks a person instead of guessing.
-        </p>
+        <p className={styles.text}>{trace.note}</p>
         <div className={styles.buttons}>
           <button type="button" className={styles.replay} onClick={() => r.replay()}>
             <span aria-hidden="true" className={styles.triangle} />

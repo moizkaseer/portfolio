@@ -30,6 +30,12 @@ test.describe("/work index", () => {
 });
 
 test.describe("run report", () => {
+  test("the replay sentence comes from the trace file (sample until the owner's real run)", async ({ page }) => {
+    await page.goto(RUN);
+    await expect(page.getByText("This is a sample run showing how the system works.")).toBeVisible();
+    await expect(page.getByText(/This is a real run/)).toHaveCount(0);
+  });
+
   test("freeze run-report: the design's frame", async ({ page }) => {
     await page.goto(`${RUN}?freeze=run-report`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("[Invoice extraction pipeline]");
@@ -89,13 +95,14 @@ test.describe("run report", () => {
     expect(errors).toEqual([]);
   });
 
-  test("an unknown run shows the not-found page and is not indexed", async ({ page }) => {
-    // With Cache Components, unlisted slugs render on request; the first render may stream a
-    // 200 before notFound() runs, in which case Next.js marks the page noindex.
-    const res = await page.goto("/work/does-not-exist");
-    expect([200, 404]).toContain(res!.status());
+  test("an unknown run is a real 404 on the first request (owner decision)", async ({ page, request }) => {
+    const fresh = `/work/no-such-run-${Date.now()}`; // never requested before
+    expect((await request.get(fresh)).status()).toBe(404);
+    const res = await page.goto(`${fresh}-page`);
+    expect(res!.status()).toBe(404);
     await expect(page.getByText(/could not be found/i)).toBeVisible();
-    if (res!.status() === 200) await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    // known runs are unaffected
+    expect((await request.get("/work/invoice-extraction-pipeline")).status()).toBe(200);
   });
 });
 

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import Link from "next/link";
 import { Instrument_Serif } from "next/font/google";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
@@ -7,6 +8,8 @@ import { SmoothScroll } from "@/lib/motion/SmoothScroll";
 import { CommandPaletteLauncher } from "@/components/palette/CommandPaletteLauncher";
 import { site } from "@/lib/content/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
+import { agentConfigured } from "@/lib/server/agent-model";
+import { AskBar } from "@/components/home/AskBar";
 import "./globals.css";
 
 // Vercel's Geist files (`geist` package, OFL) subset to Latin + arrows by scripts/subset-fonts.sh
@@ -67,7 +70,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <Footer />
         <SmoothScroll />
-        <CommandPaletteLauncher email={site.email} />
+        <aside aria-label="Agent">
+          {/* desktop: the floating "Ask the agent" pill (brief §5); phones use the bottom bar */}
+          <Link href="/#agent" className="agent-pill" data-agent-open>
+            <span aria-hidden="true" />
+            Ask the agent
+            <kbd>⌘K</kbd>
+          </Link>
+          <AskBar />
+        </aside>
+        <CommandPaletteLauncher email={site.email} agentMode={agentConfigured() ? "live" : "demo"} />
       </body>
     </html>
   );
