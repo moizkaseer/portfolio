@@ -1,0 +1,9 @@
+# Runtime dependencies for the FastAPI agent backend (agent/README.md).
+fastapi>=0.158,<1
+uvicorn[standard]>=0.54,<1
+anthropic>=2.0,<3
+httpx>=0.28,<1
+PyYAML>=6.0,<7
+
+# Optional extras — only needed if you turn these features on, see README.md:
+#   DATABASE_URL (Postgres+pgvector knowledge store): psycopg[binary]>=3.2
