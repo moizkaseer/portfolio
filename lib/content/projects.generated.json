@@ -25,5 +25,14 @@
     "category": "Experiments",
     "featured": false,
     "order": 3
+  },
+  {
+    "slug": "geolumen",
+    "runId": "004",
+    "title": "GeoLumen",
+    "outcome": "Free AI crawler and llms.txt checks for small businesses and creators",
+    "category": "Tools",
+    "featured": false,
+    "order": 4
   }
 ]

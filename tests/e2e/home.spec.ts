@@ -71,7 +71,7 @@ test.describe("04 selected runs", () => {
     test.skip(!info.project.use.isMobile);
     await ready(page);
     const cards = page.locator("[data-card]");
-    await expect(cards).toHaveCount(3);
+    await expect(cards).toHaveCount(4);
     await expect(cards.first()).toHaveAttribute("data-card", "cold-outreach-agent");
     await expect(cards.first().getByRole("img", { name: /drafted email to PostHog/ })).toBeVisible();
   });

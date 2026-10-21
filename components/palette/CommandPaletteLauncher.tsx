@@ -1,6 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useState } from "react";
+import type { AgentMode } from "@/lib/agent/mode";
 
 // The palette itself loads on first use, never in the initial bundle (brief §9).
 const CommandPalette = lazy(() => import("./CommandPalette"));
@@ -17,7 +18,7 @@ function isTyping(target: EventTarget | null) {
 }
 
 /** ⌘K / Ctrl+K / "/" opens the command palette; [data-agent-*] triggers load and open the agent. */
-export function CommandPaletteLauncher({ email, agentMode }: { email: string; agentMode: "demo" | "live" }) {
+export function CommandPaletteLauncher({ email, agentMode }: { email: string; agentMode: AgentMode }) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [grid, setGrid] = useState(false);

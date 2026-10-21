@@ -6,6 +6,7 @@ import { agentStore, type Message, type ToolRow } from "./store";
 import { createTurn } from "./turn";
 import { traceLabel } from "./protocol";
 import { getPromptState } from "@/lib/prompt-store";
+import { site } from "@/lib/content/site";
 
 /**
  * The live agent (AI SDK Chat over /api/agent). Loaded only when a model is configured.
@@ -71,11 +72,22 @@ function ensureChat() {
     },
     onError(error) {
       const last = chat!.messages[chat!.messages.length - 1];
-      const msg = /rate-limit/.test(error.message)
-        ? "That's a lot of questions — try again in an hour, or use the contact form."
-        : /turn-limit/.test(error.message)
-          ? "That's the limit for one session — the contact form reaches a person."
-          : "The agent is unavailable right now — the contact form still works.";
+      const status = (error as { statusCode?: number }).statusCode;
+      let msg: string;
+      if (/rate-limit/.test(error.message)) {
+        msg = `That's a lot of questions — try again in an hour, or email ${site.email}.`;
+      } else if (/turn-limit/.test(error.message)) {
+        msg = `That's the limit for one session — email ${site.email} to reach a person.`;
+      } else if (status === 503) {
+        // the model (or its key) just became unavailable server-side: the same signal the
+        // route sends when nothing is configured at all (brief §7) — fall back gracefully
+        agentStore.set({ mode: "demo" });
+        msg = "The live agent just went offline — switched to the recorded demo. Ask again to see it.";
+      } else if (status === undefined) {
+        msg = `Couldn't reach the server — check your connection, or email ${site.email}.`;
+      } else {
+        msg = `The agent hit an error — email ${site.email}${site.bookingUrl ? " or book a call" : ""} instead.`;
+      }
       if (last) notices.set(last.id, msg);
       turn?.end();
       turn = null;
