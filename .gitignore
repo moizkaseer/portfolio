@@ -49,3 +49,10 @@ next-env.d.ts
 
 # large local recordings (shared separately)
 /docs/fidelity/**/*.webm
+
+# agent/ (Python backend — see agent/README.md)
+/agent/.venv/
+/agent/data/
+/agent/**/__pycache__/
+/agent/**/*.pyc
+/agent/.pytest_cache/

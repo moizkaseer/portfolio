@@ -1,5 +1,6 @@
 import { convertToModelMessages, createUIMessageStreamResponse, stepCountIs, streamText, toUIMessageStream, type UIMessage } from "ai";
 import { agentModel } from "@/lib/server/agent-model";
+import { proxyAgentRequest } from "@/lib/server/agent-proxy";
 import { PromptStateSchema, serverTools, systemPrompt, uiTools } from "@/lib/server/agent-tools";
 import { clientIp, createLimiter } from "@/lib/server/rate-limit";
 import { MAX_INPUT_CHARS, MAX_TURNS } from "@/lib/agent/protocol";
@@ -15,8 +16,15 @@ const textOf = (m: UIMessage) => m.parts.map((p) => (p.type === "text" ? p.text 
  * read-only over /content, ui_* tools run in the visitor's browser. Without a configured model
  * it answers 503 { demo: true } and the client plays the scripted demo replay. Nothing about the
  * visitor or the conversation is logged.
+ *
+ * When AGENT_BACKEND_URL is set, this route becomes a thin streaming proxy to the Python agent
+ * service (agent/) instead — see lib/server/agent-proxy.ts. Without it, the behaviour below is
+ * unchanged.
  */
 export async function POST(request: Request) {
+  const backendUrl = process.env.AGENT_BACKEND_URL?.trim();
+  if (backendUrl) return proxyAgentRequest(request, backendUrl, clientIp(request.headers));
+
   const model = agentModel();
   if (!model) return Response.json({ demo: true }, { status: 503 });
 
