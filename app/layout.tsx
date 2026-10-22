@@ -57,6 +57,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const initialAgentMode = agentConfigured() ? "live" : "demo";
   return (
     <html
       lang="en"
@@ -81,7 +82,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main">{children}</main>
         <Footer />
         <SmoothScroll />
-        <Deferred name="cursor" />
+        <Deferred name="idle" />
         <aside aria-label="Agent">
           {/* desktop: the floating "Ask the agent" pill (brief §5); phones use the bottom bar */}
           <Link href="/#agent" className="agent-pill" data-agent-open>
@@ -89,9 +90,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             Ask the agent
             <kbd>⌘K</kbd>
           </Link>
-          <AskBar />
+          <AskBar initialMode={initialAgentMode} />
         </aside>
-        <CommandPaletteLauncher email={site.email} agentMode={agentConfigured() ? "live" : "demo"} />
+        <CommandPaletteLauncher email={site.email} agentMode={initialAgentMode} />
       </body>
     </html>
   );

@@ -19,6 +19,27 @@ test.describe("agent — loading", () => {
     await expect(page.locator("#agent")).toContainText("Demo replay");
   });
 
+  test("the status endpoint reports demo at runtime, uncached", async ({ request }) => {
+    const res = await request.get("/api/agent/status");
+    expect(res.status()).toBe(200);
+    expect(res.headers()["cache-control"]).toContain("no-store");
+    expect(await res.json()).toEqual({ mode: "demo" });
+  });
+
+  test("mode labels follow the runtime probe, not the prerendered guess", async ({ page }) => {
+    await page.route("**/api/agent/status", (r) => r.fulfill({ json: { mode: "live" } }));
+    await home(page);
+    await expect(page.locator("#agent [data-agent-mode]")).toHaveText("Live · reads only my case studies");
+    await expect(page.locator("[data-askbar] [data-agent-mode]")).toHaveText("live");
+  });
+
+  test("a failed probe falls back to demo", async ({ page }) => {
+    await page.route("**/api/agent/status", (r) => r.fulfill({ status: 500, body: "nope" }));
+    await home(page);
+    await expect(page.locator("#agent [data-agent-mode]")).toHaveText("Demo replay · reads only my case studies");
+    await expect(page.locator("[data-askbar] [data-agent-mode]")).toHaveText("demo");
+  });
+
   test("the API says demo when no model is configured", async ({ request }) => {
     const res = await request.post("/api/agent", { data: { messages: [] } });
     expect(res.status()).toBe(503);

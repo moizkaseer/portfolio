@@ -7,6 +7,7 @@ import { it } from "vitest";
 import site from "@/content/site.json";
 import toolbox from "@/content/toolbox.json";
 import process from "@/content/process.json";
+import about from "@/content/about.json";
 import projects from "@/lib/content/projects.generated.json";
 import { FALLBACK, PRICE, REPLAYS, type ReplayContent } from "@/lib/agent/replay-script";
 
@@ -17,7 +18,8 @@ it.runIf(!!globalThis.process.env.GEN_ANSWERS)("prints the demo answers", () => 
     timezone: site.timezone,
     summary: site.summary,
     availability: site.availability.label,
-    projects: projects.map((p) => ({ slug: p.slug, runId: p.runId, title: p.title, featured: p.featured })),
+    about: { lead: about.lead, bio: about.bio },
+    projects: projects.map((p) => ({ slug: p.slug, runId: p.runId, title: p.title, outcome: p.outcome, featured: p.featured })),
     toolbox: toolbox.groups,
     process: Object.fromEntries(process.steps.map((s) => [s.id, s.text])),
     prompt: null,

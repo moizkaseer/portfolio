@@ -5,14 +5,14 @@ import { lazy, Suspense, useEffect, useState } from "react";
 /**
  * Idle-loaded pieces with no server-rendered content: their code stays out of the initial load
  * and arrives once the page is idle (the C3 rail, the manifesto scrub, the footer wordmark scrub, the cursor dot,
- * the toolbox cross-link and copy-email).
+ * the toolbox cross-link and copy-email, the runtime agent-mode probe + analytics).
  */
 const PIECES = {
   rail: lazy(() => import("@/components/rail/Rail").then((m) => ({ default: m.Rail }))),
   manifesto: lazy(() => import("@/components/home/ManifestoMotion").then((m) => ({ default: m.ManifestoMotion }))),
   wordmark: lazy(() => import("@/components/footer/WordmarkScrub").then((m) => ({ default: m.WordmarkScrub }))),
   home: lazy(() => import("@/components/home/HomeEnhance").then((m) => ({ default: m.HomeEnhance }))),
-  cursor: lazy(() => import("@/components/cursor/CursorDot").then((m) => ({ default: m.CursorDot }))),
+  idle: lazy(() => import("@/components/Boot").then((m) => ({ default: m.Boot }))),
 };
 
 /** `near`: also load as soon as the pointer or keyboard focus enters an element matching it. */

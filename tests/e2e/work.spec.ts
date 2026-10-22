@@ -10,13 +10,13 @@ test.describe("/work index", () => {
     await page.goto("/work");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("All runs.");
     const rows = !!info.project.use.isMobile ? page.locator("[data-work-card]") : page.locator("[data-work-row]");
-    await expect(rows).toHaveCount(3);
+    await expect(rows).toHaveCount(4);
     await page.getByRole("button", { name: /^Agents/ }).click();
     await expect(page.getByRole("button", { name: /^Agents/ })).toHaveAttribute("aria-pressed", "true");
     await expect(rows).toHaveCount(1);
     await expect(page.getByRole("button", { name: /^Automations/ })).toBeDisabled();
     await page.getByRole("button", { name: /^All/ }).click();
-    await expect(rows).toHaveCount(3);
+    await expect(rows).toHaveCount(4);
   });
 
   test("nav marks Work as the current section", async ({ page }, info) => {
@@ -86,7 +86,7 @@ test.describe("run report", () => {
   test("every run report renders; brief §6 sections come from MDX", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(String(e)));
-    for (const slug of ["cold-outreach-agent", "concord", "worldcup-2026-prediction"]) {
+    for (const slug of ["cold-outreach-agent", "concord", "worldcup-2026-prediction", "geolumen"]) {
       await page.goto(`/work/${slug}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expect(page.getByRole("heading", { name: /— The problem$/ })).toBeVisible();
