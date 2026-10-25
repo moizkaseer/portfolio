@@ -9,7 +9,7 @@ import { CommandPaletteLauncher } from "@/components/palette/CommandPaletteLaunc
 import { site } from "@/lib/content/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { agentConfigured } from "@/lib/server/agent-model";
-import { pageMetadata, siteUrl } from "@/lib/seo";
+import { pageMetadata, verificationMetadata, siteUrl } from "@/lib/seo";
 import { AskBar } from "@/components/home/AskBar";
 import { Deferred } from "@/components/Deferred";
 import "./globals.css";
@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: { default: `${site.name} — ${site.positioning}`, template: `%s — ${site.name}` },
   ...pageMetadata({ description: `${site.summary} Based in ${site.city}, North Macedonia; working remotely.`, path: "/" }),
+  verification: verificationMetadata(),
 };
 
 export const viewport: Viewport = {

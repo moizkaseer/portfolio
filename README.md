@@ -25,6 +25,8 @@ Copy `.env.example` to `.env.local` and fill in what you need — every feature 
 | Variable | Used for | Without it |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for SEO (canonical links, sitemap, OG images, JSON-LD). No trailing slash. | Falls back to `https://www.<domain>` from `content/site.json`, then Vercel's production URL, then `http://localhost:3000`. |
+| `GOOGLE_SITE_VERIFICATION` | Google Search Console HTML-tag token (just the `content` value). | No tag. Verify by DNS instead, or skip it. |
+| `BING_SITE_VERIFICATION` | Bing Webmaster Tools `msvalidate.01` token. | No tag. |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL` | Sending the contact form via [Resend](https://resend.com). | Dev: the message is logged to the console. Production: the form answers 503 and asks the visitor to email directly. |
 | `CONTACT_FROM_EMAIL` | The contact email's `From` header (e.g. `"Portfolio <hello@yourdomain.com>"`). | Falls back to `Portfolio <onboarding@resend.dev>` (Resend's test sender). |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Per-IP rate limiting for the agent and contact form via [Upstash Redis](https://upstash.com) (shared across serverless instances). | Falls back to an in-memory limiter (dev / single instance only — doesn't share state across serverless instances). |
