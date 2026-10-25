@@ -33,6 +33,7 @@ export function personJsonLd() {
     jobTitle: site.positioning,
     description: site.summary,
     url: siteUrl(),
+    image: abs("/media/avatar.jpg"),
     email: `mailto:${site.email}`,
     knowsAbout: ["AI agents", "Workflow automation", "LLM evaluation", "Multi-agent systems", "Machine learning", ...toolbox.groups.flatMap((g) => g.tools)],
     ...(site.city.startsWith("[") ? {} : { address: { "@type": "PostalAddress", addressLocality: site.city, addressCountry: "MK" } }),
@@ -54,6 +55,13 @@ export function pageMetadata({ title, description, path, type = "website" }: { t
     openGraph: { type, siteName: site.name, locale: "en_US", title: full, description, url: path },
     twitter: { card: "summary_large_image", title: full, description },
   };
+}
+
+/** Search Console / Bing Webmaster ownership tags, from env (empty when unset). */
+export function verificationMetadata(): Metadata["verification"] {
+  const google = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  const bing = process.env.BING_SITE_VERIFICATION?.trim();
+  return { ...(google ? { google } : {}), ...(bing ? { other: { "msvalidate.01": bing } } : {}) };
 }
 
 /** WebSite (home page JSON-LD), tied to the Person by @id. */
