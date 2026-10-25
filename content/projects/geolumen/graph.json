@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    { "id": "domain", "label": "Domain submitted", "kind": "Trigger", "short": "domain", "detail": "owner enters a URL" },
+    { "id": "fetch", "label": "Safe fetch runs", "kind": "Tool", "short": "fetch", "detail": "http(s) only · ports 80/443 · private IPs blocked, pinned DNS on redirects" },
+    { "id": "match", "label": "Match robots.txt to AI crawlers", "kind": "Code", "short": "match", "detail": "RFC 9309 rule matching" },
+    { "id": "llms", "label": "Generate & validate llms.txt", "kind": "Code", "short": "llms.txt", "detail": "same safe fetch" },
+    { "id": "report", "label": "Visibility report ready", "kind": "Code", "short": "report", "detail": "crawler + llms.txt results" }
+  ],
+  "edges": [["domain", "fetch"], ["fetch", "match"], ["match", "llms"], ["llms", "report"]]
+}

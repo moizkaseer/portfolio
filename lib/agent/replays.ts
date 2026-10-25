@@ -30,7 +30,7 @@ async function streamText(messageId: string, text: string, isCancelled: () => bo
 /** Plays the recorded answer that matches the visitor's message. */
 export async function runReplay(question: string) {
   const theme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
-  const steps: Step[] = pickReplay(question).steps(replayContent(theme));
+  const steps: Step[] = pickReplay(question).steps(replayContent(theme), question);
   const id = newId();
   agentStore.set((s) => ({ messages: [...s.messages, { id, role: "agent", text: "", tools: [] }] }));
   const turn = createTurn(id);

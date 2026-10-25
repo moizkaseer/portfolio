@@ -1,0 +1,38 @@
+---
+runId: "004"
+title: "GeoLumen"
+outcome: "Free AI crawler and llms.txt checks for small businesses and creators"
+outcomeLong: "Free GEO + SEO visibility tools for small businesses and creators: an AI crawler checker that matches robots.txt against real AI crawlers under RFC 9309, and an llms.txt generator and validator, built behind a hardened safe fetch."
+industry: "Own product · AI search visibility (GEO + SEO) for small businesses and creators"
+stack: ["Next.js 15", "TypeScript", "Tailwind v4", "shadcn/ui", "Supabase"]
+status: building
+since: "2026"
+year: "2026"
+order: 4
+category: Tools
+lead: "Free AI search visibility (GEO + SEO) tools for small businesses and creators: an AI crawler checker against RFC 9309 and an llms.txt generator and validator, *built behind a safe fetch that blocks private IPs on every redirect.*"
+runsLine: "Live on Vercel · Supabase waitlist"
+role: "Design · build · ship"
+timeline: "Ongoing"
+resultsPeriod: "the current build"
+results:
+  - { value: "2", unit: "", label: "free tools live: an AI crawler checker and an llms.txt generator" }
+  - { value: "RFC 9309", unit: "", label: "the spec the AI crawler checker matches robots.txt against" }
+---
+
+## The problem
+
+Small businesses and creators want to show up in AI search, not just classic search, but rarely have a simple, free way to check whether AI crawlers are allowed to read their site, or to create and check an llms.txt file.
+
+## Decisions & tradeoffs
+
+- **Match robots.txt the way the spec does.** The AI crawler checker parses a site's robots.txt and matches it against real AI crawler user agents using RFC 9309's rule matching, not a hand-rolled approximation.
+- **An llms.txt generator and validator**, so a site can produce the file and check it is well-formed, not just read about the convention.
+- **A hardened safe fetch everywhere a URL is fetched.** Only http(s) on ports 80 and 443; private IPs are blocked with pinned DNS, including on every redirect hop; requests are timed out, capped in size, and rate-limited per IP. Checking someone else's URL is an SSRF surface, so the fetch path treats it as untrusted input.
+- **A Supabase waitlist**, since the tools are still being built out: a site can test its own robots.txt and llms.txt today, and join the waitlist for what's next.
+
+## What's next
+
+More GEO checks beyond the AI crawler checker and the llms.txt tools, and opening access past the waitlist.
+
+[Live](https://geolumen-six.vercel.app)

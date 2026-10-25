@@ -4,13 +4,16 @@ import toolbox from "@/content/toolbox.json";
 
 /**
  * The site's absolute URL for canonical links, sitemap, OG and JSON-LD. Uses NEXT_PUBLIC_SITE_URL
- * when set, else the domain from content/site.json (moizali.tech) if it is a real host name,
- * else Vercel's production URL, else localhost.
+ * when set, else the `www` host for the domain from content/site.json (moizali.tech redirects to
+ * www.moizali.tech) if it is a real host name, else Vercel's production URL, else localhost.
  */
 export function siteUrl(): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (env) return env.replace(/\/$/, "");
-  if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(site.domain)) return `https://${site.domain}`;
+  if (env) return env.replace(/\/+$/, "");
+  if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(site.domain)) {
+    const host = /^www\./i.test(site.domain) ? site.domain : `www.${site.domain}`;
+    return `https://${host}`;
+  }
   // on Vercel, before the domain is set: the project's production URL (a system variable)
   const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
   if (vercel) return `https://${vercel}`;
