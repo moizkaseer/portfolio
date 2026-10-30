@@ -82,7 +82,9 @@ function ensureChat() {
         // the model (or its key) just became unavailable server-side: the same signal the
         // route sends when nothing is configured at all (brief §7) — fall back gracefully
         agentStore.set({ mode: "demo" });
-        msg = "The live agent just went offline — switched to the recorded demo. Ask again to see it.";
+        msg = /quota/.test(error.message)
+          ? "The live agent has used up its free quota for now — switched to the recorded demo. Ask again to see it."
+          : "The live agent just went offline — switched to the recorded demo. Ask again to see it.";
       } else if (status === undefined) {
         msg = `Couldn't reach the server — check your connection, or email ${site.email}.`;
       } else {

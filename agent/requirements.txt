@@ -1,7 +1,8 @@
 # Runtime dependencies for the FastAPI agent backend (agent/README.md).
 fastapi>=0.158,<1
 uvicorn[standard]>=0.54,<1
-anthropic>=2.0,<3
+google-genai>=2.34,<3   # default provider: Gemini (free tier)
+anthropic>=2.0,<3       # only used when LLM_PROVIDER=anthropic
 httpx>=0.28,<1
 PyYAML>=6.0,<7
 

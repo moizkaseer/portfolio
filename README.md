@@ -34,6 +34,8 @@ Copy `.env.example` to `.env.local` and fill in what you need — every feature 
 | `ANTHROPIC_API_KEY` | Anthropic's own API, when `AGENT_PROVIDER=anthropic` (then `AGENT_MODEL`'s model part is Anthropic's own id). | The live agent stays off (demo replay). |
 | `OPENAI_API_KEY` | OpenAI's own API, when `AGENT_PROVIDER=openai`. | The live agent stays off (demo replay). |
 
+The live agent's brain is the Python service in `agent/`, which runs on Google Gemini's **free tier** by default (free key from https://aistudio.google.com/apikey, no Anthropic key needed). Set `AGENT_BACKEND_URL` + `AGENT_SHARED_SECRET` on Vercel to wire it in; see `agent/README.md` for env vars and free hosting (Render recommended).
+
 The agent's live/demo indicator is never trusted from a prerendered page alone: the client confirms it at runtime against `GET /api/agent/status` (uncached, no secrets), and a live request that fails at runtime falls back to the demo replay gracefully.
 
 ## Analytics

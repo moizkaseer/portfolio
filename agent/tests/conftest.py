@@ -119,6 +119,7 @@ def settings(tmp_path: Path, content_dir: Path) -> Settings:
 def make_settings(tmp_path: Path, content_dir: Path, **overrides) -> Settings:
     data_dir = tmp_path / "data"
     base = dict(
+        llm_provider="anthropic",
         anthropic_api_key="test-anthropic-key",
         model="claude-test-model",
         max_steps=4,

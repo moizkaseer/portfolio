@@ -10,6 +10,7 @@ from typing import Any, Iterator
 
 from app import protocol as P
 from app.protocol import validate_ui_action
+from app.providers import ProviderUnavailable, classify_error
 from app.tools import ToolSpec
 
 _FINISH_REASON_MAP = {
@@ -61,6 +62,7 @@ def run_agent_turn(
     total_cost_usd = 0.0
     step = 0
     finish_reason = "stop"
+    said_anything = False
 
     try:
         while True:
@@ -80,6 +82,7 @@ def run_agent_turn(
                 for event in stream:
                     etype = getattr(event, "type", None)
                     if etype == "content_block_start":
+                        said_anything = True
                         idx = event.index
                         cb = event.content_block
                         if cb.type == "text":
@@ -171,6 +174,9 @@ def run_agent_turn(
             if tool_results:
                 messages.append({"role": "user", "content": tool_results})
     except Exception as exc:  # network/API errors surface as a clean error part, not a crash
+        if not said_anything and classify_error(exc) in ("quota", "auth"):
+            # out of credit / rate-limited before saying anything -> caller answers 503 demo
+            raise ProviderUnavailable(classify_error(exc), f"{type(exc).__name__}: {exc}") from exc
         yield P.error(f"{type(exc).__name__}: {exc}")
         finish_reason = "error"
 

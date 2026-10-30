@@ -74,7 +74,7 @@ describe("lib/server/agent-proxy — streaming proxy to the Python backend (brie
     expect(await response.json()).toEqual({ error: "rate-limit" });
   });
 
-  it("answers a clean 502 when the backend is unreachable", async () => {
+  it("falls back to the demo replay (503 { demo: true }) when the backend is unreachable", async () => {
     const { proxyAgentRequest } = await load();
     vi.stubGlobal(
       "fetch",
@@ -86,8 +86,79 @@ describe("lib/server/agent-proxy — streaming proxy to the Python backend (brie
     const request = new Request("http://localhost/api/agent", { method: "POST", body: "{}" });
     const response = await proxyAgentRequest(request, "https://agent.example.com", "1.2.3.4");
 
-    expect(response.status).toBe(502);
-    expect(await response.json()).toEqual({ error: "agent-unavailable" });
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ demo: true, reason: "unreachable" });
+  });
+
+  it("turns a Gemini free-quota 503 from the backend into the demo fallback, keeping the reason", async () => {
+    const { proxyAgentRequest } = await load();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => Response.json({ demo: true, reason: "quota" }, { status: 503 })),
+    );
+    const request = new Request("http://localhost/api/agent", { method: "POST", body: "{}" });
+    const response = await proxyAgentRequest(request, "https://agent.example.com", "1.2.3.4");
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ demo: true, reason: "quota" });
+  });
+
+  it("turns any other backend 5xx (even non-JSON) into the demo fallback instead of an error", async () => {
+    const { proxyAgentRequest } = await load();
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("Internal Server Error", { status: 500 })));
+    const request = new Request("http://localhost/api/agent", { method: "POST", body: "{}" });
+    const response = await proxyAgentRequest(request, "https://agent.example.com", "1.2.3.4");
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ demo: true, reason: "backend-error" });
+  });
+
+  it("backendLive: live only when /healthz is up and reports a configured model", async () => {
+    const { backendLive } = await load();
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ status: "ok", modelConfigured: true })));
+    expect(await backendLive("https://agent.example.com/")).toBe(true);
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ status: "ok", modelConfigured: false })));
+    expect(await backendLive("https://agent.example.com")).toBe(false);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("timeout");
+      }),
+    );
+    expect(await backendLive("https://agent.example.com")).toBe(false);
+  });
+});
+
+describe("app/api/agent/status — runtime mode with the Python backend", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  const loadStatus = async () => {
+    vi.resetModules();
+    vi.doMock("server-only", () => ({}));
+    vi.doMock("next/server", () => ({ connection: async () => {} }));
+    return import("@/app/api/agent/status/route");
+  };
+
+  it("reports live when the backend's /healthz has a model key", async () => {
+    vi.stubEnv("AGENT_BACKEND_URL", "https://agent.example.com");
+    const fetchMock = vi.fn(async () => Response.json({ status: "ok", modelConfigured: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { GET } = await loadStatus();
+    expect(await (await GET()).json()).toEqual({ mode: "live" });
+    expect((fetchMock.mock.calls[0] as unknown as [string])[0]).toBe("https://agent.example.com/healthz");
+  });
+
+  it("reports demo when the backend is down", async () => {
+    vi.stubEnv("AGENT_BACKEND_URL", "https://agent.example.com");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("down");
+      }),
+    );
+    const { GET } = await loadStatus();
+    expect(await (await GET()).json()).toEqual({ mode: "demo" });
   });
 });
 
