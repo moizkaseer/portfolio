@@ -1,5 +1,11 @@
 # Agent backend (Python)
 
+> **Runs free by default.** The agent uses Google **Gemini's free tier**
+> (`LLM_PROVIDER=gemini`, model `gemini-3.5-flash-lite`). All you need is a free
+> API key from **https://aistudio.google.com/apikey** — no billing account and
+> **no Anthropic key**. Anthropic is still supported (`LLM_PROVIDER=anthropic`)
+> if you ever want Claude instead.
+
 A FastAPI service that is the "brain" for the site's live agent. The Next.js
 route (`app/api/agent/route.ts`) becomes a thin streaming proxy to this service
 when `AGENT_BACKEND_URL` is set; otherwise the site's original TypeScript
@@ -22,8 +28,12 @@ agent/ (this service)
    app/main.py           FastAPI app: POST /v1/chat, GET /healthz
    app/security.py       shared-secret check, request-shape guardrails
    app/ratelimit.py      per-IP sliding window (in-memory or Upstash REST)
-   app/messages.py       UIMessage[] → Anthropic Messages API turns
-   app/anthropic_agent.py  the hand-written agent loop (client.messages.stream)
+   app/messages.py       UIMessage[] → provider-neutral (Anthropic-shaped) turns
+   app/providers.py      LLM_PROVIDER switch, client factory, error classification,
+                          live model list + fallback chain, friendly messages
+   app/gemini_agent.py   the Gemini agent loop (google-genai, streaming + manual
+                          function calling) — the default
+   app/anthropic_agent.py  the Claude agent loop (client.messages.stream)
    app/protocol.py       UI message stream chunks (matches the installed `ai`
                           package's schema) + the ui_* allow-list
    app/system_prompt.py  guardrails / prompt-injection defenses / citation rule
@@ -72,10 +82,16 @@ per-model $/MTok pricing — all configurable via env, below.
 
 | Var | Default | Notes |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | — | Without it, `/v1/chat` answers `503 {"demo": true}`, same as the TS route without a model — the client plays the scripted demo replay either way. |
-| `AGENT_MODEL` | `claude-sonnet-4-5` | Any Anthropic model id. |
+| `LLM_PROVIDER` | `gemini` | `gemini` (free tier) or `anthropic`. |
+| `GEMINI_API_KEY` | — | Free key from https://aistudio.google.com/apikey (`GOOGLE_API_KEY` also accepted). Without the chosen provider's key, `/v1/chat` answers `503 {"demo": true}`, same as the TS route without a model — the client plays the scripted demo replay. |
+| `AGENT_MODEL` | `gemini-3.5-flash-lite` (`claude-sonnet-4-5` for anthropic) | Verified on 2026-10-30: `gemini-2.5-flash` now answers 404 "no longer available to new users", so it is **not** the default. |
+| `AGENT_FALLBACK_MODELS` | `gemini-3.5-flash,gemini-flash-latest` | Comma list tried in order when a model is rate-limited / out of free quota / overloaded / not available to the key (each model has its own free quota). Filtered against the key's live `models.list` (cached 6h). `none` disables. |
+| `AGENT_THINKING_LEVEL` | unset | Optional for Gemini 3+: `minimal`/`low`/`medium`/`high`. Gemini 2.5 Flash models run with thinking off. |
+| `AGENT_LLM_TIMEOUT_MS` | `25000` | Per model call; a hung call fails over to the next model / demo. |
+| `GEMINI_FREE_TIER` | `true` | The cost budget counts Gemini as $0 on the free tier; set `false` if the Google project has billing on so `AGENT_MAX_COST_USD` uses paid list prices. |
+| `ANTHROPIC_API_KEY` | — | Only for `LLM_PROVIDER=anthropic`. |
 | `AGENT_MAX_STEPS` | `6` | Max agent-loop steps (tool-call round trips) per request. |
-| `AGENT_MAX_OUTPUT_TOKENS` | `500` | `max_tokens` passed to each Anthropic call. |
+| `AGENT_MAX_OUTPUT_TOKENS` | `500` | Max output tokens per model call (`max_output_tokens` / `max_tokens`). |
 | `AGENT_MAX_COST_USD` | `0.05` | Estimated $ budget per request (input+output tokens × pricing); the loop stops early once it's spent, even mid-tool-use. |
 | `AGENT_COST_INPUT_PER_MTOK` / `AGENT_COST_OUTPUT_PER_MTOK` | built-in table keyed by `AGENT_MODEL` (fallback `$3`/`$15`) | Override the $/million-token pricing used for the cost budget above. |
 | `AGENT_RATE_INFO` | unset | If set, `draft_proposal` includes it as the pricing line; otherwise the draft never invents a price. |
@@ -127,7 +143,7 @@ per-model $/MTok pricing — all configurable via env, below.
 cd agent
 python3 -m venv .venv
 .venv/bin/pip install -r requirements-dev.txt
-cp .env.example .env   # fill in ANTHROPIC_API_KEY at minimum; see table above
+cp .env.example .env   # fill in GEMINI_API_KEY (free) at minimum; see table above
 .venv/bin/uvicorn app.main:app --reload --port 8000
 ```
 
@@ -160,8 +176,10 @@ calls), the UI message stream format (asserted against canned LLM turns),
 guardrails (shared secret, rate limiting, input/turn/message limits, the
 prompt-injection section of the system prompt), and the full agent loop
 (server tools, the `ui_*` client-tool stop condition, step/cost budget caps,
-error handling) against a scripted fake Anthropic client — no network access
-anywhere in the suite.
+error handling) against scripted fake Gemini and Anthropic clients — no
+network access anywhere in the suite. `tests/test_gemini_agent.py` also covers
+the fallback chain, `503 {"demo": true, "reason": "quota"}` when every model is
+out of free quota, and the friendly mid-answer message.
 
 ## Deploying on Railway
 
@@ -175,7 +193,7 @@ like this one:
    it points `build.dockerfilePath` at `agent/Dockerfile`.
 
 Set the environment variables above in the Railway service (at minimum
-`ANTHROPIC_API_KEY` and `AGENT_SHARED_SECRET`). The health check is
+`GEMINI_API_KEY` and `AGENT_SHARED_SECRET`). The health check is
 `GET /healthz`.
 
 To build and run locally with Docker (from the repo root):
@@ -196,8 +214,63 @@ On the Vercel project, set:
   it as `X-Agent-Secret`; the Python service rejects requests without it
   whenever it's configured.
 - `AGENT_BACKEND_TIMEOUT_MS` (optional, default `30000`) — how long the proxy
-  waits for the backend before answering a clean `502 {"error":
-  "agent-unavailable"}`.
+  waits for the backend before falling back to the demo replay.
 
 With `AGENT_BACKEND_URL` unset, the site's original TypeScript agent runs
 exactly as before — nothing else changes.
+
+## Graceful degradation (free tier)
+
+The free tier has per-model request limits (see your live limits in AI Studio;
+daily quotas reset at midnight Pacific). When they run out the visitor never
+sees a stack trace:
+
+1. **Fallback chain** — on 429 / quota / overload / 404 the loop retries the same
+   step on the next model in `AGENT_FALLBACK_MODELS`.
+2. **Before the agent has said anything** — if every model fails, `/v1/chat`
+   answers `503 {"demo": true, "reason": "quota" | "unavailable" | "auth" | ...}`.
+3. **Mid-answer** — the stream ends with a short friendly text ("I've hit my free
+   usage limit…") instead of an error part.
+4. **Next.js proxy** (`lib/server/agent-proxy.ts`) — any backend 5xx, timeout or
+   unreachable backend becomes `503 {"demo": true}`, which `lib/agent/live.ts`
+   already treats as "switch to the recorded demo". `GET /api/agent/status`
+   probes the backend's `/healthz` (2.5s timeout) so a sleeping or keyless
+   backend shows as *demo* rather than *live*.
+
+## Free hosting options
+
+| | Railway | Render (free web service) | Vercel Python Functions |
+|---|---|---|---|
+| Cost | $5 one-time trial credit (30 days), then the Free plan's **$1/month** credit — not enough to run 24/7, so realistically $5/mo Hobby | **$0**, no card; 750 instance-hours/month per workspace (enough for one service 24/7) | **$0** on Hobby (Fluid compute) |
+| Works with this repo today | Yes (`agent/railway.json` + Dockerfile) | Yes — same Dockerfile, build from repo root (`render.yaml` included) | Mostly — see caveats |
+| Cold starts | None | Spins down after 15 min idle; ~1 min to wake. Mitigated by the keep-warm workflow (`.github/workflows/agent-keepwarm.yml`) and by the status probe showing *demo* while it wakes | Seconds |
+| Disk | Volume available | Ephemeral (SQLite leads lost on restart — leads are also emailed via Resend) | Read-only except `/tmp` (auto-used when `VERCEL` is set) |
+| Streaming | Yes | Yes | Yes (Python `StreamingResponse` is supported) |
+
+**Recommendation: Render free web service + keep-warm ping.** It runs the
+existing Dockerfile unchanged (content baked in, index built at build time),
+costs nothing, and the 750 free hours cover one always-on service. The keep-warm
+workflow pings `/healthz` every 10 minutes so visitors rarely hit the 1-minute
+wake-up; `/healthz` never calls Gemini, so it doesn't spend free quota.
+
+**Vercel Python (alternative, not yet verified with a deploy).** Vercel detects
+FastAPI and serves `app/main.py:app` as one function. To try it: create a
+*second* Vercel project from this repo with Root Directory `agent/`, enable
+"Include files outside the root directory", and set `CONTENT_DIR` so the
+function can read `content/` (the main open question — files outside the root
+must be bundled into the function); set `UPSTASH_REDIS_REST_*` because the
+in-memory rate limiter is per instance. Leads go to `/tmp` (ephemeral) and are
+emailed via Resend. Until a preview deploy proves `content/` is bundled, Render
+is the lower-risk path.
+
+### Render setup (when you're ready — nothing is deployed by this repo)
+
+1. render.com → New → Blueprint → pick this repo (uses `render.yaml`), or New →
+   Web Service → Docker, Root Directory = repo root, Dockerfile path
+   `agent/Dockerfile`, Instance type **Free**, Health check `/healthz`.
+2. Env vars: `GEMINI_API_KEY`, `AGENT_SHARED_SECRET` (long random string),
+   optionally `RESEND_API_KEY`, `CALENDLY_TOKEN`.
+3. On the Vercel site project: `AGENT_BACKEND_URL=https://<service>.onrender.com`
+   and the **same** `AGENT_SHARED_SECRET`, then redeploy.
+4. Optional: GitHub repo → Settings → Variables → `AGENT_BACKEND_URL` to turn on
+   the keep-warm workflow.

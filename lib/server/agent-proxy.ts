@@ -29,13 +29,22 @@ export async function proxyAgentRequest(request: Request, backendUrl: string, cl
       signal: controller.signal,
     });
   } catch {
-    return Response.json({ error: "agent-unavailable" }, { status: 502 });
+    // unreachable / timed out (e.g. a free host waking up): play the demo instead of an error
+    return demoFallback("unreachable");
   } finally {
     clearTimeout(timeout);
   }
 
-  // Control-plane errors (rate-limit, turn-limit, invalid-request, the demo-mode
-  // 503) are plain JSON on the backend too — pass them through as-is.
+  // Backend is up but can't serve a live answer (no key, Gemini free quota used up, model
+  // overloaded, crash): answer the same 503 { demo: true } the route uses when nothing is
+  // configured, so the browser falls back to the scripted demo replay (lib/agent/live.ts).
+  if (backendResponse.status >= 500) {
+    const data = (await backendResponse.json().catch(() => null)) as { reason?: unknown } | null;
+    return demoFallback(typeof data?.reason === "string" ? data.reason : "backend-error");
+  }
+
+  // Control-plane errors (rate-limit, turn-limit, invalid-request) are plain JSON on
+  // the backend too — pass them through as-is.
   if (!backendResponse.ok) {
     const text = await backendResponse.text();
     return new Response(text, {
@@ -50,4 +59,23 @@ export async function proxyAgentRequest(request: Request, backendUrl: string, cl
     if (value) outHeaders.set(key, value);
   }
   return new Response(backendResponse.body, { status: backendResponse.status, headers: outHeaders });
+}
+
+function demoFallback(reason: string): Response {
+  return Response.json({ demo: true, reason }, { status: 503 });
+}
+
+/** GET {backend}/healthz with a short timeout — true only if it's up and has a model key. */
+export async function backendLive(backendUrl: string, timeoutMs = 2500): Promise<boolean> {
+  try {
+    const res = await fetch(`${backendUrl.replace(/\/+$/, "")}/healthz`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as { modelConfigured?: unknown };
+    return data.modelConfigured === true;
+  } catch {
+    return false;
+  }
 }

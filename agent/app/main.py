@@ -5,15 +5,18 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import Depends, FastAPI, Request
+from starlette.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from app.anthropic_agent import run_agent_turn
+from app.gemini_agent import run_gemini_turn
 from app.config import Settings, get_settings
 from app.knowledge.bm25 import BM25Index
 from app.knowledge.content_loader import load_project_slugs, load_toolbox_names
 from app.knowledge.store import load_or_build_index
 from app.messages import to_anthropic_messages
+from app.providers import ProviderUnavailable, available_gemini_models, make_llm_client, model_chain
 from app.protocol import SSE_DONE, UI_MESSAGE_STREAM_HEADERS, encode_sse
 from app.ratelimit import Limiter, client_ip, create_limiter
 from app.security import AGENT_SECRET_HEADER, GuardrailError, check_shared_secret, validate_request_shape
@@ -63,17 +66,43 @@ def get_limiter(settings: Settings = Depends(get_settings)) -> Limiter:
     return limiter
 
 
-def get_anthropic_client(settings: Settings = Depends(get_settings)) -> Any | None:
-    if not settings.anthropic_api_key:
-        return None
-    import anthropic
+_client_cache: dict[tuple, Any] = {}
 
-    return anthropic.Anthropic(api_key=settings.anthropic_api_key)
+
+def get_llm_client(settings: Settings = Depends(get_settings)) -> Any | None:
+    """SDK client for LLM_PROVIDER (gemini by default), or None -> demo mode."""
+    if not settings.model_configured:
+        return None
+    key = (settings.llm_provider, settings.gemini_api_key, settings.anthropic_api_key, settings.llm_timeout_ms)
+    client = _client_cache.get(key)
+    if client is None:
+        client = make_llm_client(
+            settings.llm_provider,
+            gemini_api_key=settings.gemini_api_key,
+            anthropic_api_key=settings.anthropic_api_key,
+            timeout_ms=settings.llm_timeout_ms,
+        )
+        _client_cache[key] = client
+    return client
+
+
+# Backwards-compatible name (tests and older code override this dependency).
+get_anthropic_client = get_llm_client
 
 
 @app.get("/healthz")
 def healthz(settings: Settings = Depends(get_settings)) -> dict:
-    return {"status": "ok", "model": settings.model, "modelConfigured": bool(settings.anthropic_api_key)}
+    return {
+        "status": "ok",
+        "provider": settings.llm_provider,
+        "model": settings.model,
+        "fallbackModels": settings.fallback_models if settings.llm_provider == "gemini" else [],
+        "modelConfigured": settings.model_configured,
+    }
+
+
+# Chunks that only frame the stream; anything else means the model actually produced output.
+_FRAMING_CHUNKS = {"start", "start-step"}
 
 
 @app.post("/v1/chat")
@@ -82,7 +111,7 @@ async def chat(
     settings: Settings = Depends(get_settings),
     index: BM25Index = Depends(get_index),
     limiter: Limiter = Depends(get_limiter),
-    anthropic_client: Any | None = Depends(get_anthropic_client),
+    llm_client: Any | None = Depends(get_llm_client),
 ):
     check_shared_secret(request, settings)
 
@@ -101,7 +130,7 @@ async def chat(
     if messages[-1].get("role") == "user" and not limiter.allow(ip):
         return JSONResponse({"error": "rate-limit"}, status_code=429)
 
-    if anthropic_client is None:
+    if llm_client is None:
         return JSONResponse({"demo": True}, status_code=503)
 
     prompt_state = body.get("promptState") if isinstance(body.get("promptState"), dict) else None
@@ -121,22 +150,55 @@ async def chat(
     anthropic_messages = to_anthropic_messages(messages)
     system = build_system_prompt()
 
+    common = dict(
+        system=system,
+        anthropic_messages=anthropic_messages,
+        server_tools=server_tools,
+        ui_tools=ui_tools,
+        known_slugs=known_slugs,
+        toolbox_names=toolbox_names,
+        max_steps=settings.max_steps,
+        max_output_tokens=settings.max_output_tokens,
+        max_cost_usd=settings.max_cost_usd_per_request,
+        pricing=settings.model_pricing(),
+    )
+    if settings.llm_provider == "anthropic":
+        chunks = run_agent_turn(llm_client, model=settings.model, **common)
+    else:
+        available = await run_in_threadpool(available_gemini_models, llm_client, settings.gemini_api_key or "")
+        chain = model_chain(settings.model, settings.fallback_models, available)
+        chunks = run_gemini_turn(
+            llm_client,
+            model=chain[0],
+            fallback_models=chain[1:],
+            thinking_level=settings.thinking_level,
+            **common,
+        )
+
+    # Pull chunks until the model has actually produced something. If the provider is
+    # out of quota / down before that, answer 503 {"demo": true} so the site falls back
+    # to the scripted demo replay instead of showing an error (graceful degradation).
+    buffered: list[dict] = []
+    _end = object()
+    try:
+        while True:
+            chunk = await run_in_threadpool(next, chunks, _end)
+            if chunk is _end:
+                break
+            buffered.append(chunk)
+            if chunk.get("type") not in _FRAMING_CHUNKS:
+                break
+    except ProviderUnavailable as exc:
+        return JSONResponse({"demo": True, "reason": exc.reason}, status_code=503)
+
     def generate():
-        for chunk in run_agent_turn(
-            anthropic_client,
-            model=settings.model,
-            system=system,
-            anthropic_messages=anthropic_messages,
-            server_tools=server_tools,
-            ui_tools=ui_tools,
-            known_slugs=known_slugs,
-            toolbox_names=toolbox_names,
-            max_steps=settings.max_steps,
-            max_output_tokens=settings.max_output_tokens,
-            max_cost_usd=settings.max_cost_usd_per_request,
-            pricing=settings.model_pricing(),
-        ):
+        for chunk in buffered:
             yield encode_sse(chunk)
+        try:
+            for chunk in chunks:
+                yield encode_sse(chunk)
+        except ProviderUnavailable:  # defensive — loops only raise this before any output
+            yield encode_sse({"type": "finish", "finishReason": "error"})
         yield SSE_DONE
 
     response_headers = {k: v for k, v in UI_MESSAGE_STREAM_HEADERS.items() if k != "content-type"}

@@ -8,8 +8,8 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
-# repo root: agent/app/config.py -> parents[2] == agent/, parents[3] == repo root
-_REPO_ROOT = Path(__file__).resolve().parents[3]
+# repo root: agent/app/config.py -> parents[0] == agent/app, parents[1] == agent/, parents[2] == repo root
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _env_str(name: str, default: str | None = None) -> str | None:
@@ -61,6 +61,12 @@ DEFAULT_MODEL_PRICING: dict[str, tuple[float, float]] = {
     "claude-sonnet-4-6": (3.0, 15.0),
     "claude-sonnet-4-5": (3.0, 15.0),
     "claude-haiku-4-5": (1.0, 5.0),
+    # Gemini on the FREE tier costs $0; these are the paid-tier list prices, used
+    # only if you switch the Google project to billing (keeps the cost cap honest).
+    "gemini-2.5-flash": (0.30, 2.50),
+    "gemini-2.5-flash-lite": (0.10, 0.40),
+    "gemini-3.5-flash-lite": (0.30, 2.50),
+    "gemini-3.8-flash": (0.75, 3.75),
 }
 _FALLBACK_PRICING = (3.0, 15.0)
 
@@ -108,18 +114,51 @@ class Settings:
     host: str
     port: int
 
+    # LLM provider (app/providers.py). Defaults keep older call sites working.
+    llm_provider: str = "gemini"
+    gemini_api_key: str | None = None
+    fallback_models: list[str] = field(default_factory=list)
+    llm_timeout_ms: int = 25_000
+    thinking_level: str | None = None
+    free_tier: bool = True
+
+    @property
+    def model_configured(self) -> bool:
+        if self.llm_provider == "anthropic":
+            return bool(self.anthropic_api_key)
+        return bool(self.gemini_api_key)
+
     def model_pricing(self) -> tuple[float, float]:
         if self.cost_input_per_mtok is not None and self.cost_output_per_mtok is not None:
             return (self.cost_input_per_mtok, self.cost_output_per_mtok)
+        if self.llm_provider == "gemini" and self.free_tier:
+            return (0.0, 0.0)
         return DEFAULT_MODEL_PRICING.get(self.model, _FALLBACK_PRICING)
 
 
 def load_settings() -> Settings:
     content_dir = Path(_env_str("CONTENT_DIR", str(_REPO_ROOT / "content")))
-    data_dir = Path(_env_str("AGENT_DATA_DIR", str(_REPO_ROOT / "agent" / "data")))
+    # Serverless hosts (Vercel) only allow writes under /tmp.
+    default_data_dir = "/tmp/agent-data" if os.environ.get("VERCEL") else str(_REPO_ROOT / "agent" / "data")
+    data_dir = Path(_env_str("AGENT_DATA_DIR", default_data_dir))
+    from app.providers import DEFAULT_FALLBACK_MODELS, DEFAULT_MODELS, SUPPORTED_PROVIDERS
+
+    provider = (_env_str("LLM_PROVIDER", "gemini") or "gemini").lower()
+    if provider not in SUPPORTED_PROVIDERS:
+        provider = "gemini"
+    fallback_raw = _env_str("AGENT_FALLBACK_MODELS", DEFAULT_FALLBACK_MODELS[provider]) or ""
+    fallbacks = [] if fallback_raw.lower() in ("none", "off", "false", "0") else [
+        p.strip() for p in fallback_raw.split(",") if p.strip()
+    ]
     return Settings(
+        llm_provider=provider,
+        gemini_api_key=_env_str("GEMINI_API_KEY") or _env_str("GOOGLE_API_KEY"),
+        fallback_models=fallbacks,
+        llm_timeout_ms=_env_int("AGENT_LLM_TIMEOUT_MS", 25_000),
+        thinking_level=_env_str("AGENT_THINKING_LEVEL"),
+        free_tier=_env_bool("GEMINI_FREE_TIER", True),
         anthropic_api_key=_env_str("ANTHROPIC_API_KEY"),
-        model=_env_str("AGENT_MODEL", "claude-sonnet-4-5"),
+        model=_env_str("AGENT_MODEL", DEFAULT_MODELS[provider]),
         max_steps=_env_int("AGENT_MAX_STEPS", 6),
         max_output_tokens=_env_int("AGENT_MAX_OUTPUT_TOKENS", 500),
         max_cost_usd_per_request=_env_float("AGENT_MAX_COST_USD", 0.05),

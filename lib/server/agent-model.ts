@@ -30,4 +30,11 @@ export function agentModel(): LanguageModel | null {
   }
 }
 
-export const agentConfigured = () => agentModel() !== null;
+/** The Python agent backend (agent/, Gemini free tier by default) when AGENT_BACKEND_URL is set. */
+export const agentBackendUrl = () => process.env.AGENT_BACKEND_URL?.trim() || null;
+
+/**
+ * Live when either the Python backend is wired up or a TS-side model is configured. This is the
+ * build/render-time guess; GET /api/agent/status confirms it at runtime (and probes the backend).
+ */
+export const agentConfigured = () => agentBackendUrl() !== null || agentModel() !== null;

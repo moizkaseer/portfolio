@@ -1,0 +1,18 @@
+# Keeps a free-tier agent backend (e.g. Render, which sleeps after 15 min idle)
+# warm by pinging /healthz. /healthz never calls the model, so it costs no
+# Gemini quota. Does nothing until the repo variable AGENT_BACKEND_URL is set
+# (GitHub → Settings → Secrets and variables → Actions → Variables).
+name: agent-keepwarm
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+permissions: {}
+jobs:
+  ping:
+    if: ${{ vars.AGENT_BACKEND_URL != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping /healthz
+        run: curl -fsS --max-time 90 --retry 2 "${{ vars.AGENT_BACKEND_URL }}/healthz" || true

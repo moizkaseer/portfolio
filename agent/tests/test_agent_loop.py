@@ -231,3 +231,30 @@ def test_a_broken_tool_execute_does_not_crash_the_stream():
     # the loop recovers and keeps going (the model gets the error as a tool_result) rather than crashing
     assert chunks[-1] == {"type": "finish", "finishReason": "stop"}
     assert len(client.messages.calls) == 2
+
+
+def test_anthropic_rate_limit_before_any_output_raises_provider_unavailable():
+    import pytest
+
+    from app.providers import ProviderUnavailable
+
+    class RateLimitError(Exception):
+        status_code = 429
+
+    class LimitedMessages:
+        def stream(self, **kwargs):
+            raise RateLimitError("rate limited")
+
+    with pytest.raises(ProviderUnavailable):
+        collect(
+            run_agent_turn(
+                SimpleNamespace(messages=LimitedMessages()),
+                model="m",
+                system="sys",
+                anthropic_messages=[{"role": "user", "content": "hello"}],
+                server_tools={},
+                ui_tools={},
+                known_slugs=[],
+                toolbox_names=[],
+            )
+        )
