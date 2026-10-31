@@ -34,5 +34,14 @@
     "category": "Tools",
     "featured": false,
     "order": 4
+  },
+  {
+    "slug": "company-autopsy",
+    "runId": "005",
+    "title": "Company Autopsy",
+    "outcome": "Paste a company URL, get a one-page AI agent autopsy in seconds",
+    "category": "Tools",
+    "featured": false,
+    "order": 5
   }
 ]

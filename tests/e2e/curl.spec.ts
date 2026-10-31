@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 
 const CURL = { "User-Agent": "curl/8.7.1", Accept: "*/*" };
 const width = (t: string) => Math.max(...t.replace(/\x1b\[[0-9;]*m/g, "").split("\n").map((l) => l.length));
-const RUNS = ["cold-outreach-agent", "concord", "worldcup-2026-prediction", "geolumen"];
+const RUNS = ["cold-outreach-agent", "concord", "worldcup-2026-prediction", "geolumen", "company-autopsy"];
 
 test.describe("curl version", () => {
   test.beforeEach(({}, info) => test.skip(!!info.project.use.isMobile, "HTTP-only tests"));

@@ -10,8 +10,8 @@ const FIXTURES = path.join(__dirname, "fixtures");
 const slugs = fs.readdirSync(DIR).filter((d) => fs.statSync(path.join(DIR, d)).isDirectory());
 
 describe("project content", () => {
-  it("has the owner's four projects", () => {
-    expect(slugs.sort()).toEqual(["cold-outreach-agent", "concord", "geolumen", "worldcup-2026-prediction"]);
+  it("has the owner's five projects", () => {
+    expect(slugs.sort()).toEqual(["cold-outreach-agent", "company-autopsy", "concord", "geolumen", "worldcup-2026-prediction"]);
   });
 
   for (const slug of slugs) {
