@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    { "id": "url", "label": "URL pasted", "kind": "Trigger", "short": "url", "detail": "validated · rate limited per IP" },
+    { "id": "fetch", "label": "Read the website", "kind": "Tool", "short": "fetch", "detail": "safe fetch · pinned DNS · robots.txt · 4 pages max" },
+    { "id": "extract", "label": "Extract the text", "kind": "Code", "short": "extract", "detail": "clean · clip · fence as untrusted" },
+    { "id": "analyze", "label": "Run the autopsy", "kind": "Model", "short": "autopsy", "detail": "Gemini · strict schema · fallback chain" },
+    { "id": "share", "label": "Signed report link", "kind": "Code", "short": "share", "detail": "compressed · HMAC-signed · no database" }
+  ],
+  "edges": [["url", "fetch"], ["fetch", "extract"], ["extract", "analyze"], ["analyze", "share"]]
+}

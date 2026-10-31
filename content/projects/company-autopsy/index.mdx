@@ -1,0 +1,48 @@
+---
+runId: "005"
+title: "Company Autopsy"
+outcome: "Paste a company URL, get a one-page AI agent autopsy in seconds"
+outcomeLong: "Reads a company's public website and returns a shareable one-page report: what the company does, who it serves, 3 to 5 AI agent opportunities with effort and impact, the risks, and a first pilot to run."
+industry: "Own product · lead magnet for AI agent consulting"
+stack: ["Gemini", "Python", "FastAPI", "Next.js", "TypeScript"]
+status: in-production
+since: "2026"
+year: "2026"
+order: 5
+category: Tools
+lead: "Paste a company's website and get a one-page autopsy of where AI agents would save it time, *grounded only in what its own pages say.*"
+runsLine: "Live on Vercel + Render · 126 tests"
+role: "Design · build · ship"
+timeline: "1 day"
+resultsPeriod: "live runs on real company sites"
+media: { src: "/media/company-autopsy.png", alt: "A Company Autopsy report for basecamp.com: the diagnosis, what the company does, who it serves and an AI leverage score, from a live run" }
+results:
+  - { value: "10–16", unit: "s", label: "from pasted URL to finished report on live runs" }
+  - { value: "4", unit: " pages", label: "read per site at most, with robots.txt respected" }
+  - { value: "0", unit: " databases", label: "share links are signed, so every report is a URL" }
+  - { value: "$0", unit: "/month", label: "to run, on Gemini's free tier and free hosting" }
+---
+
+## The problem
+
+Most companies know AI agents could help, but not where to start, and a first call usually spends half an hour just mapping what the business does. I wanted something a visitor can try in under a minute that does that mapping for their own company and ends with one concrete pilot worth talking about.
+
+## Decisions & tradeoffs
+
+- **A safe fetch, because the input is someone else's URL.** Only http(s) on ports 80 and 443. DNS is resolved once and every IP is checked, then the connection goes to that exact IP, so a DNS answer cannot swap in a private address later. Every redirect is checked again, pages are capped in size and time, and robots.txt is respected.
+- **Website text is treated as untrusted data.** It goes to the model inside a fenced block with a system prompt that says to ignore any instructions in it, and the answer must match a strict schema or it is rejected.
+- **A fallback chain on a free tier.** Gemini Flash-Lite first, then Flash, with per-IP rate limits and a daily cap. When the quota runs out, visitors see a clearly labelled sample report instead of an error.
+- **Bring your own Gemini key, if you want.** A collapsed field lets a visitor paste their own key; it's sent once in a request header, used for that run only, never stored or logged, and skips the shared daily limits. A bad key or an exhausted quota on it comes back as a clear error, not a silent fallback to the shared tier.
+- **No database.** A report is compressed into the share link and signed with HMAC, so links can't be edited and there is nothing to store or leak. Each shared report gets its own preview image.
+- **Progress streams live.** The page shows each step (reading pages, analysing) as it happens, so a cold start or a slow site doesn't look like a hang.
+
+## What broke
+
+- **The SSRF guard blocked the sandbox it was tested in.** The test machine's DNS resolves every host to a reserved range, which the guard correctly refused. A development-only allow list fixed testing without loosening production.
+- **The share preview showed a missing-glyph box.** The image renderer's font had no "✚", so the card logo rendered as a blank box until I swapped in a plain "+".
+
+## What's next
+
+Measuring how often the suggested pilot matches what a person would pick after a real call, and a shared rate limit store so the limits hold across more than one server.
+
+[Live](https://company-autopsy.vercel.app) · [Code on GitHub](https://github.com/moizkaseer/company-autopsy)
