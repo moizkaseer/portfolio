@@ -43,5 +43,14 @@
     "category": "Tools",
     "featured": false,
     "order": 5
+  },
+  {
+    "slug": "ai-receptionist",
+    "runId": "006",
+    "title": "Balkan AI Receptionist",
+    "outcome": "A multilingual AI receptionist, designed for a dental clinic's WhatsApp and phone",
+    "category": "Agents",
+    "featured": false,
+    "order": 6
   }
 ]

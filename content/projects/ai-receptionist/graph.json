@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    { "id": "message", "label": "WhatsApp message", "kind": "Trigger", "short": "message", "detail": "deduped by provider message id · later a voice chunk" },
+    { "id": "language", "label": "Detect & pin language", "kind": "Code", "short": "language", "detail": "mk · sq · sr · en, from the first message" },
+    { "id": "safety", "label": "Safety pre-check", "kind": "Code", "short": "safety", "detail": "emergency keyword · anger signal, before the model is asked" },
+    { "id": "agent", "label": "LLM + tool loop", "kind": "Model", "short": "agent", "detail": "Groq · knowledge base + six tool schemas" },
+    { "id": "validate", "label": "Validate & write", "kind": "Code", "short": "validate", "detail": "hours · no double booking · DB exclusion constraint" },
+    { "id": "reply", "label": "Reply or handoff", "kind": "Tool", "short": "reply", "detail": "send the reply, or notify the owner on failure" }
+  ],
+  "edges": [["message", "language"], ["language", "safety"], ["safety", "agent"], ["agent", "validate"], ["validate", "reply"]]
+}

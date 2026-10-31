@@ -1,0 +1,54 @@
+---
+runId: "006"
+title: "Balkan AI Receptionist"
+outcome: "A multilingual AI receptionist, designed for a dental clinic's WhatsApp and phone"
+outcomeLong: "A multilingual AI receptionist for small businesses in North Macedonia and the Balkans: answers FAQs only from the business's own knowledge base, books/moves/cancels appointments, takes messages, and hands off to a human on low confidence, an upset caller, or a medical emergency. First target customer: a private dental clinic."
+industry: "Own product · AI receptionist for small businesses in North Macedonia and the Balkans"
+stack: ["Python", "FastAPI", "Groq", "Postgres", "Redis"]
+status: building
+since: "2026"
+year: "2026"
+order: 6
+category: Agents
+lead: "A multilingual AI receptionist for a dental clinic's WhatsApp and phone, where FAQs are answered only from the clinic's own knowledge base *and double booking is blocked by the database, not just the prompt.*"
+runsLine: "Phase 1 · design + schema + prompt"
+role: "Design · schema · prompt"
+timeline: "In progress"
+resultsPeriod: "design phase"
+media: { src: "/media/ai-receptionist.png", alt: "The AI receptionist's opening AI-and-recording disclosure line, shown in Macedonian, Albanian, Serbian and English, from the production system prompt" }
+results:
+  - { value: "4", unit: "", label: "languages for the opening disclosure and emergency line" }
+  - { value: "6", unit: "", label: "agent tools, each argument checked in code first" }
+  - { value: "1", unit: "", label: "database constraint that blocks a double booking" }
+  - { value: "5", unit: "", label: "build phases; only Phase 1 (design) is done" }
+---
+
+## The problem
+
+Small clinics in North Macedonia answer their phone and WhatsApp by hand, in whichever of four languages a caller happens to use, and a missed call during a treatment is a missed booking. I wanted a receptionist a dental clinic could trust with its FAQs and its calendar without it ever inventing a price or a policy, in Macedonian, Albanian, Serbian or English.
+
+## Decisions & tradeoffs
+
+- **The model decides, code validates.** The LLM never writes to the database; a tool call is checked (dates in the future, inside opening hours, no double booking, phone format) before anything executes, and only the validated code path touches Postgres.
+- **Grounded-only FAQ answers.** The agent answers from the clinic's own knowledge base, injected into the prompt. A missing topic becomes a message for the owner, not a guess.
+- **Disclosure at the start, in the caller's language.** Every conversation opens by stating it's an AI assistant and that the conversation may be recorded — for EU AI Act transparency and GDPR's recording notice. The production system prompt has that line written out in all four languages.
+- **Handoff triggers are code rules, not the model's self-confidence.** A medical emergency, an angry caller, two failed tool validations in a row, or a knowledge-base miss asked twice all go straight to a human handoff, and the code-level check runs before the model is even asked.
+- **Double booking is blocked by the database, not only the prompt.** `bookings` has a Postgres exclusion constraint on business + staff + time range, so an overlapping confirmed booking for the same staff cannot be inserted, independent of whatever the model decides to do.
+- **Multi-tenant from day one.** Every table carries a business ID, so a second clinic is a new row, not a new deployment.
+- **Replayable runs.** Every turn stores the prompt version, model, knowledge-base hash and tool I/O, so a conversation can be replayed later and diffed against a new prompt or model.
+
+## What's hard / risks
+
+- WhatsApp Business Cloud API verification with Meta can take days, and replies outside the 24-hour window need pre-approved templates — this needs to start early, before Phase 2 is otherwise ready.
+- Local Twilio numbers may not be available in North Macedonia; the likely workaround is a foreign number with call forwarding from the clinic's own line.
+- Macedonian and Albanian speech recognition quality is unmeasured — Phase 3 (voice) will measure it, not assume it.
+- Keyword-based emergency detection is a safety net, not a guarantee; the keyword list and the clinic's emergency number still need a clinic-side review.
+
+## What's next
+
+- **Phase 2 — WhatsApp text version.** The webhook, the conversation loop, the six agent tools, argument validation, logging.
+- **Phase 3 — Voice.** Twilio for calls, ElevenLabs for speech-to-text and text-to-speech.
+- **Phase 4 — Admin UI.** A Next.js + TypeScript app for editing the knowledge base, managing bookings and reading transcripts.
+- **Phase 5 — Evaluation.** 20 scripted conversations across the four languages, scored by an eval script.
+
+[Code on GitHub](https://github.com/moizkaseer/ai-receptionist)
