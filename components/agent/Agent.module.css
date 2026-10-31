@@ -160,6 +160,14 @@
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.55;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.answer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .cursor {

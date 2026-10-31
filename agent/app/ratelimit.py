@@ -65,7 +65,17 @@ def create_limiter(
     return MemorySlidingWindowLimiter(limit, window_seconds)
 
 
-def client_ip(headers: dict[str, str]) -> str:
+CLIENT_IP_HEADER = "x-agent-client-ip"
+
+
+def client_ip(headers: dict[str, str], *, trust_proxy_header: bool = False) -> str:
+    """The visitor's IP. The Next.js proxy sends it in `x-agent-client-ip`; that header is
+    only honoured when the caller is authenticated by the shared secret (trust_proxy_header),
+    because hosting proxies in front of this service may rewrite x-forwarded-for."""
+    if trust_proxy_header:
+        asserted = (headers.get(CLIENT_IP_HEADER) or "").strip()
+        if asserted and asserted != "unknown":
+            return asserted[:64]
     forwarded = headers.get("x-forwarded-for")
     if forwarded:
         return forwarded.split(",")[0].strip()

@@ -50,6 +50,7 @@ describe("lib/server/agent-proxy — streaming proxy to the Python backend (brie
     expect(init.method).toBe("POST");
     expect((init.headers as Record<string, string>)["x-agent-secret"]).toBe("s3cr3t");
     expect((init.headers as Record<string, string>)["x-forwarded-for"]).toBe("203.0.113.4");
+    expect((init.headers as Record<string, string>)["x-agent-client-ip"]).toBe("203.0.113.4");
     expect(JSON.parse(init.body as string)).toMatchObject({ messages: [{ role: "user" }] });
 
     expect(response.status).toBe(200);
@@ -58,6 +59,20 @@ describe("lib/server/agent-proxy — streaming proxy to the Python backend (brie
     const text = await response.text();
     expect(text).toContain('data: {"type":"start"}');
     expect(text).toContain("data: [DONE]");
+  });
+
+  it("rejects a malformed body with 400 without calling the backend (never a demo-flipping 5xx)", async () => {
+    const { proxyAgentRequest } = await load();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    for (const body of ["not json", "", "[]", "null", '"hi"']) {
+      const request = new Request("http://localhost/api/agent", { method: "POST", body });
+      const response = await proxyAgentRequest(request, "https://agent.example.com", "1.2.3.4");
+      expect(response.status).toBe(400);
+      expect(await response.json()).toEqual({ error: "invalid-request" });
+    }
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("passes control-plane errors (rate-limit, etc) through as plain JSON", async () => {

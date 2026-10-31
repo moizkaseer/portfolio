@@ -7,17 +7,23 @@ import "server-only";
  * ai-SDK UI message stream format app/api/agent/route.ts does, so live.ts
  * needs no changes either way.
  */
-const DEFAULT_TIMEOUT_MS = 30_000;
+// Time to the backend's first byte (it buffers until the model has said something). Must stay
+// under the route's maxDuration (60s) so a stuck backend still gets the demo fallback.
+const DEFAULT_TIMEOUT_MS = 50_000;
 const STREAM_HEADER_ALLOWLIST = ["content-type", "x-vercel-ai-ui-message-stream", "cache-control", "connection", "x-accel-buffering"];
 
 export async function proxyAgentRequest(request: Request, backendUrl: string, clientIp: string): Promise<Response> {
   const body = await request.text();
+  // a malformed body is the client's fault: answer 400 here, never a 5xx (5xx flips the site to demo)
+  if (!isJsonObject(body)) return Response.json({ error: "invalid-request" }, { status: 400 });
   const timeoutMs = Number(process.env.AGENT_BACKEND_TIMEOUT_MS) || DEFAULT_TIMEOUT_MS;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   const secret = process.env.AGENT_SHARED_SECRET;
-  const headers: Record<string, string> = { "content-type": "application/json", "x-forwarded-for": clientIp };
+  // The visitor's IP goes in a dedicated header too: hosting proxies in front of the backend may
+  // rewrite x-forwarded-for, and the backend trusts x-agent-client-ip only with the shared secret.
+  const headers: Record<string, string> = { "content-type": "application/json", "x-forwarded-for": clientIp, "x-agent-client-ip": clientIp };
   if (secret) headers["x-agent-secret"] = secret;
 
   let backendResponse: Response;
@@ -59,6 +65,15 @@ export async function proxyAgentRequest(request: Request, backendUrl: string, cl
     if (value) outHeaders.set(key, value);
   }
   return new Response(backendResponse.body, { status: backendResponse.status, headers: outHeaders });
+}
+
+function isJsonObject(text: string): boolean {
+  try {
+    const v: unknown = JSON.parse(text);
+    return typeof v === "object" && v !== null && !Array.isArray(v);
+  } catch {
+    return false;
+  }
 }
 
 function demoFallback(reason: string): Response {

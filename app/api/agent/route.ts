@@ -5,7 +5,8 @@ import { PromptStateSchema, serverTools, systemPrompt, uiTools } from "@/lib/ser
 import { clientIp, createLimiter } from "@/lib/server/rate-limit";
 import { MAX_INPUT_CHARS, MAX_TURNS } from "@/lib/agent/protocol";
 
-export const maxDuration = 30;
+// The Python backend bounds a whole turn at ~45s (AGENT_TURN_BUDGET_MS); leave headroom for the stream.
+export const maxDuration = 60;
 
 const limit = createLimiter("agent", 12, 60 * 60); // 12 visitor messages per IP per hour (brief §7)
 

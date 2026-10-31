@@ -11,7 +11,9 @@ already produces; `to_gemini_contents` maps them onto Gemini `contents`
 from __future__ import annotations
 
 import json
-from typing import Any, Iterator
+import logging
+import time
+from typing import Any, Callable, Iterator
 
 from app import protocol as P
 from app.protocol import validate_ui_action
@@ -23,9 +25,13 @@ from app.providers import (
 )
 from app.tools import ToolSpec
 
+logger = logging.getLogger("agent.gemini")
+
 # Gemini 3+ models require a thought signature on function-call parts in the
 # history. Calls replayed from the browser (UIMessage[]) don't carry one, so we
-# attach Google's documented placeholder that skips that validation.
+# attach Google's documented placeholder that skips that validation — on every
+# replayed call, because which call Gemini treats as "first in a step" depends on
+# how the browser grouped the turn (a missing one is a hard 400).
 _SKIP_THOUGHT_SIGNATURE = b"skip_thought_signature_validator"
 
 _FINISH_REASON_MAP = {
@@ -37,6 +43,13 @@ _FINISH_REASON_MAP = {
     "PROHIBITED_CONTENT": "content-filter",
     "SPII": "content-filter",
 }
+
+
+def _is_overloaded(exc: BaseException) -> bool:
+    """A transient 503 "model overloaded / high demand" (not a timeout or quota error)."""
+    code = getattr(exc, "code", None) or getattr(exc, "status_code", None)
+    text = str(exc).upper()
+    return code == 503 or "HIGH DEMAND" in text or "OVERLOADED" in text
 
 
 def _needs_thought_signatures(model: str) -> bool:
@@ -87,7 +100,6 @@ def to_gemini_contents(anthropic_messages: list[dict], model: str = "") -> list[
             if content:
                 parts.append({"text": content})
         elif isinstance(content, list):
-            first_call = True
             for block in content:
                 btype = block.get("type")
                 if btype == "text" and block.get("text"):
@@ -98,9 +110,8 @@ def to_gemini_contents(anthropic_messages: list[dict], model: str = "") -> list[
                     part: dict[str, Any] = {
                         "function_call": {"id": call_id or None, "name": block.get("name"), "args": block.get("input") or {}}
                     }
-                    if sign and first_call:
+                    if sign:
                         part["thought_signature"] = _SKIP_THOUGHT_SIGNATURE
-                    first_call = False
                     parts.append(part)
                 elif btype == "tool_result":
                     call_id = block.get("tool_use_id") or ""
@@ -186,11 +197,20 @@ def run_gemini_turn(
     pricing: tuple[float, float] = (0.0, 0.0),
     fallback_models: list[str] | None = None,
     thinking_level: str | None = None,
+    turn_budget_s: float | None = None,
+    attempt_timeout_s: float | None = None,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
 ) -> Iterator[dict]:
     """Yields UI message stream chunks; always ends with exactly one `finish` chunk —
     except when the provider is unavailable before anything was said, in which case it
     raises ProviderUnavailable (after `start`/`start-step`) so the caller can answer
-    `503 {"demo": true}` instead."""
+    `503 {"demo": true}` instead.
+
+    `turn_budget_s` bounds the whole turn (all steps and fallback attempts) so it ends
+    inside the hosting proxy's time limit; each model call also gets at most
+    `attempt_timeout_s` (and never more than the time left), so a hung primary model
+    still leaves room to fall back to the next one."""
     tool_schemas = [t.schema for t in server_tools.values()] + [t.schema for t in ui_tools.values()]
     ui_tool_names = set(ui_tools.keys())
     server_tool_names = set(server_tools.keys())
@@ -205,6 +225,10 @@ def run_gemini_turn(
     chain = [model, *[m for m in (fallback_models or []) if m and m != model]]
     chain_pos = 0
     active_model = chain[0]
+    started = clock()
+
+    def time_left() -> float | None:
+        return None if turn_budget_s is None else turn_budget_s - (clock() - started)
 
     while True:
         step += 1
@@ -216,9 +240,13 @@ def run_gemini_turn(
         calls: list[tuple[str, str, dict]] = []  # (id, name, args)
         gemini_finish: str | None = None
         usage = None
+        retried_same_model = False
 
         while True:  # one attempt, plus at most one retry on the fallback model
             try:
+                left = time_left()
+                if left is not None and left < 1.0:
+                    raise TimeoutError("turn deadline exceeded (TIMEOUT)")
                 config = build_config(
                     model=active_model,
                     system=system,
@@ -226,6 +254,9 @@ def run_gemini_turn(
                     max_output_tokens=max_output_tokens,
                     thinking_level=thinking_level,
                 )
+                timeouts = [t for t in (attempt_timeout_s, left) if t is not None]
+                if timeouts:
+                    config["http_options"] = {"timeout": max(1000, int(min(timeouts) * 1000))}
                 stream = client.models.generate_content_stream(model=active_model, contents=contents, config=config)
                 for chunk in stream:
                     if getattr(chunk, "usage_metadata", None) is not None:
@@ -254,7 +285,31 @@ def run_gemini_turn(
                 break
             except Exception as exc:
                 reason = classify_error(exc)
-                can_retry = not step_text_emitted and chain_pos + 1 < len(chain) and is_retryable_on_fallback(reason)
+                # one line per failed attempt so Render logs show *why* a turn degraded
+                logger.warning(
+                    "gemini attempt failed: model=%s step=%d reason=%s %s: %s",
+                    active_model, step, reason, type(exc).__name__, str(exc)[:300],
+                )
+                left = time_left()
+                out_of_time = left is not None and left < 2.0
+                can_retry = (
+                    not out_of_time
+                    and not step_text_emitted
+                    and chain_pos + 1 < len(chain)
+                    and is_retryable_on_fallback(reason)
+                )
+                # "high demand" 503s are usually gone a second later: retry the same
+                # (fast) model once before falling back to a slower one.
+                if (
+                    not retried_same_model
+                    and not step_text_emitted
+                    and _is_overloaded(exc)
+                    and (left is None or left >= 3.0)
+                ):
+                    retried_same_model = True
+                    sleep(1.0)
+                    model_parts, calls, usage, gemini_finish = [], [], None, None
+                    continue
                 if can_retry:
                     chain_pos += 1
                     active_model = chain[chain_pos]  # stays on this model for the rest of the turn

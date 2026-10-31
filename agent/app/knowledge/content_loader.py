@@ -65,7 +65,9 @@ def load_projects(content_dir: Path) -> list[Document]:
                 None,
                 [
                     f"{title} ({frontmatter.get('category', '')}, {frontmatter.get('status', '')})",
+                    "Featured project (the one Moiz leads with)." if frontmatter.get("featured") else "",
                     outcome,
+                    frontmatter.get("runsLine", ""),
                     lead,
                     f"Stack: {', '.join(frontmatter.get('stack', []))}",
                     f"Steps: {steps_text}" if steps_text else "",
@@ -175,12 +177,48 @@ def load_project_detail(content_dir: Path, slug: str) -> dict[str, Any] | None:
         "timeline": frontmatter.get("timeline"),
         "stack": frontmatter.get("stack", []),
         "status": frontmatter.get("status"),
+        "featured": bool(frontmatter.get("featured", False)),
+        "runsLine": frontmatter.get("runsLine"),
         "results": frontmatter.get("results", []),
         "steps": [{"step": n.get("label"), "kind": n.get("kind")} for n in graph.get("nodes", [])],
         "caseStudy": body,
         "placeholder": frontmatter.get("placeholder", False),
         "url": f"/work/{slug}",
     }
+
+
+def load_project_summaries(content_dir: Path) -> list[dict[str, Any]]:
+    """One line per project, featured first, then by the site's `order` — the list_projects tool."""
+    projects_dir = content_dir / "projects"
+    if not projects_dir.is_dir():
+        return []
+    out: list[dict[str, Any]] = []
+    for entry in sorted(projects_dir.iterdir()):
+        mdx_path = entry / "index.mdx"
+        if not entry.is_dir() or not mdx_path.exists():
+            continue
+        fm, _body = _split_frontmatter(mdx_path.read_text(encoding="utf-8"))
+        out.append(
+            {
+                "slug": entry.name,
+                "title": fm.get("title", entry.name),
+                "outcome": fm.get("outcome", ""),
+                "category": fm.get("category"),
+                "status": fm.get("status"),
+                "featured": bool(fm.get("featured", False)),
+                "order": fm.get("order"),
+                "runsLine": fm.get("runsLine"),
+                "stack": fm.get("stack", []),
+                "url": f"/work/{entry.name}",
+                "placeholder": bool(fm.get("placeholder", False)),
+            }
+        )
+
+    def _key(p: dict[str, Any]) -> tuple:
+        order = p["order"] if isinstance(p["order"], (int, float)) else 1_000
+        return (0 if p["featured"] else 1, order, p["slug"])
+
+    return sorted(out, key=_key)
 
 
 def load_toolbox_names(content_dir: Path) -> list[str]:

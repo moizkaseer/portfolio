@@ -133,7 +133,7 @@ def model_chain(primary: str, fallbacks: list[str], available: set[str] | None) 
     return chain
 
 
-def make_llm_client(provider: str, *, gemini_api_key: str | None, anthropic_api_key: str | None, timeout_ms: int = 25_000) -> Any | None:
+def make_llm_client(provider: str, *, gemini_api_key: str | None, anthropic_api_key: str | None, timeout_ms: int = 15_000) -> Any | None:
     """Returns an SDK client for the configured provider, or None (-> demo mode) when no key is set."""
     if provider == "anthropic":
         if not anthropic_api_key:

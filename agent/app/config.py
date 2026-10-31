@@ -118,7 +118,8 @@ class Settings:
     llm_provider: str = "gemini"
     gemini_api_key: str | None = None
     fallback_models: list[str] = field(default_factory=list)
-    llm_timeout_ms: int = 25_000
+    llm_timeout_ms: int = 15_000  # per model call; a hung primary still leaves time to fall back
+    turn_budget_ms: int = 45_000  # whole turn (all steps + fallbacks); must stay under the proxy's limit
     thinking_level: str | None = None
     free_tier: bool = True
 
@@ -154,7 +155,8 @@ def load_settings() -> Settings:
         llm_provider=provider,
         gemini_api_key=_env_str("GEMINI_API_KEY") or _env_str("GOOGLE_API_KEY"),
         fallback_models=fallbacks,
-        llm_timeout_ms=_env_int("AGENT_LLM_TIMEOUT_MS", 25_000),
+        llm_timeout_ms=_env_int("AGENT_LLM_TIMEOUT_MS", 15_000),
+        turn_budget_ms=_env_int("AGENT_TURN_BUDGET_MS", 45_000),
         thinking_level=_env_str("AGENT_THINKING_LEVEL"),
         free_tier=_env_bool("GEMINI_FREE_TIER", True),
         anthropic_api_key=_env_str("ANTHROPIC_API_KEY"),

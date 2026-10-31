@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from app.knowledge.content_loader import load_project_detail
+from app.knowledge.content_loader import load_project_detail, load_project_summaries
 
 if TYPE_CHECKING:
     from app.tools import ToolContext, ToolSpec
@@ -64,6 +64,20 @@ def _get_experience(ctx: "ToolContext"):
     return execute
 
 
+def _list_projects(ctx: "ToolContext"):
+    def execute(_input_: dict[str, Any]) -> Any:
+        projects = load_project_summaries(ctx.settings.content_dir)
+        return {
+            "projects": projects,
+            "note": (
+                "Every project on the site, featured first, then in the site's order. For 'best project' "
+                "questions lead with the featured one; for overviews mention each briefly by title."
+            ),
+        }
+
+    return execute
+
+
 def build(ctx: "ToolContext") -> dict[str, "ToolSpec"]:
     from app.tools import ToolSpec
 
@@ -86,6 +100,17 @@ def build(ctx: "ToolContext") -> dict[str, "ToolSpec"]:
                 },
             },
             execute=_search_knowledge(ctx),
+        ),
+        "list_projects": ToolSpec(
+            schema={
+                "name": "list_projects",
+                "description": (
+                    "List every project on the site (title, one-line outcome, status, stack, url), featured first. "
+                    "Use for overview questions: 'what has he built?', 'best project?', 'show me his work'."
+                ),
+                "input_schema": {"type": "object", "properties": {}},
+            },
+            execute=_list_projects(ctx),
         ),
         "get_case_study": ToolSpec(
             schema={

@@ -87,7 +87,8 @@ per-model $/MTok pricing — all configurable via env, below.
 | `AGENT_MODEL` | `gemini-3.5-flash-lite` (`claude-sonnet-4-5` for anthropic) | Verified on 2026-10-30: `gemini-2.5-flash` now answers 404 "no longer available to new users", so it is **not** the default. |
 | `AGENT_FALLBACK_MODELS` | `gemini-3.5-flash,gemini-flash-latest` | Comma list tried in order when a model is rate-limited / out of free quota / overloaded / not available to the key (each model has its own free quota). Filtered against the key's live `models.list` (cached 6h). `none` disables. |
 | `AGENT_THINKING_LEVEL` | unset | Optional for Gemini 3+: `minimal`/`low`/`medium`/`high`. Gemini 2.5 Flash models run with thinking off. |
-| `AGENT_LLM_TIMEOUT_MS` | `25000` | Per model call; a hung call fails over to the next model / demo. |
+| `AGENT_LLM_TIMEOUT_MS` | `15000` | Per model call; a hung call fails over to the next model / demo. |
+| `AGENT_TURN_BUDGET_MS` | `45000` | Whole turn (every step and fallback). Keep it under the Next.js route's `maxDuration` (60s). |
 | `GEMINI_FREE_TIER` | `true` | The cost budget counts Gemini as $0 on the free tier; set `false` if the Google project has billing on so `AGENT_MAX_COST_USD` uses paid list prices. |
 | `ANTHROPIC_API_KEY` | — | Only for `LLM_PROVIDER=anthropic`. |
 | `AGENT_MAX_STEPS` | `6` | Max agent-loop steps (tool-call round trips) per request. |

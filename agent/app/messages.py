@@ -42,8 +42,23 @@ def to_anthropic_messages(ui_messages: list[dict]) -> list[dict]:
         content_blocks: list[dict] = []
         tool_results: list[dict] = []
 
+        def flush() -> None:
+            if content_blocks:
+                anthropic_messages.append({"role": "assistant", "content": list(content_blocks)})
+            if tool_results:
+                anthropic_messages.append({"role": "user", "content": list(tool_results)})
+            content_blocks.clear()
+            tool_results.clear()
+
         for part in parts:
             ptype = part.get("type", "")
+            if ptype == "step-start":
+                # One UIMessage holds every model step of a turn. Split it back into
+                # call -> result -> next step so the history keeps the real order
+                # (Gemini 3 validates each step's function calls separately).
+                if tool_results:
+                    flush()
+                continue
             if ptype == "text":
                 text = part.get("text", "")
                 if text:
@@ -77,10 +92,7 @@ def to_anthropic_messages(ui_messages: list[dict]) -> list[dict]:
                 # (ui_*) tool call — leave it without a tool_result; this must be the
                 # last turn in the conversation.
 
-        if content_blocks:
-            anthropic_messages.append({"role": "assistant", "content": content_blocks})
-        if tool_results:
-            anthropic_messages.append({"role": "user", "content": tool_results})
+        flush()
 
     return anthropic_messages
 
