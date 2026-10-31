@@ -58,4 +58,10 @@ def validate_request_shape(body: Any, settings: Settings) -> list[dict]:
         if len(text_of_message(m)) > settings.max_input_chars:
             raise GuardrailError("too-long", status_code=413)
 
+    # A new visitor message with no text would reach the model as an empty turn (Gemini
+    # rejects it, which used to surface as a 503 "demo" and flip the site into demo mode).
+    last = messages[-1]
+    if last.get("role") == "user" and not text_of_message(last).strip():
+        raise GuardrailError("empty")
+
     return messages

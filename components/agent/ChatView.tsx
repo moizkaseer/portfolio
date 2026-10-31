@@ -3,6 +3,7 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { agentStore } from "@/lib/agent/store";
 import { ask, stop } from "@/lib/agent/entry";
+import { formatAnswer } from "@/lib/agent/format";
 import styles from "./Agent.module.css";
 
 export const SUGGESTIONS = ["Show me your best project", "What do you build?", "How do you make agents reliable?", "Are you available?"];
@@ -80,7 +81,15 @@ export function ChatView({ variant, onClose, initialInput = "" }: { variant: "se
               ))}
               {(m.text || m.streaming) && (
                 <p className={styles.answer}>
-                  {m.text}
+                  {formatAnswer(m.text).map((p, i) =>
+                    typeof p === "string" ? (
+                      p
+                    ) : (
+                      <a key={i} href={p.href} {...(p.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                        {p.label}
+                      </a>
+                    ),
+                  )}
                   {m.streaming && <span aria-hidden="true" className={styles.cursor} />}
                 </p>
               )}

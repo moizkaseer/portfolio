@@ -16,7 +16,8 @@ from app.knowledge.bm25 import BM25Index
 from app.knowledge.content_loader import load_project_slugs, load_toolbox_names
 from app.knowledge.store import load_or_build_index
 from app.messages import to_anthropic_messages
-from app.providers import ProviderUnavailable, available_gemini_models, make_llm_client, model_chain
+from app import protocol as P
+from app.providers import ProviderUnavailable, available_gemini_models, friendly_text, make_llm_client, model_chain
 from app.protocol import SSE_DONE, UI_MESSAGE_STREAM_HEADERS, encode_sse
 from app.ratelimit import Limiter, client_ip, create_limiter
 from app.security import AGENT_SECRET_HEADER, GuardrailError, check_shared_secret, validate_request_shape
@@ -115,14 +116,19 @@ async def chat(
 ):
     check_shared_secret(request, settings)
 
-    body = await request.json()
+    try:
+        body = await request.json()
+    except ValueError:  # malformed / empty JSON body — a client error, never a 5xx (5xx means "demo")
+        return JSONResponse({"error": "invalid-request"}, status_code=400)
     try:
         messages = validate_request_shape(body, settings)
     except GuardrailError as exc:
         return JSONResponse({"error": exc.code}, status_code=exc.status_code)
 
     headers_lower = {k.lower(): v for k, v in request.headers.items()}
-    ip = client_ip(headers_lower)
+    # check_shared_secret passed above, so a proxy-asserted visitor IP header can be trusted
+    # (when no secret is configured the service is open and the header is ignored).
+    ip = client_ip(headers_lower, trust_proxy_header=bool(settings.shared_secret))
 
     # only a new visitor message counts against the rate limit (not the
     # follow-ups a browser sends back after running a ui_* tool) — mirrors
@@ -172,6 +178,8 @@ async def chat(
             model=chain[0],
             fallback_models=chain[1:],
             thinking_level=settings.thinking_level,
+            turn_budget_s=settings.turn_budget_ms / 1000,
+            attempt_timeout_s=settings.llm_timeout_ms / 1000,
             **common,
         )
 
@@ -189,7 +197,21 @@ async def chat(
             if chunk.get("type") not in _FRAMING_CHUNKS:
                 break
     except ProviderUnavailable as exc:
-        return JSONResponse({"demo": True, "reason": exc.reason}, status_code=503)
+        if messages[-1].get("role") != "assistant":
+            return JSONResponse({"demo": True, "reason": exc.reason}, status_code=503)
+        # A follow-up after a ui_* tool ran in the browser: the visitor already has a
+        # live answer on screen, so a transient model hiccup here shouldn't flip the
+        # whole session to the demo replay — close the turn with a short apology.
+        if not any(c.get("type") == "start-step" for c in buffered):
+            buffered.append(P.start_step())
+        buffered += [
+            P.text_start("text-retry"),
+            P.text_delta("text-retry", friendly_text(exc.reason)),
+            P.text_end("text-retry"),
+            P.finish_step(),
+            P.finish("other" if exc.reason == "quota" else "error"),
+        ]
+        chunks = iter(())
 
     def generate():
         for chunk in buffered:
