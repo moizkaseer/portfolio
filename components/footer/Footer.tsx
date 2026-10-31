@@ -36,6 +36,11 @@ export function Footer() {
           © {year} {site.name}
         </span>
         <span>
+          <Link href="/blog" className="text-link">
+            Blog
+          </Link>
+        </span>
+        <span>
           {site.socials.map((s, i) => (
             <span key={s.label}>
               {i > 0 && " · "}

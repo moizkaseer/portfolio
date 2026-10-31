@@ -1,4 +1,5 @@
 import { getProjects } from "@/lib/content/projects";
+import { getPosts } from "@/lib/content/blog";
 import { site } from "@/lib/content/site";
 import toolbox from "@/content/toolbox.json";
 import process from "@/content/process.json";
@@ -9,6 +10,7 @@ import { statusLabel } from "@/lib/content/status";
 /** /llms.txt — a plain summary for AI assistants (brief §10), from the content files. */
 export function GET() {
   const runs = getProjects();
+  const posts = getPosts();
   const lines = [
     `# ${site.name}`,
     "",
@@ -33,6 +35,12 @@ export function GET() {
     `All runs: ${abs("/work")}`,
     "",
     ...runs.map((p) => `- [RUN #${p.runId} ${p.title}](${abs(`/work/${p.slug}`)}): ${p.outcome} (${p.category}; ${statusLabel(p.status).toLowerCase()})`),
+    "",
+    "## Blog",
+    "",
+    `All posts: ${abs("/blog")}`,
+    "",
+    ...posts.map((p) => `- [${p.title}](${abs(`/blog/${p.slug}`)}): ${p.description}`),
     "",
     "## Tools",
     "",
