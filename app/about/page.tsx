@@ -14,7 +14,7 @@ export const metadata: Metadata = pageMetadata({ title: "About", description: ab
 /**
  * /about — about, now, timeline, toolbox (brief §4). Not in the design canvas: built from its
  * language (DESIGN_SPEC §7): the run report's breadcrumb and title, mono section headers,
- * hairlines, Geist + Instrument Serif. Content from content/about.json (drafted from the owner's repos; photo still to come).
+ * hairlines, Geist + Instrument Serif. Content from content/about.json (drafted from the owner's repos).
  */
 export default function About() {
   const live = site.availability.status === "available";
@@ -47,12 +47,6 @@ export default function About() {
           </h1>
           <p className={styles.lead}>{about.lead}</p>
         </div>
-        {about.photo && (
-          <figure className={styles.photo}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={about.photo} alt={about.photoAlt} />
-          </figure>
-        )}
       </section>
 
       <section aria-labelledby="bio-h" className={styles.block}>
