@@ -1,0 +1,41 @@
+---
+slug: "building-ai-agents-on-a-0-budget"
+title: "Building AI agents on a $0 budget"
+description: "Free model tiers, fallback chains, rate limits, keep-warm pings, and bring-your-own-key — what it actually takes to ship an agent for free."
+date: "2026-10-31"
+tags: ["AI agents", "Free tier", "Engineering"]
+---
+
+Every one of my own projects runs on $0 a month. Not "cheap" — zero. That's a real constraint, not a marketing line, and it shapes almost every engineering decision in a way that a project with a budget doesn't have to think about. Here's what actually goes into making a working AI agent cost nothing to run.
+
+## Pick a model with a real free tier
+
+Gemini has a free tier that needs no billing account at all — just an API key from AI Studio. That's the model behind this site's own agent and behind [Company Autopsy](/work/company-autopsy). Free tiers come with quotas, and quotas run out, which means "free" only works if you plan for the moment the free part stops working mid-request.
+
+The fix I use everywhere is a model fallback chain. The portfolio agent tries `gemini-3.5-flash-lite` first, then falls through to `gemini-3.5-flash`, then `gemini-flash-latest` — each one has its own separate free quota, so when one is exhausted or rate-limited, the next one picks up the request instead of the whole system going down. Company Autopsy does the same thing with Flash-Lite falling back to Flash. The chain also checks, and caches for six hours, which models the current key is actually allowed to call, so it doesn't waste a request on a model that would just 404.
+
+## Rate limit before you ever call the model
+
+A free quota is shared across every visitor, so one burst of traffic can burn a day's budget in minutes if nothing stops it. Company Autopsy enforces a per-IP sliding window and a global daily cap on LLM calls, both held in memory — the service runs as a single small instance, so there's no shared store to keep consistent, and a restart just resets the counters (which only makes the limits briefly more generous, never less safe). When the daily cap is hit, visitors don't get an error. They get a clearly labeled sample report instead, so the product still demonstrates what it does even with zero quota left for the day.
+
+Cheap checks come before expensive ones, too. The cold outreach agent rejects a poor-fit lead for about $0.0013 — before any actual research, which costs real tokens, gets paid for. That ordering matters more on a free tier than anywhere else: the point isn't just saving money, it's not spending your limited daily quota on a request that was never going to produce something useful.
+
+## Free hosting has its own tax: cold starts
+
+Free hosting tiers (Render, in this case) sleep an idle backend after about 15 minutes, and a cold start takes roughly a minute. That's fine for a backend with no visitors, and genuinely annoying for the first person who shows up. Two things handle it: a scheduled GitHub Action pings `/healthz` every 10 minutes to keep the process warm during active hours — carefully hitting an endpoint that never calls the model, so the keep-warm ping itself costs zero quota — and a status check on every page load that, if the backend is asleep, fires a non-blocking wake request and tells the browser to quietly re-probe for about 70 seconds while the backend spins up, flipping from a demo state to live the moment it answers. I wrote more about that mechanism in [how I built the agent on this site](/blog/how-i-built-the-ai-agent-on-my-portfolio).
+
+## An honest demo mode is not optional
+
+If your fallback for "the free model is out of quota" is a broken page, you haven't actually shipped a free product — you've shipped a product that's free until the first real traffic spike, then broken. Every agent I've built answers a clear `{"demo": true}` signal when it can't serve a real answer, rather than an error or, worse, a model straining to answer anyway and inventing something. The portfolio site's chat then falls back to a scripted replay built as pure functions over the real content files — it only ever says things that are true, because it's reading from the same data the live agent reads from. Company Autopsy shows a sample report with the same honesty: labeled as a sample, built from real logic, not a fabricated result dressed up as a live one.
+
+## Bring-your-own-key, for people who want more than free
+
+Company Autopsy also supports a bring-your-own-Gemini-key option. A visitor can paste their own key into a collapsed field, and it's sent once in a request header, used to build a client for that single request, and never stored or logged anywhere. Using your own key skips the shared daily cap entirely, since you're spending your own quota, not the shared one. If the key is invalid or already out of quota, that comes back as a clear, specific error — not a silent fallback to the shared tier, which would be confusing and would also quietly burn through limits meant for everyone else.
+
+## The tradeoffs, honestly
+
+None of this is free in the sense of effortless. A fallback chain means more code paths to test. An in-memory rate limiter means the limits reset on a restart, which is a real gap, even if it only makes things briefly more lenient rather than less safe. A sleeping backend means the first visitor after a quiet period waits through a cold start, however well you mask it. Company Autopsy's own "what's next" list includes moving to a shared rate-limit store so the limits hold across more than one server instance — the in-memory version works today because it's a single small instance, and that assumption is worth being honest about rather than hiding.
+
+$0 doesn't mean no engineering. It means the engineering goes into quota management, graceful degradation, and being upfront with users about which mode they're in, instead of into a monthly infrastructure bill. If you're trying to validate whether an agent idea is worth a real budget before committing to one, that's exactly the approach I'd take, and it's covered in more depth — including the specific SSRF and prompt-injection guards that come with letting an agent touch a stranger's URL for free — in [what building Company Autopsy taught me](/blog/lessons-from-building-company-autopsy).
+
+Got an idea you want to prove out before spending real money on infrastructure? [Get in touch](/#contact) and let's talk about what a $0 version of it would even look like.

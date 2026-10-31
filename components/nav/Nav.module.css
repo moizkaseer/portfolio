@@ -53,7 +53,8 @@
 
 /* "01 Work" underlined on /work pages (RunReport.html) — CSS only, no client JS */
 :global(body:has([data-page="work"])) .link[data-nav="work"],
-:global(body:has([data-page="about"])) .link[data-nav="about"] {
+:global(body:has([data-page="about"])) .link[data-nav="about"],
+:global(body:has([data-page="blog"])) .link[data-nav="blog"] {
   border-bottom: 1px solid var(--ink);
 }
 

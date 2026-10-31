@@ -45,13 +45,37 @@ export function personJsonLd() {
  * layout's — every page sets its own, or link previews all read like the home page.
  * The og:image comes from each route's opengraph-image file.
  */
-export function pageMetadata({ title, description, path, type = "website" }: { title?: string; description: string; path: string; type?: "website" | "article" | "profile" }): Metadata {
+export function pageMetadata({
+  title,
+  description,
+  path,
+  type = "website",
+  article,
+  rss,
+}: {
+  title?: string;
+  description: string;
+  path: string;
+  type?: "website" | "article" | "profile";
+  /** publishedTime/authors for `type: "article"` pages (BlogPosting-style OG tags). */
+  article?: { publishedTime: string; modifiedTime?: string; authors?: string[] };
+  /** adds a `<link rel="alternate" type="application/rss+xml">` to the page. */
+  rss?: string;
+}): Metadata {
   const full = title ? `${title} — ${site.name}` : `${site.name} — ${site.positioning}`;
   return {
     ...(title ? { title } : {}),
     description,
-    alternates: { canonical: path },
-    openGraph: { type, siteName: site.name, locale: "en_US", title: full, description, url: path },
+    alternates: { canonical: path, ...(rss ? { types: { "application/rss+xml": rss } } : {}) },
+    openGraph: {
+      type,
+      siteName: site.name,
+      locale: "en_US",
+      title: full,
+      description,
+      url: path,
+      ...(type === "article" && article ? article : {}),
+    } as Metadata["openGraph"],
     twitter: { card: "summary_large_image", title: full, description },
   };
 }

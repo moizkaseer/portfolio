@@ -1,0 +1,37 @@
+---
+slug: "what-does-an-ai-agent-engineer-do"
+title: "What does an AI agent engineer actually do?"
+description: "Prompting a chatbot isn't the job. Here's what I actually spend my time on: limits, verification, and an off switch."
+date: "2026-10-31"
+tags: ["AI agents", "Engineering"]
+---
+
+People hear "AI agent engineer" and picture someone who writes clever prompts all day. That's maybe 10% of it, and it's the easy 10%. The actual job is building the parts around the model: the limits that stop it from wandering, the checks that catch it when it's wrong, and the off switch for when it needs to stop. The model is a component. Everything else is engineering.
+
+I write down my own process as five steps, because I keep rediscovering the same shape on every project: trigger, plan, act, verify, ship. Something happens — an email lands, a form is submitted, a URL is pasted into a box. The agent decides what needs doing and which tools it's allowed to use, with limits set before it starts so it never wanders. It does the work with real access — a database, an API, a browser fetch. Every result gets checked, by code or by a second pass, and when it's unsure it stops instead of guessing. Then it ships, and the run gets logged so it can be replayed later. None of those five steps is "write a good prompt." Three of them are specifically about not trusting the model.
+
+## The model proposes, code decides
+
+This is the line I come back to on every project. A language model is good at drafting, summarizing, and pattern-matching against something that looks right. It is not a reliable judge of its own correctness, and it's a worse judge of risk. So the pattern I keep building is: the model proposes an answer, and plain code decides whether to accept it.
+
+On the [cold outreach agent](/work/cold-outreach-agent), this is the whole point of the system. It researches a company and drafts a cold email, and the model could absolutely write something that sounds confident and is wrong — made-up funding rounds, invented product names, whatever. So the pipeline treats every claim in the draft as something that has to be proven. A fact is only kept if its source URL was actually fetched during that run and the exact quote appears in the page text. The verifier maps every claim in the email back to a fact, and code — not the model — decides pass or fail. I learned the hard way that you can't even trust a model to grade this: I had an LLM judge scoring drafts as 92% faithful, and when I read the facts myself it was closer to 75%. Changing nothing but the judge's method moved the same 24 facts from 0.92 to 0.67. I rebuilt it so the model has to name a specific quote for each detail, and the verdict is derived from that, in code.
+
+[Concord](/work/concord) is the same idea applied to a team of agents instead of one. When several agents split a task, a worker can die mid-run, two subgoals can duplicate the same request, or a specialist can finish with a correct-looking answer about the wrong thing. A supervisor watches for exactly these failure modes — using a drift check that asks a model five yes/no questions, then lets code turn the answers into a verdict, not the model's own opinion of itself. Under injected faults, a run with a dead worker recovers 8 out of 8 times with the supervisor running, and 0 out of 8 without it. That's the kind of number that only exists because I bothered to measure it, not because it sounded plausible.
+
+## Limits come before capability
+
+Before an agent gets access to anything, it needs boundaries, because "autonomous" and "unsupervised" are not the same thing. On the cold outreach agent, only one step in the whole pipeline is allowed to loop on its own, and it has exactly three tools, none of which can send, write, or delete anything. A person approves every email before it goes out, and an opt-out reply is caught by plain code even if the model is completely down.
+
+[Company Autopsy](/work/company-autopsy) shows the same instinct applied to a different kind of risk: the input is a URL a stranger pasted into a form, which means the fetch itself is an attack surface. The safe-fetch layer only allows http(s) on standard ports, resolves DNS once, checks every resolved address, and connects to that exact IP so a DNS answer can't swap in something private after the fact. Every redirect gets re-checked the same way. None of that is prompting. It's the kind of plumbing that has to exist before you let a model anywhere near an arbitrary website.
+
+## What I actually spend time on
+
+If I'm honest about where the hours go on a project, it's roughly: deciding what the agent is and isn't allowed to touch, writing the verification step that catches a wrong answer before a person sees it, figuring out what "wrong" even measures (and then measuring it, with real numbers, not vibes), and building the fallback path for when the model is unavailable, over quota, or just wrong. The actual call to the model — the prompt, the schema, the tool definitions — is usually the smallest file in the project.
+
+That's also why "prompt engineer" and "AI agent engineer" aren't the same job. A good prompt makes the model's first answer better. None of that helps you when the model is confidently wrong, or when a dependency goes down, or when a worker process gets killed mid-task. Those are software engineering problems with a probabilistic component bolted on, and they get solved the way software engineering problems usually get solved: tests, state machines, locks, and a clear boundary between what the model is trusted to say and what code is trusted to verify.
+
+## Where this shows up on this site
+
+This site's own agent — the one in the corner you can talk to — follows the same rules. It runs on a free-tier model with a fallback chain, and when nothing is configured or the backend is asleep, it falls back to a scripted demo built from the same content files the live agent uses, instead of making something up or showing an error. I've written about [how that agent is built](/blog/how-i-built-the-ai-agent-on-my-portfolio) and about [running agents on a $0 budget](/blog/building-ai-agents-on-a-0-budget) if you want the specifics.
+
+If you've got a repetitive job that a person on your team still does by hand — research, outreach, reporting, data entry — and a wrong answer there would actually cost you something, that's exactly the kind of problem this approach is built for. [Get in touch](/#contact) and tell me what the job looks like today; that's always where I start.
