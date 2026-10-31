@@ -128,7 +128,9 @@ describe("lib/server/agent-proxy — streaming proxy to the Python backend (brie
 });
 
 describe("app/api/agent/status — runtime mode with the Python backend", () => {
+  let afterCallbacks: (() => unknown)[] = [];
   afterEach(() => {
+    afterCallbacks = [];
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
   });
@@ -136,7 +138,7 @@ describe("app/api/agent/status — runtime mode with the Python backend", () => 
   const loadStatus = async () => {
     vi.resetModules();
     vi.doMock("server-only", () => ({}));
-    vi.doMock("next/server", () => ({ connection: async () => {} }));
+    vi.doMock("next/server", () => ({ connection: async () => {}, after: (cb: () => unknown) => afterCallbacks.push(cb) }));
     return import("@/app/api/agent/status/route");
   };
 
@@ -158,7 +160,30 @@ describe("app/api/agent/status — runtime mode with the Python backend", () => 
       }),
     );
     const { GET } = await loadStatus();
-    expect(await (await GET()).json()).toEqual({ mode: "demo" });
+    expect(await (await GET()).json()).toEqual({ mode: "demo", waking: true });
+  });
+
+  it("when the backend is asleep, answers demo + waking at once and wakes it after responding", async () => {
+    vi.stubEnv("AGENT_BACKEND_URL", "https://agent.example.com");
+    const fetchMock = vi.fn(async () => {
+      throw new Error("timeout");
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const { GET } = await loadStatus();
+    expect(await (await GET()).json()).toEqual({ mode: "demo", waking: true });
+    expect(fetchMock).toHaveBeenCalledTimes(1); // only the quick /healthz probe so far
+    expect(afterCallbacks).toHaveLength(1);
+    await afterCallbacks[0](); // the wake request, after the response; never throws
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect((fetchMock.mock.calls[1] as unknown as [string])[0]).toBe("https://agent.example.com/healthz");
+  });
+
+  it("does not wake anything when the backend is already live", async () => {
+    vi.stubEnv("AGENT_BACKEND_URL", "https://agent.example.com");
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ status: "ok", modelConfigured: true })));
+    const { GET } = await loadStatus();
+    await GET();
+    expect(afterCallbacks).toHaveLength(0);
   });
 });
 

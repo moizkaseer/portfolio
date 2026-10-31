@@ -19,6 +19,8 @@ export interface ReplayContent {
   /** the system the visitor last built in "What should run itself?", if any */
   prompt: { task: string; nodes: { kind: string; title: string }[] } | null;
   theme: "light" | "dark";
+  /** the live backend is waking up (free host asleep) — the replay is only standing in for a minute */
+  waking?: boolean;
 }
 
 export type Step =
@@ -78,7 +80,28 @@ function projectReplay(id: string, slug: string, match: RegExp): Replay {
 /** "does he know React?" / "do you know Python?" — the skill name, captured for a lookup against real content. */
 const SKILL_RE = /\b(?:does (?:he|moiz) know|do you know|can you use|have you (?:used|worked with)|know how to use|experience with|familiar with|any experience with)\s+([a-z0-9+#.-]+(?:\s[a-z0-9+#.-]+){0,3})/i;
 
+/** "hello", "hi there", "thanks!" — the whole message is a greeting or a thank-you, nothing else. */
+export const GREETING_RE = /^\s*(?:(?:hi|hello|hey|heya|hiya|howdy|yo|hola|salam|salaam|greetings|good (?:morning|afternoon|evening|day))(?:\s+(?:there|again|moiz|agent|everyone|all))?|(?:thanks|thank you|thx|ty|cheers)(?:\s+(?:so much|a lot|again|moiz|agent))?)\s*[!.?,:)]*\s*$/i;
+const THANKS_RE = /^\s*(?:thanks|thank you|thx|ty|cheers)/i;
+
+/** Example questions the replay can answer, offered whenever the visitor needs a starting point. */
+const TRY = '"Show me your best project", "What do you build?", "How do you make agents reliable?" or "Are you available?"';
+
+const wakingNote = (c: ReplayContent) => (c.waking ? " The live agent is waking up (it sleeps when nobody's around), so give it a minute — until then I'm answering from recorded replies." : "");
+
 export const REPLAYS: Replay[] = [
+  {
+    id: "greeting",
+    match: GREETING_RE,
+    steps: (c, question = "") => [
+      {
+        kind: "text",
+        text: THANKS_RE.test(question)
+          ? `You're welcome! Anything else? Try ${TRY} — or use the contact form to reach ${c.name} directly.`
+          : `Hi! I'm the agent on ${c.name}'s site. I can walk you through the work and show you around.${wakingNote(c)} Try ${TRY}`,
+      },
+    ],
+  },
   {
     id: "best-project",
     match: new RegExp(`${terms(["best", "show me", "impress", "top project", "strongest"]).source}|favou?rite`, "i"),
@@ -202,10 +225,12 @@ export const PRICE: Replay = {
 export const FALLBACK: Replay = {
   id: "fallback",
   match: /$^/,
-  steps: () => [
+  steps: (c) => [
     {
       kind: "text",
-      text: "This is a demo replay with a few recorded answers — try one of the suggestions, or ask about the best project, reliability, tools, availability or the system you just built. The live agent can answer anything about the work once it's switched on.",
+      text: c.waking
+        ? `Good question — that one needs the live agent, which is waking up right now (it sleeps when nobody's around). Try again in a minute and it can answer anything about ${c.name}'s work. Meanwhile I can answer ${TRY}`
+        : `I don't have a recorded answer for that one — the live agent isn't available right now. Try ${TRY}, or ask ${c.name} directly through the contact form.`,
     },
   ],
 };

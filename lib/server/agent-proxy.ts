@@ -79,3 +79,15 @@ export async function backendLive(backendUrl: string, timeoutMs = 2500): Promise
     return false;
   }
 }
+
+/**
+ * Fire-and-forget wake-up for a sleeping free host: a plain GET /healthz with a long timeout (a
+ * Render free instance takes ~1 min to cold-start). Never throws; the result doesn't matter.
+ */
+export async function wakeBackend(backendUrl: string, timeoutMs = 55_000): Promise<void> {
+  try {
+    await fetch(`${backendUrl.replace(/\/+$/, "")}/healthz`, { cache: "no-store", signal: AbortSignal.timeout(timeoutMs) });
+  } catch {
+    // still asleep or unreachable — the next status probe will nudge it again
+  }
+}
