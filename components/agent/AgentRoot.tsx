@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { agentStore } from "@/lib/agent/store";
 import { setAgentRouter } from "@/lib/agent/actions";
 import { ask } from "@/lib/agent/entry";
-import { agentMode } from "@/lib/agent/mode";
+import { agentMode, onAgentModeChange } from "@/lib/agent/mode";
 import { ChatView } from "./ChatView";
 import styles from "./Agent.module.css";
 
@@ -44,6 +44,8 @@ export default function AgentRoot({ mode }: { mode: "demo" | "live" }) {
     setAgentRouter(router);
     // questions wait for the probe (normally already answered: components/Boot.tsx starts it once the page is idle)
     void agentMode().then((m) => (agentStore.set({ mode: m }), ready()));
+    // a sleeping backend wakes up a minute later: switch to live then (lib/agent/mode.ts)
+    return onAgentModeChange((m) => agentStore.set({ mode: m }));
   }, [mode, router]);
 
   // home: take over the section 06 terminal (the static design markup stays for no-JS)

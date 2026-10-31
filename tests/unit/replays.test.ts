@@ -58,6 +58,36 @@ describe("demo replay answers come from the content files", () => {
   });
 });
 
+describe("greetings and the honest fallback", () => {
+  it("a bare greeting or thank-you gets the friendly greeting, not the fallback", () => {
+    for (const q of ["hello", "Hello!", "hi", "hi there", "Hey", "hey moiz", "good morning", "thanks", "Thank you!", "thx", "cheers"]) {
+      expect(pickReplay(q).id, q).toBe("greeting");
+    }
+  });
+  it("a greeting followed by a real question answers the question", () => {
+    expect(pickReplay("hi, what tools do you use?").id).toBe("tools");
+    expect(pickReplay("hello where are you based").id).toBe("location");
+    expect(pickReplay("hey show me your best project").id).toBe("best-project");
+  });
+  it("greeting words inside other words don't trigger it", () => {
+    expect(pickReplay("history").id).not.toBe("greeting");
+    expect(pickReplay("they built what?").id).not.toBe("greeting");
+  });
+  it("the greeting introduces the agent and offers suggestions; thanks gets a reply in kind", () => {
+    expect(answer("hello")).toContain("Hi! I'm the agent on Ada's site.");
+    expect(answer("hello")).toContain('"Show me your best project"');
+    expect(answer("hello")).not.toContain("waking up");
+    expect(answer("hello", { ...C, waking: true })).toContain("The live agent is waking up");
+    expect(answer("thanks!")).toContain("You're welcome!");
+  });
+  it("the fallback is honest about the live agent and offers suggestions", () => {
+    expect(answer("tell me a joke")).toContain("live agent isn't available right now");
+    expect(answer("tell me a joke")).toContain('"What do you build?"');
+    expect(answer("tell me a joke", { ...C, waking: true })).toContain("waking up right now");
+    expect(answer("tell me a joke", { ...C, waking: true })).toContain("Try again in a minute");
+  });
+});
+
 describe("keyword matching uses word boundaries, not raw substrings", () => {
   it("'highlights' doesn't misfire into the theme switch (the substring 'light')", () => {
     expect(pickReplay("what are the highlights of your work?").id).not.toBe("theme");

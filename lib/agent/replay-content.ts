@@ -4,6 +4,7 @@ import process from "@/content/process.json";
 import about from "@/content/about.json";
 import projects from "@/lib/content/projects.generated.json";
 import { getPromptState } from "@/lib/prompt-store";
+import { agentWaking } from "./mode";
 import type { ReplayContent } from "./replay-script";
 
 /** The content the demo replay's answers are built from — the same files the site renders. */
@@ -21,5 +22,6 @@ export function replayContent(theme: "light" | "dark" = "dark"): ReplayContent {
     process: Object.fromEntries(process.steps.map((s) => [s.id, s.text])),
     prompt: p ? { task: p.task, nodes: p.nodes } : null,
     theme,
+    waking: agentWaking(),
   };
 }
