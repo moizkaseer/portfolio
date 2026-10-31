@@ -1,0 +1,41 @@
+---
+slug: "how-i-built-the-ai-agent-on-my-portfolio"
+title: "How I built the AI agent that runs my portfolio"
+description: "A FastAPI backend on Gemini's free tier, a model fallback chain, and an honest demo mode for when the real thing is asleep."
+date: "2026-10-29"
+tags: ["AI agents", "Architecture", "Gemini"]
+---
+
+The chat agent on this site's homepage is a real agent talking to a real model, not a canned widget — most of the time. I want to walk through how it's actually put together, because the interesting part isn't the chat UI, it's everything that has to happen so the thing stays honest when the model, the free hosting, or both, aren't cooperating.
+
+## The shape of it
+
+The backend is a Python FastAPI service, kept in `agent/` in this repo, separate from the Next.js site. It talks to Google's Gemini through the official `google-genai` SDK, chosen specifically because Gemini has a free tier that needs no billing account — just a key from AI Studio. The provider is abstracted (`app/providers.py`) so the same agent loop can run against Anthropic's Claude instead by flipping an environment variable, but Gemini-on-free-tier is what's actually deployed.
+
+Requests come in from the Next.js app through a thin streaming proxy (`lib/server/agent-proxy.ts`). It forwards the request body, the visitor's IP, and a shared secret in an `x-agent-secret` header, then streams the backend's response straight through using the same UI-message-stream format the frontend already expects, so the proxy doesn't need to understand what's inside the stream. It just has to get out of the way.
+
+## Picking a model that's actually free
+
+Gemini's free tier is still a tier, which means limits and the occasional "not available to this key" surprise. So the agent doesn't call one model — it calls a chain. The primary model (currently `gemini-3.5-flash-lite`) is tried first; if it's rate-limited, out of quota, overloaded, or the key simply can't use it, the code falls through to the next model in the chain (`gemini-3.5-flash`, then `gemini-flash-latest`), each of which has its own, separate free quota. Before trying, it can also check the live list of models the key is actually allowed to call and drop ones that would just 404, caching that list for six hours so it isn't re-fetched on every request.
+
+Every error gets classified into one of a small number of reasons — quota, auth, model-not-found, unavailable, or a generic error — and only some of those are worth retrying on a lighter model. An auth failure on the primary model isn't going to fix itself by trying a different model with the same bad key, so the chain stops there instead of burning time on calls that can't succeed.
+
+## Failing honestly instead of failing loudly
+
+This is the part I actually care about. If the model can't answer — no key configured, free quota exhausted, the backend unreachable — the system is built to say so, quietly, rather than show an error or (worse) pretend. The backend answers a `503` with `{"demo": true}` when it can't serve a live turn before saying anything. The Next.js proxy does the same thing if the backend is completely unreachable or times out. On the frontend, that response flips the chat into a scripted demo mode (`lib/agent/replay-script.ts`), built entirely as pure functions over the site's real content files — the actual project list, the actual toolbox, the actual availability status. It never invents numbers or facts; if something isn't filled in yet, the demo just shows a placeholder instead of making something up.
+
+If the failure happens mid-answer instead of before the first word, the agent loop finishes the stream with a short, honest message instead of a raw exception — something like "I've hit my free usage limit for the moment, so I can't finish that answer right now," with a pointer to the contact form or booking link. A visitor should never see a stack trace from this thing.
+
+## Waking a sleeping backend
+
+The agent backend runs on a free hosting tier, which sleeps after about 15 minutes with no traffic and takes roughly a minute to cold-start. A `/api/agent/status` route checks, on every page load, whether the backend is actually live by hitting its `/healthz` endpoint and confirming a model key is configured — never trusting a prerendered page's guess, since the model config can change without a redeploy. If the backend doesn't answer, the status route fires off a non-blocking wake request (a plain `GET /healthz` with a long timeout) after responding, and tells the browser it's "waking." The browser then quietly re-probes every 8 to 14 seconds, for about 70 seconds total, and flips the UI from demo to live the moment the backend answers — no page reload required.
+
+There's also a scheduled GitHub Action that pings `/healthz` every 10 minutes to keep the backend warm during active hours. It's careful to hit `/healthz` specifically, because that endpoint never calls the model — so the keep-warm ping costs zero Gemini quota, it just keeps the process from going cold in the first place.
+
+## What this has in common with the other projects
+
+The honest-fallback instinct isn't unique to this agent. [Company Autopsy](/work/company-autopsy) runs the exact same shape — Gemini Flash-Lite falling back to Flash, a daily quota cap, and a clearly labeled sample report instead of an error when the quota runs out — because it's a lead-generation tool running on the same kind of free infrastructure. And the [cold outreach agent](/work/cold-outreach-agent) applies the same "don't trust a single pass" discipline to a completely different problem: instead of model fallback, it verifies every factual claim in a drafted email against a source it actually fetched, with code making the final accept/reject call.
+
+If you're curious about the budget side of this — why free tiers, rate limits, and keep-warm pings are the whole game when you're not trying to spend money to ship something real — I wrote that up separately in [building AI agents on a $0 budget](/blog/building-ai-agents-on-a-0-budget).
+
+If you want something like this built around your own workflow — a backend that talks to a model, verifies its own output, and fails honestly instead of loudly — [get in touch](/#contact) and tell me what the repetitive part of your job looks like right now.
